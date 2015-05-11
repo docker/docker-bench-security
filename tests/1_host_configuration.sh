@@ -1,0 +1,208 @@
+#!/bin/sh
+
+logit ""
+info "1 - Host Configuration"
+
+# 1.1
+check_1_1="1.1  - Create a separate partition for containers"
+grep /var/lib/docker /etc/fstab >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  pass "$check_1_1"
+else
+  warn "$check_1_1"
+fi
+
+# 1.2
+check_1_2="1.2  - Use an updated Linux Kernel"
+kernel_version=`uname -r | cut -d "-" -f 1`
+do_version_check 3.10 $kernel_version
+if [ $? -eq 11 ]; then
+  warn "$check_1_2"
+else
+  pass "$check_1_2"
+fi
+
+# 1.5
+check_1_5="1.5  - Remove all non-essential services from the host - Network"
+# Check for listening network services.
+listening_services=`netstat -na | grep -v tcp6 | grep -v unix | grep LISTEN | wc -l`
+if [ $listening_services -eq 0 ]; then
+  warn "1.5  - Failed to get listening services for check: $check_1_5"
+else
+  if [ $listening_services -gt 5 ]; then
+    warn "$check_1_5"
+  else
+    pass "$check_1_5"
+  fi
+fi
+
+# 1.6
+check_1_6="1.6  - Keep Docker up to date"
+docker_version=`docker version | grep 'Server version' | awk '{print $3}'`
+if [ $? -eq 11 ]; then
+  warn "$check_1_6"
+else
+  pass "$check_1_6"
+fi
+
+# 1.7
+check_1_7="1.7  - Only allow trusted users to control Docker daemon"
+docker_users=`cat /etc/group | grep docker`
+info "$check_1_7"
+for u in $docker_users; do
+  info "     * $u"
+done
+
+# 1.8
+check_1_8="1.8  - Audit docker daemon"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /usr/bin/docker >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_8"
+  else
+    warn "$check_1_8"
+  fi
+else
+  warn "1.8  - Failed to inspect: auditctl command not found."
+fi
+
+# 1.9
+check_1_9="1.9  - Audit Docker files and directories - /var/lib/docker"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /var/lib/docker >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_9"
+  else
+    warn "$check_1_9"
+  fi
+else
+  warn "1.9  - Failed to inspect: auditctl command not found."
+fi
+
+# 1.10
+check_1_10="1.10 - Audit Docker files and directories - /etc/docker"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/docker >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_10"
+  else
+    warn "$check_1_10"
+  fi
+else
+  warn "1.10 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.11
+check_1_11="1.11 - Audit Docker files and directories - docker-registry.service"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /usr/lib/systemd/system/docker-registry.service >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_11"
+  else
+    warn "$check_1_11"
+  fi
+else
+  warn "1.11 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.12
+check_1_12="1.12 - Audit Docker files and directories - docker.service"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /usr/lib/systemd/system/docker.service >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_12"
+  else
+    warn "$check_1_12"
+  fi
+else
+  warn "1.12 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.13
+check_1_13="1.13 - Audit Docker files and directories - /var/run/docker.sock"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /var/run/docker.sock >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_13"
+  else
+    warn "$check_1_13"
+  fi
+else
+  warn "1.13 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.14
+check_1_14="1.14 - Audit Docker files and directories - /etc/sysconfig/docker"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/sysconfig/docker >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_14"
+  else
+    warn "$check_1_14"
+  fi
+else
+  warn "1.14 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.15
+check_1_15="1.15 - Audit Docker files and directories - /etc/sysconfig/docker-network"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/sysconfig/docker-network >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_15"
+  else
+    warn "$check_1_15"
+  fi
+else
+  warn "1.15 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.16
+check_1_16="1.16 - Audit Docker files and directories - /etc/sysconfig/docker-registry"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/sysconfig/docker-registry >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_16"
+  else
+    warn "$check_1_16"
+  fi
+else
+  warn "1.16 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.17
+check_1_17="1.17 - Audit Docker files and directories - /etc/sysconfig/docker-storage"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/sysconfig/docker-storage >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_17"
+  else
+    warn "$check_1_17"
+  fi
+else
+  warn "1.17 - Failed to inspect: auditctl command not found."
+fi
+
+# 1.18
+check_1_18="1.18 - Audit Docker files and directories - /etc/default/docker"
+command -v auditctl >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  auditctl -l | grep /etc/default/docker >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_1_18"
+  else
+    warn "$check_1_18"
+  fi
+else
+  warn "1.18 - Failed to inspect: auditctl command not found."
+fi
