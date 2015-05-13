@@ -23,7 +23,7 @@ else
     user=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
 
-    if test $user = "User=" || test $user = "User=<no value>"; then
+    if test $user = "User=" || test $user = "User=[]" ||test $user = "User=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_4_1"

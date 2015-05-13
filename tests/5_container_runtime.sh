@@ -23,7 +23,7 @@ else
     policy=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
 
-    if test $policy = "AppArmorProfile=" || test $policy = "AppArmorProfile=<no value>"; then
+    if test $policy = "AppArmorProfile=" || test $policy = "AppArmorProfile=[]" ||test $policy = "AppArmorProfile=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_1"
@@ -50,7 +50,7 @@ else
     policy=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
 
-    if test $policy = "SecurityOpt=" || test $policy = "SecurityOpt=<no value>"; then
+    if test $policy = "SecurityOpt=" || test $policy = "SecurityOpt=[]" || test $policy = "SecurityOpt=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_2"
@@ -103,7 +103,7 @@ else
   for c in $cont_inspect; do
     caps=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
-    if test $caps != "CapAdd=" && test $caps != "CapAdd=<no value>"; then
+    if test $caps != "CapAdd=" && test $caps != "CapAdd=[]" && test $caps != "CapAdd=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_4"
@@ -456,7 +456,7 @@ else
   for c in $cont_inspect; do
     mode=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
-    if test $mode != "Devices=[]" && test $mode != "Devices=<no value>"; then
+    if test $mode != "Devices=" && test $mode != "Devices=[]" && test $mode != "Devices=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         info "$check_5_18"
@@ -481,7 +481,7 @@ else
   for c in $cont_inspect; do
     mode=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
-    if test $mode = "Ulimits=" || test $mode = "Ulimits=<no value>"; then
+    if test $mode = "Ulimits=" || test $mode = "Ulimits=[]" || test $mode = "Ulimits=<no value>"; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         info "$check_5_19"
