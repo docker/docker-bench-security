@@ -7,8 +7,6 @@ info "5  - Container Runtime"
 if test "$containers" = ""; then
   info "     * No containers running, skipping Section 5"
 else
-  # List all running containers
-  containers=`docker ps -q`
   # Make the loop separator be a new-line in POSIX compliant fashion
   set -f; IFS=$'
 '
@@ -16,7 +14,7 @@ else
   check_5_1="5.1  - Verify AppArmor Profile, if applicable"
 
   # List all the running containers, ouput their ID and AppArmorProfile
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:AppArmorProfile={{.AppArmorProfile }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:AppArmorProfile={{.AppArmorProfile }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -43,7 +41,7 @@ else
   check_5_2="5.2  - Verify SELinux security options, if applicable"
 
   # List all the running containers, ouput their ID and SecurityOptions
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:SecurityOpt={{.HostConfig.SecurityOpt }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:SecurityOpt={{.HostConfig.SecurityOpt }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -70,7 +68,7 @@ else
   check_5_3="5.3  - Verify that containers are running only a single main process"
 
   # List all the running containers, ouput their Id
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
 
@@ -96,7 +94,7 @@ else
   check_5_4="5.4  - Restrict Linux Kernel Capabilities within containers"
 
   # List all the running containers, ouput their ID and CapAdd
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:CapAdd={{ .HostConfig.CapAdd}}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:CapAdd={{ .HostConfig.CapAdd}}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
 
@@ -123,7 +121,7 @@ else
   check_5_5="5.5  - Do not use privileged containers"
 
   # List all the running containers, ouput their ID and privileged status
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:{{.HostConfig.Privileged }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:{{.HostConfig.Privileged }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
 
@@ -149,7 +147,6 @@ else
   # 5.6
   check_5_6="5.6  - Do not mount sensitive host system directories on containers"
 
-  containers=`docker ps -q`
   # List of sensitive directories to test for. Script uses new-lines as a separator
   sensitive_dirs='/boot
   /dev
@@ -159,7 +156,7 @@ else
   /sys
   /usr'
   # List all the running containers, ouput their ID and R/W Volumes
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:{{ .VolumesRW }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:{{ .VolumesRW }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -194,7 +191,7 @@ else
   check_5_7="5.7  - Do not run ssh within containers"
 
   # List all the running containers, ouput their Id
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -243,7 +240,7 @@ else
   check_5_10="5.10 - Do not use host network mode on container"
 
   # List all the running containers, ouput their ID and network mode
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:NetworkMode={{.HostConfig.NetworkMode }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:NetworkMode={{.HostConfig.NetworkMode }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -269,7 +266,7 @@ else
   check_5_11="5.11 - Limit memory usage for container"
 
   # List all the running containers, ouput their ID and memory limit
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:{{ .Config.Memory }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:{{ .Config.Memory }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   # Make the loop separator be a new-line in POSIX compliant fashion
@@ -296,7 +293,7 @@ else
   check_5_12="5.12 - Set container CPU priority appropriately"
 
   # List all the running containers, ouput their ID and CPU Shares
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:{{.Config.CpuShares }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:{{.Config.CpuShares }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -322,7 +319,7 @@ else
   check_5_13="5.13 - Mount container's root filesystem as read only"
 
   # List all the running containers, ouput their ID and status of ReadonlyRootfs
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:{{.HostConfig.ReadonlyRootfs }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:{{.HostConfig.ReadonlyRootfs }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -372,7 +369,7 @@ else
   check_5_15="5.15 - Do not set the 'on-failure' container restart policy to always"
 
   # List all the running containers, ouput their ID and Restart Policy Name
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:RestartPolicyName={{.HostConfig.RestartPolicy.Name }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:RestartPolicyName={{.HostConfig.RestartPolicy.Name }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -399,7 +396,7 @@ else
   check_5_16="5.16 - Do not share the host's process namespace"
 
   # List all the running containers, ouput their ID and PidMode
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:PidMode={{.HostConfig.PidMode }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:PidMode={{.HostConfig.PidMode }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -425,7 +422,7 @@ else
   check_5_17="5.17 - Do not share the host's IPC namespace"
 
   # List all the running containers, ouput their ID and IpcMode
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:IpcMode={{.HostConfig.IpcMode }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:IpcMode={{.HostConfig.IpcMode }}'`
   # We have some containers running, set failure flag to 0, set failure flag to 0
   fail=0
   for c in $cont_inspect; do
@@ -451,7 +448,7 @@ else
   check_5_18="5.18 - Do not directly expose host devices to containers"
 
   # List all the running containers, ouput their ID and host devices
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:Devices={{.HostConfig.Devices }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:Devices={{.HostConfig.Devices }}'`
   fail=0
   for c in $cont_inspect; do
     mode=`printf "$c" | cut -d ":" -f 2`
@@ -476,7 +473,7 @@ else
   check_5_19="5.19 - Override default ulimit at runtime only if needed"
 
   # List all the running containers, ouput their ID and host devices
-  cont_inspect=`docker ps -q | xargs docker inspect --format '{{ .Id }}:Ulimits={{.HostConfig.Ulimits }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id }}:Ulimits={{.HostConfig.Ulimits }}'`
   fail=0
   for c in $cont_inspect; do
     mode=`printf "$c" | cut -d ":" -f 2`

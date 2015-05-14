@@ -71,6 +71,16 @@ done
 
 # Load all the tests from tests/ and run them
 main () {
+  # List all running containers
+  containers=`docker ps -q`
+  # If there is a container named docker-security-benchmark, memorize it:
+  benchcont="nil"
+  for c in $containers; do
+    labels=`docker inspect --format '{{ .Config.Labels }}' $c`
+    contains "$labels" "security-benchmark" && benchcont="$c"
+  done
+  # List all running containers except docker-security-benchmark
+  containers=`docker ps -q | grep -v $benchcont`
   for test in tests/*.sh
   do
      . ./$test

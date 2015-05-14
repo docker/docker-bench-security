@@ -6,20 +6,19 @@ info "6  - Docker Security Operations"
 # 6.5
 check_6_5="6.5 - Use a centralized and remote log collection service"
 
-containers=`docker ps -q`
 # If containers is empty, there are no running containers
 if test "$containers" = ""; then
   info "$check_6_5"
   info "     * No containers running"
 else
   # List all the running containers, ouput their ID and host devices
-  containers=`docker ps -q | xargs docker inspect --format '{{ .Id}}:{{ .Volumes }}'`
+  cont_inspect=`printf $containers | xargs docker inspect --format '{{ .Id}}:{{ .Volumes }}'`
   # We have some containers running, set failure flag to 0.
   fail=0
   # Make the loop separator be a new-line in POSIX compliant fashion
   set -f; IFS=$'
 '
-  for c in $containers; do
+  for c in $cont_inspect; do
     mode=`printf "$c" | cut -d ":" -f 2`
     container_id=`printf "$c" | cut -d ":" -f 1`
     if test $mode = "map[]"; then
@@ -53,7 +52,7 @@ fi
 # 6.7
 check_6_7="6.7 - Avoid container sprawl"
 total_containers=`docker info 2>/dev/null | grep "Containers" | awk '{print $2}'`
-running_containers=`docker ps -q | wc -l | awk '{print $1}'`
+running_containers=`printf $containers | wc -l | awk '{print $1}'`
 diff=`expr "$total_containers" - "$running_containers"`
 if [ $diff -gt 25 ]; then
   warn "$check_6_7"
