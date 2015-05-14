@@ -19,6 +19,8 @@ docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.soc
 diogomonica/docker-security-benchmark
 ```
 
+This benchmark requires Docker 1.6 or later to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6, I feel free to remove the `--label` flag or run the shell script locally (see below).
+
 ## Building the benchmark
 
 If you wish to build and run this container yourself, you can follow the following steps:
