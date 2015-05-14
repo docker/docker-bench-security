@@ -13,7 +13,8 @@ The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by run
 
 ```
 docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.sock \
--v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc diogomonica/docker-security-benchmark
+-v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label security-benchmark \
+diogomonica/docker-security-benchmark
 ```
 
 ## Building the benchmark
@@ -23,7 +24,9 @@ If you wish to build and run this container yourself, you can follow the followi
 ```
 # git clone https://github.com/diogomonica/docker-security-benchmark.git
 # cd docker-security-benchmark; docker build -t docker-security-benchmark .
-# docker run run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.sock -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc docker-security-benchmark
+# docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.sock \
+-v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label security-benchmark \
+docker-security-benchmark
 ```
 
 Also, this script can also be simply run from your base host by running:
