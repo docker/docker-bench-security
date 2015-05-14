@@ -48,7 +48,7 @@ fi
 # 6.7
 check_6_7="6.7 - Avoid container sprawl"
 total_containers=`docker info 2>/dev/null | grep "Containers" | awk '{print $2}'`
-running_containers=`printf $containers | wc -l | awk '{print $1}'`
+running_containers=`docker ps -q | wc -l | awk '{print $1}'`
 diff=`expr "$total_containers" - "$running_containers"`
 if [ $diff -gt 25 ]; then
   warn "$check_6_7"
