@@ -81,6 +81,7 @@ main () {
   done
   # List all running containers except docker-security-benchmark
   containers=`docker ps -q | grep -v $benchcont`
+
   for test in tests/*.sh
   do
      . ./$test

@@ -22,9 +22,9 @@ diogomonica/docker-security-benchmark
 If you wish to build and run this container yourself, you can follow the following steps:
 
 ```
-# git clone https://github.com/diogomonica/docker-security-benchmark.git
-# cd docker-security-benchmark; docker build -t docker-security-benchmark .
-# docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.sock \
+git clone https://github.com/diogomonica/docker-security-benchmark.git
+cd docker-security-benchmark; docker build -t docker-security-benchmark .
+docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.sock \
 -v /usr/lib/systemd:/usr/lib/systemd -v /etc:/etc --label security-benchmark \
 docker-security-benchmark
 ```
@@ -32,8 +32,8 @@ docker-security-benchmark
 Also, this script can also be simply run from your base host by running:
 
 ```
-# git clone https://github.com/diogomonica/docker-security-benchmark.git
-# cd docker-security-benchmark; sh docker_security_benchmark.sh
+git clone https://github.com/diogomonica/docker-security-benchmark.git
+cd docker-security-benchmark; sh docker_security_benchmark.sh
 ```
 
 This script was build to be POSIX 2004 compliant, so it should be portable across any Unix platform.

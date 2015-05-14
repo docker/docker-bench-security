@@ -31,6 +31,7 @@ if [ $listening_services -eq 0 ]; then
 else
   if [ $listening_services -gt 5 ]; then
     warn "$check_1_5"
+    warn "     * Host listening on: $listening_services ports"
   else
     pass "$check_1_5"
   fi
