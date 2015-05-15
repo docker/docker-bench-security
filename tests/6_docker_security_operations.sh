@@ -7,7 +7,7 @@ info "6  - Docker Security Operations"
 check_6_5="6.5 - Use a centralized and remote log collection service"
 
 # If containers is empty, there are no running containers
-if test "$containers" = ""; then
+if [ -z "$containers" ]; then
   info "$check_6_5"
   info "     * No containers running"
 else
@@ -17,7 +17,7 @@ else
   for c in $containers; do
     volumes=`docker inspect --format '{{ .Volumes }}' $c`
 
-    if test $volumes = "map[]"; then
+    if [ "$volumes" = "map[]" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         info "$check_6_5"

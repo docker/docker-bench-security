@@ -54,7 +54,7 @@ logit "Initializing `date`\n"
 
 # Warn if not root
 ID=`id -u`
-if test "x$ID" != "x0"; then
+if [ "x$ID" != "x0" ]; then
     warn "Some tests might require root to run"
     sleep 3
 fi

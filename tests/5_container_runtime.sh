@@ -4,7 +4,7 @@ logit "\n"
 info "5  - Container Runtime"
 
 # If containers is empty, there are no running containers
-if test "$containers" = ""; then
+if [ -z "$containers" ]; then
   info "     * No containers running, skipping Section 5"
 else
   # Make the loop separator be a new-line in POSIX compliant fashion
@@ -17,7 +17,7 @@ else
   for c in $containers; do
     policy=`docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' $c`
 
-    if test $policy = "AppArmorProfile=" || test $policy = "AppArmorProfile=[]" ||test $policy = "AppArmorProfile=<no value>"; then
+    if [ "$policy" = "AppArmorProfile=" -o "$policy" = "AppArmorProfile=[]" -o "$policy" = "AppArmorProfile=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_1"
@@ -40,7 +40,7 @@ else
   for c in $containers; do
     policy=`docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' $c`
 
-    if test $policy = "SecurityOpt=" || test $policy = "SecurityOpt=[]" || test $policy = "SecurityOpt=<no value>"; then
+    if [ "$policy" = "SecurityOpt=" -o "$policy" = "SecurityOpt=[]" -o "$policy" = "SecurityOpt=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_2"
@@ -85,7 +85,7 @@ else
   for c in $containers; do
     caps=`docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' $c`
 
-    if test $caps != "CapAdd=" && test $caps != "CapAdd=[]" && test $caps != "CapAdd=<no value>"; then
+    if [ "$caps" != "CapAdd=" -a "$caps" != "CapAdd=[]" -a "$caps" != "CapAdd=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_4"
@@ -108,7 +108,7 @@ else
   for c in $containers; do
     privileged=`docker inspect --format '{{ .HostConfig.Privileged }}' $c`
 
-    if test $privileged = "true"; then
+    if [ "$privileged" = "true" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_5"
@@ -190,7 +190,7 @@ else
   for c in $containers; do
     port=`docker port $c | awk '{print $1}' | cut -d '/' -f1`
 
-    if test "$port" != "" && [ $port -lt 1025 ]; then
+    if [ ! -z "$port" ] && [ $port -lt 1025 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_8"
@@ -213,7 +213,7 @@ else
   for c in $containers; do
     mode=`docker inspect --format 'NetworkMode={{ .HostConfig.NetworkMode }}' $c`
 
-    if test $mode = "NetworkMode=host"; then
+    if [ "$mode" = "NetworkMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_10"
@@ -236,7 +236,7 @@ else
   for c in $containers; do
     memory=`docker inspect --format '{{ .Config.Memory }}' $c`
 
-    if test $memory = "0"; then
+    if [ $memory = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_11"
@@ -259,7 +259,7 @@ else
   for c in $containers; do
     shares=`docker inspect --format '{{ .Config.CpuShares }}' $c`
 
-    if test $shares = "0"; then
+    if [ "$shares" = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_12"
@@ -282,7 +282,7 @@ else
   for c in $containers; do
    read_status=`docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' $c`
 
-    if test $read_status = "false"; then
+    if [ "$read_status" = "false" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_13"
@@ -304,7 +304,7 @@ else
   fail=0
   for c in $containers; do
     ip=`docker port $c | awk '{print $3}' | cut -d ':' -f1`
-    if test "$ip" = "0.0.0.0"; then
+    if [ "$ip" = "0.0.0.0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_14"
@@ -327,7 +327,7 @@ else
   for c in $containers; do
     policy=`docker inspect --format 'RestartPolicyName={{ .HostConfig.RestartPolicy.Name }}' $c`
 
-    if test $policy = "RestartPolicyName=always"; then
+    if [ "$policy" = "RestartPolicyName=always" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_15"
@@ -350,7 +350,7 @@ else
   for c in $containers; do
     mode=`docker inspect --format 'PidMode={{.HostConfig.PidMode }}' $c`
 
-    if test $mode = "PidMode=host"; then
+    if [ "$mode" = "PidMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_16"
@@ -373,7 +373,7 @@ else
   for c in $containers; do
     mode=`docker inspect --format 'IpcMode={{.HostConfig.IpcMode }}' $c`
 
-    if test $mode = "IpcMode=host"; then
+    if [ "$mode" = "IpcMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_17"
@@ -396,7 +396,7 @@ else
   for c in $containers; do
     devices=`docker inspect --format 'Devices={{ .HostConfig.Devices }}' $c`
 
-    if test $devices != "Devices=" && test $devices != "Devices=[]" && test $devices != "Devices=<no value>"; then
+    if [ "$devices" != "Devices=" -a "$devices" != "Devices=[]" -a "$devices" != "Devices=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         info "$check_5_18"
@@ -420,7 +420,7 @@ else
   for c in $containers; do
     ulimits=`docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' $c`
 
-    if test $ulimits = "Ulimits=" || test $ulimits = "Ulimits=[]" || test $ulimits = "Ulimits=<no value>"; then
+    if [ "$ulimits" = "Ulimits=" -o "$ulimits" = "Ulimits=[]" -o "$ulimits" = "Ulimits=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         info "$check_5_19"

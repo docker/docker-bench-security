@@ -29,7 +29,7 @@ do_version_check() {
 contains() {
     string="$1"
     substring="$2"
-    if test "${string#*$substring}" != "$string"
+    if [ "${string#*$substring}" != "$string" ]
     then
         return 0    # $substring is in $string
     else

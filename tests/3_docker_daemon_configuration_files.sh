@@ -291,7 +291,7 @@ if [ -d "$directory" ]; then
   fail=0
   perms=`ls -lL $directory/* | grep .crt | awk '{print $1}'`
   for p in $perms; do
-    if test "$p" != "-rw-r--r--." && test "$p" = "-rw-------."; then
+    if [ "$p" != "-rw-r--r--." -a "$p" = "-rw-------." ]; then
       fail=1
     fi
   done
@@ -327,7 +327,7 @@ check_3_20="3.20 - Verify that TLS CA certificate file permissions are set to 44
 tlscacert=`ps -ef | grep docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1`
 if [ -f "$tlscacert" ]; then
   perms=`ls -ld "$tlscacert" | awk '{print $1}'`
-  if test "$perms" = "-rw-r--r--"; then
+  if [ "$perms" = "-rw-r--r--" ]; then
     pass "$check_3_20"
   else
     warn "$check_3_20"
@@ -359,7 +359,7 @@ check_3_22="3.22 - Verify that Docker server certificate file permissions are se
 tlscacert=`ps -ef | grep docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1`
 if [ -f "$tlscert" ]; then
   perms=`ls -ld "$tlscert" | awk '{print $1}'`
-  if test "$perms" = "-rw-r--r--"; then
+  if [ "$perms" = "-rw-r--r--" ]; then
     pass "$check_3_22"
   else
     warn "$check_3_22"
@@ -391,7 +391,7 @@ check_3_24="3.24 - Verify that Docker server key file permissions are set to 400
 tlskey=`ps -ef | grep docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1`
 if [ -f "$tlskey" ]; then
   perms=`ls -ld "$tlskey" | awk '{print $1}'`
-  if test "$perms" = "-r--------"; then
+  if [ "$perms" = "-r--------" ]; then
     pass "$check_3_24"
   else
     warn "$check_3_24"
@@ -423,7 +423,7 @@ check_3_26="3.26 - Verify that Docker socket file permissions are set to 660"
 file="/var/run/docker.sock"
 if [ -f "$file" ]; then
   perms=`ls -ld "$file" | awk '{print $1}'`
-  if test "$perms" = "srw-rw----"; then
+  if [ "$perms" = "srw-rw----" ]; then
     pass "$check_3_26"
   else
     warn "$check_3_26"
