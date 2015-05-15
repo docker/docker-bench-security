@@ -10,7 +10,7 @@ We are making this available as an open-source utility so the Docker community c
 
 We packaged this benchmark as a small container for your convenience. Note that this container is being run with a *lot* of privilege -- sharing the host's filesystem, pid and network namespaces, due to portions of the benchmark applying to the running host.
 
-The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by running our pre-built container:
+The easiest way to run your hosts against the CIS Docker 1.6.1 benchmark is by running our pre-built container:
 
 
 ```
