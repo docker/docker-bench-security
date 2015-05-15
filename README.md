@@ -10,7 +10,7 @@ We are making this available as an open-source utility so the Docker community c
 
 We packaged this benchmark as a small container for your convenience. Note that this container is being run with a *lot* of privilege -- sharing the host's filesystem, pid and network namespaces, due to portions of the benchmark applying to the running host.
 
-The easiest way to run your hosts against the CIS Docker 1.6.1 benchmark is by running our pre-built container:
+The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by running our pre-built container:
 
 
 ```
@@ -19,7 +19,9 @@ docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.soc
 diogomonica/docker-security-benchmark
 ```
 
-This benchmark requires Docker 1.6 or later to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6, I feel free to remove the `--label` flag or run the shell script locally (see below).
+This benchmark requires Docker 1.6.2 or later to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, I feel free to remove the `--label` flag or run the shell script locally (see below).
+
+Additionally, there was a bug in Docker 1.6.0 that would not allow mounting `-v /dev:/dev`. If you are getting an error while accessing `resolv.conf`, please update your docker to 1.6.2.
 
 ## Building the benchmark
 
