@@ -190,7 +190,7 @@ else
   for c in $containers; do
     port=`docker port $c | awk '{print $1}' | cut -d '/' -f1`
 
-    if [ ! -z "$port" ] && [ $port -lt 1025 ]; then
+    if [ ! -z "$port" ] && [ "$port" -lt 1025 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_8"
