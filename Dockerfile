@@ -2,10 +2,10 @@ FROM gliderlabs/alpine:3.1
 
 RUN apk --update add docker
 
-RUN mkdir /docker_security_benchmark
+RUN mkdir /docker-bench
 
-COPY . /docker_security_benchmark
+COPY . /docker-bench
 
-WORKDIR /docker_security_benchmark
+WORKDIR /docker-bench
 
-ENTRYPOINT ["/bin/sh", "docker_security_benchmark.sh"]
+ENTRYPOINT ["/bin/sh", "docker-bench.sh"]
