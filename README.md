@@ -1,6 +1,6 @@
 # Docker Bench for Security
 
-![Docker Bench for Security running](/benchmark_log.png?raw=true "Docker Bench for Security running")
+![Docker Bench for Security running](https://github.com/diogomonica/docker-bench-security/raw/master/benchmark_log.png?raw=true "Docker Bench for Security running")
 
 The Docker Bench for Security is a script that checks for all the automatable tests included in the [CIS Docker 1.6 Benchmark](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf). We are releasing this as a follow-up to our [Understanding Docker Security and Best Practices](https://blog.docker.com/2015/05/understanding-docker-security-and-best-practices/) blog post.
 
