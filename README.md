@@ -1,12 +1,12 @@
-# Docker Bench - Security
+# Docker Bench for Security
 
-![Docker Bench Security running](/benchmark_log.png?raw=true "Docker Bench Security running")
+![Docker Bench for Security running](/benchmark_log.png?raw=true "Docker Bench for Security running")
 
-The Docker Bench is a script that checks for all the automatable tests included in the [CIS Docker 1.6 Benchmark](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf). We are releasing this as a follow-up to our [Understanding Docker Security and Best Practices](https://blog.docker.com/2015/05/understanding-docker-security-and-best-practices/) blog post.
+The Docker Bench for Security is a script that checks for all the automatable tests included in the [CIS Docker 1.6 Benchmark](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf). We are releasing this as a follow-up to our [Understanding Docker Security and Best Practices](https://blog.docker.com/2015/05/understanding-docker-security-and-best-practices/) blog post.
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and docker containers against this benchmark.
 
-## Running Docker Bench
+## Running Docker Bench for Security
 
 We packaged docker bench as a small container for your convenience. Note that this container is being run with a *lot* of privilege -- sharing the host's filesystem, pid and network namespaces, due to portions of the benchmark applying to the running host.
 
@@ -23,7 +23,7 @@ Docker bench requires Docker 1.6.2 or later to run, since it depends on the `--l
 
 Additionally, there was a bug in Docker 1.6.0 that would not allow mounting `-v /dev:/dev`. If you are getting an error while accessing `resolv.conf`, please update your docker to 1.6.2.
 
-## Building Docker Bench
+## Building Docker Bench for Security
 
 If you wish to build and run this container yourself, you can follow the following steps:
 
