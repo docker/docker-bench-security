@@ -19,7 +19,7 @@ docker run -it --net host --pid host -v /var/run/docker.sock:/var/run/docker.soc
 diogomonica/docker-bench-security
 ```
 
-Docker bench requires Docker 1.6.2 or later to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, I feel free to remove the `--label` flag or run the shell script locally (see below).
+Docker bench requires Docker 1.6.2 or later in order to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, I feel free to remove the `--label` flag or run the shell script locally (see below).
 
 Additionally, there was a bug in Docker 1.6.0 that would not allow mounting `-v /dev:/dev`. If you are getting an error while accessing `resolv.conf`, please update your docker to 1.6.2.
 
