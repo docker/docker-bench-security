@@ -1,5 +1,8 @@
 #!/bin/sh
 
+ps_command=$(command -v ps)
+ps_args='-U root -u root -f'
+
 # Returns the absolute path of a given string
 abspath () { case "$1" in /*)printf "%s\n" "$1";; *)printf "%s\n" "$PWD/$1";; esac; }
 
