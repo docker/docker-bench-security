@@ -61,6 +61,13 @@ else
 
   fail=0
   for c in $containers; do
+    exec_check=`docker exec $c ps -el 2>/dev/null`
+    if [ $? -eq 255 ]; then
+      warn "$check_5_3"
+      warn "      * Docker exec fails: $c"
+      fail=1
+    fi
+
     processes=`docker exec $c ps -el 2>/dev/null | wc -l | awk '{print $1}'`
     if [ $processes -gt 5 ]; then
       # If it's the first container, fail the test
@@ -165,8 +172,14 @@ else
 
   fail=0
   for c in $containers; do
-    processes=`docker exec $c ps -el 2>/dev/null | grep sshd | wc -l | awk '{print $1}'`
+    exec_check=`docker exec $c ps -el 2>/dev/null`
+    if [ $? -eq 255 ]; then
+      warn "$check_5_7"
+      warn "     * Docker exec failed: $c"
+      fail=1
+    fi
 
+    processes=`docker exec $c ps -el 2>/dev/null | grep sshd | wc -l | awk '{print $1}'`
     if [ $processes -gt 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
