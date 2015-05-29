@@ -17,7 +17,7 @@ else
   set -f; IFS=$'
 '
   for c in $containers; do
-    user=`docker inspect --format 'User={{.Config.User}}' $c`
+    user=$(docker inspect --format 'User={{.Config.User}}' "$c")
 
     if [ "$user" = "User=" -o "$user" = "User=[]" -o "$user" = "User=<no value>" ]; then
       # If it's the first container, fail the test

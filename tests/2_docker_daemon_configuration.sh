@@ -5,7 +5,7 @@ info "2 - Docker Daemon Configuration"
 
 # 2.1
 check_2_1="2.1  - Do not use lxc execution driver"
-$ps_command $ps_args | grep docker | grep lxc >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep lxc >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_1"
 else
@@ -14,7 +14,7 @@ fi
 
 # 2.2
 check_2_2="2.2  - Restrict network traffic between containers"
-$ps_command $ps_args | grep docker | grep "icc=false" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "icc=false" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_2"
 else
@@ -23,7 +23,7 @@ fi
 
 # 2.3
 check_2_3="2.3  - Set the logging level"
-$ps_command $ps_args | grep docker | grep "log-level=\"debug\"" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "log-level=\"debug\"" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_3"
 else
@@ -32,7 +32,7 @@ fi
 
 # 2.4
 check_2_4="2.4  - Allow Docker to make changes to iptables"
-$ps_command $ps_args | grep docker | grep "iptables=false" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "iptables=false" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_4"
 else
@@ -41,7 +41,7 @@ fi
 
 # 2.5
 check_2_5="2.5  - Do not use insecure registries"
-$ps_command $ps_args | grep docker | grep "insecure-registry" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "insecure-registry" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_5"
 else
@@ -50,7 +50,7 @@ fi
 
 # 2.6
 check_2_6="2.6  - Setup a local registry mirror"
-$ps_command $ps_args | grep docker | grep "registry-mirror" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "registry-mirror" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_6"
 else
@@ -60,7 +60,7 @@ fi
 
 # 2.7
 check_2_7="2.7  - Do not use the aufs storage driver"
-storage_driver=`docker info 2>/dev/null| grep -e "^Storage Driver:\s*aufs\s*$"`
+docker info 2>/dev/null| grep -e "^Storage Driver:\s*aufs\s*$"
 if [ $? -eq 0 ]; then
   warn "$check_2_7"
 else
@@ -69,7 +69,7 @@ fi
 
 # 2.8
 check_2_8="2.8  - Do not bind Docker to another IP/Port or a Unix socket"
-$ps_command $ps_args | grep docker | grep "\-H" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "\-H" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   info "$check_2_8"
   info "     * Docker daemon running with -H"
@@ -79,9 +79,9 @@ fi
 
 # 2.9
 check_2_9="2.9  - Configure TLS authentication for Docker daemon"
-$ps_command $ps_args | grep docker | grep "tcp://" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "tcp://" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
-  $ps_command $ps_args | grep docker | grep "tlsverify" | grep "tlskey" >/dev/null 2>&1
+  pgrep -U root -u root -lf docker | grep "tlsverify" | grep "tlskey" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
     pass "$check_2_9"
     info "     * Docker daemon currently listening on TCP"
@@ -96,7 +96,7 @@ fi
 
 # 2.10
 check_2_10="2.10 - Set default ulimit as appropriate"
-$ps_command $ps_args | grep docker | grep "default-ulimit" >/dev/null 2>&1
+pgrep -U root -u root -lf docker | grep "default-ulimit" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_10"
 else
