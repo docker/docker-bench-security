@@ -19,7 +19,7 @@ dir_name=`dirname ${this_path}`    ## Dir where this file is
 myname=`basename ${this_path}`     ## file name of this script.
 logger="${myname}.log"
 
-export PATH=/bin:/sbin:/usr/bin:/usr/local/bin
+export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
 
 # Check for required program(s)
 req_progs='docker netstat grep awk'
