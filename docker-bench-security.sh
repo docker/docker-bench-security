@@ -15,8 +15,8 @@
 
 # Setup the paths
 this_path=$(abspath $0)       ## Path of this file including filenamel
-dir_name=`dirname ${this_path}`    ## Dir where this file is
-myname=`basename ${this_path}`     ## file name of this script.
+dir_name="$(dirname ${this_path})"    ## Dir where this file is
+myname="$(basename ${this_path})"     ## file name of this script.
 logger="${myname}.log"
 
 
@@ -27,7 +27,7 @@ for p in $req_progs; do
 done
 
 # Ensure we can connect to docker daemon
-`docker ps -q >/dev/null 2>&1`
+"$(docker ps -q >/dev/null 2>&1)"
 if [ $? -ne 0 ]; then
   printf "Error connecting to docker daemon (does docker ps work?)\n"
   exit 1
@@ -50,10 +50,10 @@ yell "# ------------------------------------------------------------------------
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 # ------------------------------------------------------------------------------"
 
-logit "Initializing `date`\n"
+logit "Initializing $(date)\n"
 
 # Warn if not root
-ID=`id -u`
+ID="$(id -u)"
 if [ "x$ID" != "x0" ]; then
     warn "Some tests might require root to run"
     sleep 3
@@ -72,15 +72,15 @@ done
 # Load all the tests from tests/ and run them
 main () {
   # List all running containers
-  containers=`docker ps -q`
+  containers="$(docker ps -q)"
   # If there is a container with label docker-bench, memorize it:
   benchcont="nil"
   for c in $containers; do
-    labels=`docker inspect --format '{{ .Config.Labels }}' $c`
+    labels="$(docker inspect --format '{{ .Config.Labels }}' $c)"
     contains "$labels" "docker-bench" && benchcont="$c"
   done
   # List all running containers except docker-bench
-  containers=`docker ps -q | grep -v $benchcont`
+  containers="$(docker ps -q | grep -v $benchcont)"
 
   for test in tests/*.sh
   do

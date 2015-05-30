@@ -7,10 +7,10 @@ abspath () { case "$1" in /*)printf "%s\n" "$1";; *)printf "%s\n" "$PWD/$1";; es
 do_version_check() {
     [ "$1" = "$2" ] && return 10
 
-    ver1front=`printf $1 | cut -d "." -f -1`
-    ver1back=`printf $1 | cut -d "." -f 2-`
-    ver2front=`printf $2 | cut -d "." -f -1`
-    ver2back=`printf $2 | cut -d "." -f 2-`
+    ver1front="$(printf $1 | cut -d "." -f -1)"
+    ver1back="$(printf $1 | cut -d "." -f 2-)"
+    ver2front="$(printf $2 | cut -d "." -f -1)"
+    ver2back="$(printf $2 | cut -d "." -f 2-)"
 
     if [ "$ver1front" != "$1" ] || [ "$ver2front" != "$2" ]; then
         [ "$ver1front" -gt "$ver2front" ] && return 11
