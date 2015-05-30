@@ -247,7 +247,7 @@ fi
 check_3_16="3.16 - Verify that /etc/docker directory permissions are set to 755"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
-  perms=`ls -ld $directory | awk '{print $1}'`
+  perms="$(ls -ld $directory | awk '{print $1}')"
   if [ $perms = "drwxr-xr-x." ]; then
     pass "$check_3_16"
   elif [ $perms = "drwx------" ]; then
@@ -266,7 +266,7 @@ check_3_17="3.17 - Verify that registry certificate file ownership is set to roo
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  owners=`ls -lL $directory/* | grep .crt | awk '{print $3, $4}'`
+  owners="$(ls -lL $directory/* | grep .crt | awk '{print $3, $4}')"
   for p in $owners; do
     printf "$p" | grep "root" >/dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -289,7 +289,7 @@ check_3_18="3.18 - Verify that registry certificate file permissions are set to 
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  perms=`ls -lL $directory/* | grep .crt | awk '{print $1}'`
+  perms="$(ls -lL $directory/* | grep .crt | awk '{print $1}')"
   for p in $perms; do
     if [ "$p" != "-rw-r--r--." -a "$p" = "-rw-------." ]; then
       fail=1
@@ -308,7 +308,7 @@ fi
 
 # 3.19
 check_3_19="3.19 - Verify that TLS CA certificate file ownership is set to root:root"
-tlscacert=`ps -ef | grep docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlscacert="$(ps -ef | grep docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlscacert" ]; then
   ls -ld "$tlscacert" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -324,9 +324,9 @@ fi
 
 # 3.20
 check_3_20="3.20 - Verify that TLS CA certificate file permissions are set to 444"
-tlscacert=`ps -ef | grep docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlscacert="$(ps -ef | grep docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlscacert" ]; then
-  perms=`ls -ld "$tlscacert" | awk '{print $1}'`
+  perms="$(ls -ld "$tlscacert" | awk '{print $1}')"
   if [ "$perms" = "-rw-r--r--" ]; then
     pass "$check_3_20"
   else
@@ -340,7 +340,7 @@ fi
 
 # 3.21
 check_3_21="3.21 - Verify that Docker server certificate file ownership is set to root:root"
-tlscert=`ps -ef | grep docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlscert="$(ps -ef | grep docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlscert" ]; then
   ls -ld "$tlscert" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -356,9 +356,9 @@ fi
 
 # 3.22
 check_3_22="3.22 - Verify that Docker server certificate file permissions are set to 444"
-tlscacert=`ps -ef | grep docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlscacert="$(ps -ef | grep docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlscert" ]; then
-  perms=`ls -ld "$tlscert" | awk '{print $1}'`
+  perms="$(ls -ld "$tlscert" | awk '{print $1}')"
   if [ "$perms" = "-rw-r--r--" ]; then
     pass "$check_3_22"
   else
@@ -372,7 +372,7 @@ fi
 
 # 3.23
 check_3_23="3.23 - Verify that Docker server key file ownership is set to root:root"
-tlskey=`ps -ef | grep docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlskey="$(ps -ef | grep docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlskey" ]; then
   ls -ld "$tlskey" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -388,9 +388,9 @@ fi
 
 # 3.24
 check_3_24="3.24 - Verify that Docker server key file permissions are set to 400"
-tlskey=`ps -ef | grep docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1`
+tlskey="$(ps -ef | grep docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1)"
 if [ -f "$tlskey" ]; then
-  perms=`ls -ld "$tlskey" | awk '{print $1}'`
+  perms="$(ls -ld "$tlskey" | awk '{print $1}')"
   if [ "$perms" = "-r--------" ]; then
     pass "$check_3_24"
   else
@@ -422,7 +422,7 @@ fi
 check_3_26="3.26 - Verify that Docker socket file permissions are set to 660"
 file="/var/run/docker.sock"
 if [ -f "$file" ]; then
-  perms=`ls -ld "$file" | awk '{print $1}'`
+  perms="$(ls -ld "$file" | awk '{print $1}')"
   if [ "$perms" = "srw-rw----" ]; then
     pass "$check_3_26"
   else
