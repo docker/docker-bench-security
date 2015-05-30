@@ -40,6 +40,7 @@ fi
 # 1.6
 check_1_6="1.6  - Keep Docker up to date"
 docker_version=`docker version | grep 'Server version' | awk '{print $3}'`
+do_version_check 1.6.2 $docker_version
 if [ $? -eq 11 ]; then
   warn "$check_1_6"
 else
@@ -48,7 +49,7 @@ fi
 
 # 1.7
 check_1_7="1.7  - Only allow trusted users to control Docker daemon"
-docker_users=`cat /etc/group | grep docker`
+docker_users=`grep docker /etc/group`
 info "$check_1_7"
 for u in $docker_users; do
   info "     * $u"
