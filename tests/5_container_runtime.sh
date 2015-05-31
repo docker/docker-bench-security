@@ -15,7 +15,7 @@ else
 
   fail=0
   for c in $containers; do
-    policy=`docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' $c`
+    policy=$(docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' "$c")
 
     if [ "$policy" = "AppArmorProfile=" -o "$policy" = "AppArmorProfile=[]" -o "$policy" = "AppArmorProfile=<no value>" ]; then
       # If it's the first container, fail the test
@@ -38,7 +38,7 @@ else
 
   fail=0
   for c in $containers; do
-    policy=`docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' $c`
+    policy=$(docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' "$c")
 
     if [ "$policy" = "SecurityOpt=" -o "$policy" = "SecurityOpt=[]" -o "$policy" = "SecurityOpt=<no value>" ]; then
       # If it's the first container, fail the test
@@ -61,15 +61,15 @@ else
 
   fail=0
   for c in $containers; do
-    exec_check=`docker exec $c ps -el 2>/dev/null`
+    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
     if [ $? -eq 255 ]; then
       warn "$check_5_3"
       warn "      * Docker exec fails: $c"
       fail=1
     fi
 
-    processes=`docker exec $c ps -el 2>/dev/null | wc -l | awk '{print $1}'`
-    if [ $processes -gt 5 ]; then
+    processes=$(docker exec "$c" ps -el 2>/dev/null | wc -l | awk '{print $1}')
+    if [ "$processes" -gt 5 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_3"
@@ -90,7 +90,7 @@ else
 
   fail=0
   for c in $containers; do
-    caps=`docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' $c`
+    caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
 
     if [ "$caps" != "CapAdd=" -a "$caps" != "CapAdd=[]" -a "$caps" != "CapAdd=<no value>" ]; then
       # If it's the first container, fail the test
@@ -113,7 +113,7 @@ else
 
   fail=0
   for c in $containers; do
-    privileged=`docker inspect --format '{{ .HostConfig.Privileged }}' $c`
+    privileged=$(docker inspect --format '{{ .HostConfig.Privileged }}' "$c")
 
     if [ "$privileged" = "true" ]; then
       # If it's the first container, fail the test
@@ -145,7 +145,7 @@ else
 /usr'
   fail=0
   for c in $containers; do
-    volumes=`docker inspect --format '{{ .VolumesRW }}' $c`
+    volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
       sensitive=0
@@ -172,14 +172,14 @@ else
 
   fail=0
   for c in $containers; do
-    exec_check=`docker exec $c ps -el 2>/dev/null`
+    docker exec "$c" ps -el 2>/dev/null
     if [ $? -eq 255 ]; then
       warn "$check_5_7"
       warn "     * Docker exec failed: $c"
       fail=1
     fi
 
-    processes=`docker exec $c ps -el 2>/dev/null | grep sshd | wc -l | awk '{print $1}'`
+    processes=$(docker exec "$c" ps -el 2>/dev/null | grep -c sshd | awk '{print $1}')
     if [ $processes -gt 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
@@ -201,7 +201,7 @@ else
 
   fail=0
   for c in $containers; do
-    port=`docker port $c | awk '{print $1}' | cut -d '/' -f1`
+    port=$(docker port "$c" | awk '{print $1}' | cut -d '/' -f1)
 
     if [ ! -z "$port" ] && [ "$port" -lt 1025 ]; then
       # If it's the first container, fail the test
@@ -224,7 +224,7 @@ else
 
   fail=0
   for c in $containers; do
-    mode=`docker inspect --format 'NetworkMode={{ .HostConfig.NetworkMode }}' $c`
+    mode=$(docker inspect --format 'NetworkMode={{ .HostConfig.NetworkMode }}' "$c")
 
     if [ "$mode" = "NetworkMode=host" ]; then
       # If it's the first container, fail the test
@@ -247,9 +247,9 @@ else
 
   fail=0
   for c in $containers; do
-    memory=`docker inspect --format '{{ .Config.Memory }}' $c`
+    memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
 
-    if [ $memory = "0" ]; then
+    if [ "$memory" = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_11"
@@ -270,7 +270,7 @@ else
 
   fail=0
   for c in $containers; do
-    shares=`docker inspect --format '{{ .Config.CpuShares }}' $c`
+    shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
 
     if [ "$shares" = "0" ]; then
       # If it's the first container, fail the test
@@ -293,7 +293,7 @@ else
 
   fail=0
   for c in $containers; do
-   read_status=`docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' $c`
+   read_status=$(docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' "$c")
 
     if [ "$read_status" = "false" ]; then
       # If it's the first container, fail the test
@@ -316,7 +316,7 @@ else
 
   fail=0
   for c in $containers; do
-    ip=`docker port $c | awk '{print $3}' | cut -d ':' -f1`
+    ip=$(docker port "$c" | awk '{print $3}' | cut -d ':' -f1)
     if [ "$ip" = "0.0.0.0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
@@ -338,7 +338,7 @@ else
 
   fail=0
   for c in $containers; do
-    policy=`docker inspect --format 'RestartPolicyName={{ .HostConfig.RestartPolicy.Name }}' $c`
+    policy=$(docker inspect --format 'RestartPolicyName={{ .HostConfig.RestartPolicy.Name }}' "$c")
 
     if [ "$policy" = "RestartPolicyName=always" ]; then
       # If it's the first container, fail the test
@@ -361,7 +361,7 @@ else
 
   fail=0
   for c in $containers; do
-    mode=`docker inspect --format 'PidMode={{.HostConfig.PidMode }}' $c`
+    mode=$(docker inspect --format 'PidMode={{.HostConfig.PidMode }}' "$c")
 
     if [ "$mode" = "PidMode=host" ]; then
       # If it's the first container, fail the test
@@ -384,7 +384,7 @@ else
 
   fail=0
   for c in $containers; do
-    mode=`docker inspect --format 'IpcMode={{.HostConfig.IpcMode }}' $c`
+    mode=$(docker inspect --format 'IpcMode={{.HostConfig.IpcMode }}' "$c")
 
     if [ "$mode" = "IpcMode=host" ]; then
       # If it's the first container, fail the test
@@ -407,7 +407,7 @@ else
 
   fail=0
   for c in $containers; do
-    devices=`docker inspect --format 'Devices={{ .HostConfig.Devices }}' $c`
+    devices=$(docker inspect --format 'Devices={{ .HostConfig.Devices }}' "$c")
 
     if [ "$devices" != "Devices=" -a "$devices" != "Devices=[]" -a "$devices" != "Devices=<no value>" ]; then
       # If it's the first container, fail the test
@@ -431,7 +431,7 @@ else
   # List all the running containers, ouput their ID and host devices
   fail=0
   for c in $containers; do
-    ulimits=`docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' $c`
+    ulimits=$(docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' "$c")
 
     if [ "$ulimits" = "Ulimits=" -o "$ulimits" = "Ulimits=[]" -o "$ulimits" = "Ulimits=<no value>" ]; then
       # If it's the first container, fail the test

@@ -14,8 +14,8 @@ fi
 
 # 1.2
 check_1_2="1.2  - Use an updated Linux Kernel"
-kernel_version=`uname -r | cut -d "-" -f 1`
-do_version_check 3.10 $kernel_version
+kernel_version=$(uname -r | cut -d "-" -f 1)
+do_version_check 3.10 "$kernel_version"
 if [ $? -eq 11 ]; then
   warn "$check_1_2"
 else
@@ -25,11 +25,11 @@ fi
 # 1.5
 check_1_5="1.5  - Remove all non-essential services from the host - Network"
 # Check for listening network services.
-listening_services=`netstat -na | grep -v tcp6 | grep -v unix | grep LISTEN | wc -l`
-if [ $listening_services -eq 0 ]; then
+listening_services=$(netstat -na | grep -v tcp6 | grep -v unix | grep -c LISTEN)
+if [ "$listening_services" -eq 0 ]; then
   warn "1.5  - Failed to get listening services for check: $check_1_5"
 else
-  if [ $listening_services -gt 5 ]; then
+  if [ "$listening_services" -gt 5 ]; then
     warn "$check_1_5"
     warn "     * Host listening on: $listening_services ports"
   else
@@ -39,8 +39,8 @@ fi
 
 # 1.6
 check_1_6="1.6  - Keep Docker up to date"
-docker_version=`docker version | grep 'Server version' | awk '{print $3}'`
 do_version_check 1.6.2 $docker_version
+docker version | grep 'Server version' | awk '{print $3}'
 if [ $? -eq 11 ]; then
   warn "$check_1_6"
 else
@@ -49,7 +49,7 @@ fi
 
 # 1.7
 check_1_7="1.7  - Only allow trusted users to control Docker daemon"
-docker_users=`grep docker /etc/group`
+docker_users=$(grep docker /etc/group)
 info "$check_1_7"
 for u in $docker_users; do
   info "     * $u"
