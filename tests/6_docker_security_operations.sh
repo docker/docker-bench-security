@@ -36,13 +36,25 @@ set +f; unset IFS
 
 # 6.6
 check_6_6="6.6 - Avoid image sprawl"
-images=$(docker images | wc -l | awk '{print $1}')
+images=$(docker images -q | wc -l | awk '{print $1}')
+active_images=0
+
+for c in $(docker inspect -f "{{.Image}}" $(docker ps -qa)); do
+  if [[ $(docker images --no-trunc -a | grep $c) ]]; then
+    ((active_images++))
+  fi
+done
+
 if [ "$images" -gt 100 ]; then
   warn "$check_6_6"
   warn "     * There are currently: $images images"
 else
   info "$check_6_6"
   info "     * There are currently: $images images"
+fi
+
+if [[ "$active_images" -lt "$((images / 2))" ]]; then
+  warn "     * Only $active_images out of $images are in use"
 fi
 
 # 6.7

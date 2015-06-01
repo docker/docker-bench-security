@@ -64,7 +64,7 @@ else
     exec_check=$(docker exec "$c" ps -el 2>/dev/null)
     if [ $? -eq 255 ]; then
       warn "$check_5_3"
-      warn "      * Docker exec fails: $c"
+      warn "     * Docker exec fails: $c"
       fail=1
     fi
 
@@ -172,10 +172,10 @@ else
 
   fail=0
   for c in $containers; do
-    docker exec "$c" ps -el 2>/dev/null
+    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
     if [ $? -eq 255 ]; then
       warn "$check_5_7"
-      warn "     * Docker exec failed: $c"
+      warn "     * Docker exec fails: $c"
       fail=1
     fi
 
