@@ -36,7 +36,7 @@ set +f; unset IFS
 
 # 6.6
 check_6_6="6.6 - Avoid image sprawl"
-images=$(docker images | wc -l | awk '{print $1}')
+images=$(docker images -q | wc -l | awk '{print $1}')
 if [ "$images" -gt 100 ]; then
   warn "$check_6_6"
   warn "     * There are currently: $images images"
