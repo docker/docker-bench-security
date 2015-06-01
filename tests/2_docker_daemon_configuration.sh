@@ -60,7 +60,7 @@ fi
 
 # 2.7
 check_2_7="2.7  - Do not use the aufs storage driver"
-docker info 2>/dev/null| grep -e "^Storage Driver:\s*aufs\s*$"
+docker info 2>/dev/null | grep -e "^Storage Driver:\s*aufs\s*$" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_7"
 else
