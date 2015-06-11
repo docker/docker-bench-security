@@ -1,6 +1,15 @@
-FROM alpine:3.1
+FROM debian:wheezy
 
-RUN apk --update add docker
+RUN apt-get update && \
+    apt-get -y upgrade && \
+    apt-get -y install auditd ca-certificates curl gawk net-tools procps --no-install-recommends && \
+    curl -sSL https://get.docker.com/ | sh && \
+    apt-get -y purge git openssh* patch rsync* && \
+    apt-get -y clean && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/* \
+      /usr/share/doc /usr/share/doc-base \
+      /usr/share/man /usr/share/locale /usr/share/zoneinfo
 
 RUN mkdir /docker-bench-security
 
