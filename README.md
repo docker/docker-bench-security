@@ -12,7 +12,6 @@ We packaged docker bench as a small container for your convenience. Note that th
 
 The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by running our pre-built container:
 
-
 ```sh
 docker run -it --cap-add audit_control --net host --pid host \
     -v /var/run/docker.sock:/var/run/docker.sock \
