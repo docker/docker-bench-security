@@ -14,7 +14,7 @@ The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by run
 
 
 ```sh
-docker run -it --net host --pid host \
+docker run -it --cap-add audit_control --net host --pid host \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
     -v /etc:/etc --label docker-bench-security \
@@ -33,7 +33,7 @@ If you wish to build and run this container yourself, you can follow the followi
 git clone https://github.com/diogomonica/docker-bench-security.git
 cd docker-bench-security
 docker build -t docker-bench-security .
-docker run -it --net host --pid host \
+docker run -it --cap-add audit_control --net host --pid host \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
     -v /etc:/etc --label security-benchmark \
