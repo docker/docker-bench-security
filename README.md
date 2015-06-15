@@ -43,7 +43,7 @@ docker run -it --net host --pid host -v /var/lib:/var/lib \
 Also, this script can also be simply run from your base host by running:
 
 ```sh
-git clone https://github.com/diogomonica/docker-bench-security.git
+git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
 sh docker-bench-security.sh
 ```

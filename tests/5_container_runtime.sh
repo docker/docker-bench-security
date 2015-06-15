@@ -201,18 +201,21 @@ else
 
   fail=0
   for c in $containers; do
-    port=$(docker port "$c" | awk '{print $1}' | cut -d '/' -f1)
+    ports=$(docker port "$c" | awk '{print $1}' | cut -d '/' -f1)
 
-    if [ ! -z "$port" ] && [ "$port" -lt 1025 ]; then
-      # If it's the first container, fail the test
-      if [ $fail -eq 0 ]; then
-        warn "$check_5_8"
-        warn "     * Privileged Port in use: $port in $c"
-        fail=1
-      else
-        warn "     * Privileged Port in use: $port in $c"
+    # iterate through port range (line delimited)
+    for port in $ports; do
+    if [ ! -z "$port" ] && [ "0$port" -lt 1025 ]; then
+        # If it's the first container, fail the test
+        if [ $fail -eq 0 ]; then
+          warn "$check_5_8"
+          warn "     * Privileged Port in use: $port in $c"
+          fail=1
+        else
+          warn "     * Privileged Port in use: $port in $c"
+        fi
       fi
-    fi
+    done
   done
   # We went through all the containers and found no privileged ports
   if [ $fail -eq 0 ]; then
@@ -316,17 +319,18 @@ else
 
   fail=0
   for c in $containers; do
-    ip=$(docker port "$c" | awk '{print $3}' | cut -d ':' -f1)
-    if [ "$ip" = "0.0.0.0" ]; then
-      # If it's the first container, fail the test
-      if [ $fail -eq 0 ]; then
-        warn "$check_5_14"
-        warn "     * Port being bound to wildcard IP: $ip in $c"
-        fail=1
-      else
-        warn "     * Port being bound to wildcard IP: $ip in $c"
+    for ip in $(docker port "$c" | awk '{print $3}' | cut -d ':' -f1); do
+      if [ "$ip" = "0.0.0.0" ]; then
+        # If it's the first container, fail the test
+        if [ $fail -eq 0 ]; then
+          warn "$check_5_14"
+          warn "     * Port being bound to wildcard IP: $ip in $c"
+          fail=1
+        else
+          warn "     * Port being bound to wildcard IP: $ip in $c"
+        fi
       fi
-    fi
+    done
   done
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ $fail -eq 0 ]; then

@@ -40,8 +40,8 @@ images=$(docker images -q | wc -l | awk '{print $1}')
 active_images=0
 
 for c in $(docker inspect -f "{{.Image}}" $(docker ps -qa)); do
-  if [[ $(docker images --no-trunc -a | grep $c) ]]; then
-    ((active_images++))
+  if docker images --no-trunc -a | grep $c > /dev/null ; then
+    active_images=$(( active_images += 1 ))
   fi
 done
 
@@ -53,7 +53,7 @@ else
   info "     * There are currently: $images images"
 fi
 
-if [[ "$active_images" -lt "$((images / 2))" ]]; then
+if [ "$active_images" -lt "$((images / 2))" ]; then
   warn "     * Only $active_images out of $images are in use"
 fi
 
