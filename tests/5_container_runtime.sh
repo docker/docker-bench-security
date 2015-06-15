@@ -319,17 +319,18 @@ else
 
   fail=0
   for c in $containers; do
-    ip=$(docker port "$c" | awk '{print $3}' | cut -d ':' -f1)
-    if [ "$ip" = "0.0.0.0" ]; then
-      # If it's the first container, fail the test
-      if [ $fail -eq 0 ]; then
-        warn "$check_5_14"
-        warn "     * Port being bound to wildcard IP: $ip in $c"
-        fail=1
-      else
-        warn "     * Port being bound to wildcard IP: $ip in $c"
+    for ip in $(docker port "$c" | awk '{print $3}' | cut -d ':' -f1); do
+      if [ "$ip" = "0.0.0.0" ]; then
+        # If it's the first container, fail the test
+        if [ $fail -eq 0 ]; then
+          warn "$check_5_14"
+          warn "     * Port being bound to wildcard IP: $ip in $c"
+          fail=1
+        else
+          warn "     * Port being bound to wildcard IP: $ip in $c"
+        fi
       fi
-    fi
+    done
   done
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ $fail -eq 0 ]; then
