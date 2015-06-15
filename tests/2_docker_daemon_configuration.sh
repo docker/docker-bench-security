@@ -79,7 +79,7 @@ fi
 
 # 2.9
 check_2_9="2.9  - Configure TLS authentication for Docker daemon"
-pgrep -lf docker | grep "tcp://" >/dev/null 2>&1
+pgrep -lf docker | grep "\-H" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pgrep -lf docker | grep "tlsverify" | grep "tlskey" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
