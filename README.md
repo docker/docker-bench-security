@@ -39,7 +39,7 @@ docker run -it --net host --pid host --cap-add audit_control \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
     -v /etc:/etc --label security-benchmark \
-    diogomonica/docker-bench-security
+    docker-bench-security
 ```
 
 Also, this script can also be simply run from your base host by running:
