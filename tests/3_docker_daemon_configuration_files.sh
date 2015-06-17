@@ -250,7 +250,7 @@ check_3_17="3.17 - Verify that registry certificate file ownership is set to roo
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  owners=$(ls -lL "$directory"/*.crt | awk '{print "$3", "$4"}')
+  owners=$(ls -lL $directory | grep ".crt" | awk '{print $3, $4}')
   for p in $owners; do
     printf "%s" "$p" | grep "root" >/dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -273,7 +273,7 @@ check_3_18="3.18 - Verify that registry certificate file permissions are set to 
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  perms=$(ls -lL "$directory"/*.crt | awk '{print $1}')
+  perms=$(ls -lL $directory | grep ".crt" | awk '{print $1}')
   for p in $perms; do
     if [ "$p" != "-r--r--r--." -a "$p" = "-r--------." ]; then
       fail=1
