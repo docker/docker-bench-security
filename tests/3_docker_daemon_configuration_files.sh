@@ -232,10 +232,9 @@ fi
 check_3_16="3.16 - Verify that /etc/docker directory permissions are set to 755"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
-  perms=$(ls -ld $directory | awk '{print $1}')
-  if [ "$perms" = "drwxr-xr-x." ]; then
+  if [ "$(stat -c %a $directory)" -eq 755 ]; then
     pass "$check_3_16"
-  elif [ "$perms" = "drwx------" ]; then
+  elif [ "$(stat -c %a $directory)" -eq 700 ]; then
     pass "$check_3_16"
   else
     warn "$check_3_16"
