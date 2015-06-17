@@ -19,7 +19,7 @@ docker run -it --net host --pid host --cap-add audit_control \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
     -v /etc:/etc --label docker-bench-security \
-    docker-bench-security
+    diogomonica/docker-bench-security
 ```
 
 Docker bench requires Docker 1.6.2 or later in order to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, I feel free to remove the `--label` flag or run the shell script locally (see below).
@@ -39,7 +39,7 @@ docker run -it --net host --pid host --cap-add audit_control \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
     -v /etc:/etc --label security-benchmark \
-    docker-bench-security
+    diogomonica/docker-bench-security
 ```
 
 Also, this script can also be simply run from your base host by running:
