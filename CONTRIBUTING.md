@@ -36,8 +36,7 @@ The Docker Bench has the main script called `docker-bench-security.sh`. This is 
 The tests are split in 6 different files:
 
 ```sh
-✗  docker-bench-security git:(master) ✗ tree tests
-tests
+✗ tests
 ├── 1_host_configuration.sh
 ├── 2_docker_daemon_configuration.sh
 ├── 3_docker_daemon_configuration_files.sh
