@@ -19,12 +19,15 @@ The only thing you need to hack on Docker Bench for Security is a POSIX 2004 com
 You can build the container that wraps the docker-bench for security:
 ```sh
 ✗ git clone git@github.com:docker/docker-bench-security.git
-✗ docker build -t diogomonica/docker-bench-security .
+✗ cd docker-bench-security
+✗ docker build -t docker-bench-security .
 ```
 
 Or you can simply run the shell script locally:
 
 ```sh
+✗ git clone git@github.com:docker/docker-bench-security.git
+✗ cd docker-bench-security
 ✗ sh docker-bench-security.sh
 ```
 
