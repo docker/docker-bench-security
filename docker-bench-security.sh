@@ -73,11 +73,11 @@ done
 main () {
   # List all running containers
   containers=$(docker ps -q)
-  # If there is a container with label docker-bench, memorize it:
+  # If there is a container with label docker-bench-security, memorize it:
   benchcont="nil"
   for c in $containers; do
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
-    contains "$labels" "docker-bench" && benchcont="$c"
+    contains "$labels" "docker-bench-security" && benchcont="$c"
   done
   # List all running containers except docker-bench
   containers=$(docker ps -q | grep -v "$benchcont")
