@@ -7,8 +7,7 @@ info "3 - Docker Daemon Configuration Files"
 check_3_1="3.1  - Verify that docker.service file ownership is set to root:root"
 file="/usr/lib/systemd/system/docker.service"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_1"
   else
     warn "$check_3_1"
@@ -23,8 +22,7 @@ fi
 check_3_2="3.2  - Verify that docker.service file permissions are set to 644"
 file="/usr/lib/systemd/system/docker.service"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_2"
   else
     warn "$check_3_2"
@@ -39,8 +37,7 @@ fi
 check_3_3="3.3  - Verify that docker-registry.service file ownership is set to root:root"
 file="/usr/lib/systemd/system/docker-registry.service"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_3"
   else
     warn "$check_3_3"
@@ -55,8 +52,7 @@ fi
 check_3_4="3.4  - Verify that docker-registry.service file permissions are set to 644"
 file="/usr/lib/systemd/system/docker-registry.service"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_4"
   else
     warn "$check_3_4"
@@ -71,8 +67,7 @@ fi
 check_3_5="3.5  - Verify that docker.socket file ownership is set to root:root"
 file="/usr/lib/systemd/system/docker.socket"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_5"
   else
     warn "$check_3_5"
@@ -87,8 +82,7 @@ fi
 check_3_6="3.6  - Verify that docker.socket file permissions are set to 644"
 file="/usr/lib/systemd/system/docker.socket"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_6"
   else
     warn "$check_3_6"
@@ -103,8 +97,7 @@ fi
 check_3_7="3.7  - Verify that Docker environment file ownership is set to root:root "
 file="/etc/sysconfig/docker"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_7"
   else
     warn "$check_3_7"
@@ -119,8 +112,7 @@ fi
 check_3_8="3.8  - Verify that Docker environment file permissions are set to 644"
 file="/etc/sysconfig/docker"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_8"
   else
     warn "$check_3_8"
@@ -135,8 +127,7 @@ fi
 check_3_9="3.9  - Verify that docker-network environment file ownership is set to root:root"
 file="/etc/sysconfig/docker-network"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_9"
   else
     warn "$check_3_9"
@@ -151,8 +142,7 @@ fi
 check_3_10="3.10 - Verify that docker-network environment file permissions are set to 644"
 file="/etc/sysconfig/docker-network"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_10"
   else
     warn "$check_3_10"
@@ -167,8 +157,7 @@ fi
 check_3_11="3.11 - Verify that docker-registry environment file ownership is set to root:root"
 file="/etc/sysconfig/docker-registry"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_11"
   else
     warn "$check_3_11"
@@ -183,8 +172,7 @@ fi
 check_3_12="3.12 - Verify that docker-registry environment file permissions are set to 644"
 file="/etc/sysconfig/docker-registry"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_12"
   else
     warn "$check_3_12"
@@ -199,8 +187,7 @@ fi
 check_3_13="3.13 - Verify that docker-storage environment file ownership is set to root:root"
 file="/etc/sysconfig/docker-storage"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_13"
   else
     warn "$check_3_13"
@@ -215,8 +202,7 @@ fi
 check_3_14="3.14 - Verify that docker-storage environment file permissions are set to 644"
 file="/etc/sysconfig/docker-storage"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $1}' | grep "rw-r--r--" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_14"
   else
     warn "$check_3_14"
@@ -231,8 +217,7 @@ fi
 check_3_15="3.15 - Verify that /etc/docker directory ownership is set to root:root"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
-  ls -ld "$directory" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
     pass "$check_3_15"
   else
     warn "$check_3_15"
@@ -247,10 +232,9 @@ fi
 check_3_16="3.16 - Verify that /etc/docker directory permissions are set to 755"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
-  perms=$(ls -ld $directory | awk '{print $1}')
-  if [ "$perms" = "drwxr-xr-x." ]; then
+  if [ "$(stat -c %a $directory)" -eq 755 ]; then
     pass "$check_3_16"
-  elif [ "$perms" = "drwx------" ]; then
+  elif [ "$(stat -c %a $directory)" -eq 700 ]; then
     pass "$check_3_16"
   else
     warn "$check_3_16"
@@ -266,7 +250,7 @@ check_3_17="3.17 - Verify that registry certificate file ownership is set to roo
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  owners=$(ls -lL "$directory"/*.crt | awk '{print "$3", "$4"}')
+  owners=$(ls -lL $directory | grep ".crt" | awk '{print $3, $4}')
   for p in $owners; do
     printf "%s" "$p" | grep "root" >/dev/null 2>&1
     if [ $? -ne 0 ]; then
@@ -289,9 +273,9 @@ check_3_18="3.18 - Verify that registry certificate file permissions are set to 
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
-  perms=$(ls -lL "$directory"/*.crt | awk '{print $1}')
+  perms=$(ls -lL $directory | grep ".crt" | awk '{print $1}')
   for p in $perms; do
-    if [ "$p" != "-rw-r--r--." -a "$p" = "-rw-------." ]; then
+    if [ "$p" != "-r--r--r--." -a "$p" = "-r--------." ]; then
       fail=1
     fi
   done
@@ -310,8 +294,7 @@ fi
 check_3_19="3.19 - Verify that TLS CA certificate file ownership is set to root:root"
 tlscacert=$(pgrep -lf docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1)
 if [ -f "$tlscacert" ]; then
-  ls -ld "$tlscacert" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_19"
   else
     warn "$check_3_19"
@@ -327,7 +310,7 @@ check_3_20="3.20 - Verify that TLS CA certificate file permissions are set to 44
 tlscacert=$(pgrep -lf docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | cut -d " " -f 1)
 if [ -f "$tlscacert" ]; then
   perms=$(ls -ld "$tlscacert" | awk '{print $1}')
-  if [ "$perms" = "-rw-r--r--" ]; then
+  if [ "$perms" = "-r--r--r--" ]; then
     pass "$check_3_20"
   else
     warn "$check_3_20"
@@ -342,8 +325,7 @@ fi
 check_3_21="3.21 - Verify that Docker server certificate file ownership is set to root:root"
 tlscert=$(pgrep -lf docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1)
 if [ -f "$tlscert" ]; then
-  ls -ld "$tlscert" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_21"
   else
     warn "$check_3_21"
@@ -359,7 +341,7 @@ check_3_22="3.22 - Verify that Docker server certificate file permissions are se
 tlscacert=$(pgrep -lf docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | cut -d " " -f 1)
 if [ -f "$tlscert" ]; then
   perms=$(ls -ld "$tlscert" | awk '{print $1}')
-  if [ "$perms" = "-rw-r--r--" ]; then
+  if [ "$perms" = "-r--r--r--" ]; then
     pass "$check_3_22"
   else
     warn "$check_3_22"
@@ -374,8 +356,7 @@ fi
 check_3_23="3.23 - Verify that Docker server key file ownership is set to root:root"
 tlskey=$(pgrep -lf docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | cut -d " " -f 1)
 if [ -f "$tlskey" ]; then
-  ls -ld "$tlskey" | awk '{print $3, $4}' | grep "root root" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_23"
   else
     warn "$check_3_23"
@@ -406,8 +387,7 @@ fi
 check_3_25="3.25 - Verify that Docker socket file ownership is set to root:docker"
 file="/var/run/docker.sock"
 if [ -f "$file" ]; then
-  ls -ld "$file" | awk '{print $3, $4}' | grep "root docker" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_25"
   else
     warn "$check_3_25"
