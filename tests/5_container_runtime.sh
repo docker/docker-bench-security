@@ -201,11 +201,12 @@ else
 
   fail=0
   for c in $containers; do
-    ports=$(docker port "$c" | awk '{print $1}' | cut -d '/' -f1)
+    # Port format is private port -> ip: public port
+    ports=$(docker port "$c" | awk '{print $0}' | cut -d ':' -f2)
 
     # iterate through port range (line delimited)
     for port in $ports; do
-    if [ ! -z "$port" ] && [ "0$port" -lt 1025 ]; then
+    if [ ! -z "$port" ] && [ "0$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
           warn "$check_5_8"
