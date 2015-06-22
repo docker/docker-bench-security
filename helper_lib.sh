@@ -36,3 +36,13 @@ contains() {
         return 1    # $substring is not in $string
     fi
 }
+
+# Extracts all commandline args from all running processes named like the first parameter
+get_command_line_args() {
+    PROC="$1"
+
+    for PID in `pgrep $PROC`
+    do
+        cat /proc/$PID/cmdline | tr "\0" " "
+    done
+}
