@@ -1,6 +1,8 @@
 FROM alpine:3.1
 
-RUN apk --update add docker
+RUN apk update && \
+    apk upgrade && \
+    apk --update add docker
 
 RUN mkdir /docker-bench-security
 
