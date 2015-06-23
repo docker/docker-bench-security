@@ -2,6 +2,9 @@
 
 ## Requirements
 
+### Dockerfile name
+The format should be `Dockerfile.{distribution name}`.  
+
 ### Keep your images up-to-date
 Use the distribution package manager to keep your image up-to-date.
 
