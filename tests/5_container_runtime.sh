@@ -180,7 +180,7 @@ else
     fi
 
     processes=$(docker exec "$c" ps -el 2>/dev/null | grep -c sshd | awk '{print $1}')
-    if [ "$processes" -gt 1 ]; then
+    if [ "$processes" -ge 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_7"
