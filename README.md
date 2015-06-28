@@ -2,7 +2,7 @@
 
 ![Docker Bench for Security running](https://github.com/diogomonica/docker-bench-security/raw/master/benchmark_log.png?raw=true "Docker Bench for Security running")
 
-The Docker Bench for Security is a script that checks for all the automatable tests included in the [CIS Docker 1.6 Benchmark](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf). We are releasing this as a follow-up to our [Understanding Docker Security and Best Practices](https://blog.docker.com/2015/05/understanding-docker-security-and-best-practices/) blog post.
+The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are inspired by the [CIS Docker 1.6 Benchmark](https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf). We are releasing this as a follow-up to our [Understanding Docker Security and Best Practices](https://blog.docker.com/2015/05/understanding-docker-security-and-best-practices/) blog post.
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and docker containers against this benchmark.
 
@@ -10,7 +10,7 @@ We are making this available as an open-source utility so the Docker community c
 
 We packaged docker bench as a small container for your convenience. Note that this container is being run with a *lot* of privilege -- sharing the host's filesystem, pid and network namespaces, due to portions of the benchmark applying to the running host.
 
-The easiest way to run your hosts against the CIS Docker 1.6 benchmark is by running our pre-built container:
+The easiest way to run your hosts against the Docker Bench for Security is by running our pre-built container:
 
 
 ```sh
