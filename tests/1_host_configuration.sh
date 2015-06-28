@@ -72,7 +72,7 @@ fi
 # 1.9
 check_1_9="1.9  - Audit Docker files and directories - /var/lib/docker"
 directory="/var/lib/docker"
-if [ -d "$file" ]; then
+if [ -d "$directory" ]; then
   command -v auditctl >/dev/null 2>&1
   if [ $? -eq 0 ]; then
     auditctl -l | grep $directory >/dev/null 2>&1
