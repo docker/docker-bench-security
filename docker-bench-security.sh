@@ -1,10 +1,11 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# CIS Docker 1.6 Benchmark v1.0.0 checker
+# Docker Bench for Security v1.0.0
 #
 # Docker, Inc. (c) 2015
 #
-# Provides automated tests for the CIS Docker 1.6 Benchmark:
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker 1.6 Benchmark:
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 #
 # ------------------------------------------------------------------------------
@@ -42,11 +43,12 @@ usage () {
 }
 
 yell "# ------------------------------------------------------------------------------
-# CIS Docker 1.6 Benchmark v1.0.0 checker
+# Docker Bench for Security v1.0.0
 #
 # Docker, Inc. (c) 2015
 #
-# Provides automated tests for the CIS Docker 1.6 Benchmark:
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker 1.6 Benchmark:
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 # ------------------------------------------------------------------------------"
 
