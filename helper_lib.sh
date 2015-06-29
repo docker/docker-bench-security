@@ -41,7 +41,7 @@ contains() {
 get_command_line_args() {
     PROC="$1"
 
-    for PID in `pgrep $PROC`
+    for PID in `pgrep -x -o $PROC`
     do
         cat /proc/$PID/cmdline | tr "\0" " "
     done
