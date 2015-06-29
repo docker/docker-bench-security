@@ -1,10 +1,11 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# CIS Docker 1.6 Benchmark v1.0.0 checker
+# Docker Bench for Security v1.0.0
 #
 # Docker, Inc. (c) 2015
 #
-# Provides automated tests for the CIS Docker 1.6 Benchmark:
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker 1.6 Benchmark:
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 #
 # ------------------------------------------------------------------------------
@@ -21,7 +22,7 @@ export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
 logger="${myname}.log"
 
 # Check for required program(s)
-req_progs='docker netstat grep awk'
+req_progs='awk docker grep netstat stat'
 for p in $req_progs; do
   command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
 done
@@ -42,11 +43,12 @@ usage () {
 }
 
 yell "# ------------------------------------------------------------------------------
-# CIS Docker 1.6 Benchmark v1.0.0 checker
+# Docker Bench for Security v1.0.0
 #
 # Docker, Inc. (c) 2015
 #
-# Provides automated tests for the CIS Docker 1.6 Benchmark:
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker 1.6 Benchmark:
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 # ------------------------------------------------------------------------------"
 
@@ -73,11 +75,11 @@ done
 main () {
   # List all running containers
   containers=$(docker ps -q)
-  # If there is a container with label docker-bench, memorize it:
+  # If there is a container with label docker-bench-security, memorize it:
   benchcont="nil"
   for c in $containers; do
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
-    contains "$labels" "docker-bench" && benchcont="$c"
+    contains "$labels" "docker-bench-security" && benchcont="$c"
   done
   # List all running containers except docker-bench
   containers=$(docker ps -q | grep -v "$benchcont")
