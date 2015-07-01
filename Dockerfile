@@ -1,4 +1,8 @@
+# REPOSITORY https://github.com/docker/docker-bench-security
+
 FROM alpine:3.1
+
+MAINTAINER dockerbench.com
 
 RUN apk update && \
     apk upgrade && \
