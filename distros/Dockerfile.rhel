@@ -1,5 +1,5 @@
+# REPOSITORY https://github.com/docker/docker-bench-security
 
-EPOSITORY https://github.com/docker/docker-bench-security
 FROM rhel7
 
 MAINTAINER smccarty@redhat.com
