@@ -1,4 +1,8 @@
+
+EPOSITORY https://github.com/docker/docker-bench-security
 FROM rhel7
+
+MAINTAINER smccarty@redhat.com
 
 RUN yum install -y yum-utils; yum clean all
 RUN yum-config-manager --disable "*" &>/dev/null

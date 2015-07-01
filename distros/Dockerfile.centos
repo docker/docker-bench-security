@@ -1,3 +1,7 @@
+# REPOSITORY https://github.com/docker/docker-bench-security
+
+MAINTAINER smccarty@redhat.com
+
 FROM centos
 
 RUN yum install -y docker net-tools audit procps-ng; yum clean all
