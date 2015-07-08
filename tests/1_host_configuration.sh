@@ -5,7 +5,7 @@ info "1 - Host Configuration"
 
 # 1.1
 check_1_1="1.1  - Create a separate partition for containers"
-grep /var/lib/docker /etc/fstab >/dev/null 2>&1
+sh 1_1_check.sh 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_1_1"
 else
