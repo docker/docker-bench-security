@@ -294,7 +294,7 @@ fi
 check_3_19="3.19 - Verify that TLS CA certificate file ownership is set to root:root"
 tlscacert=$(get_command_line_args docker | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlscacert" ]; then
-  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+  if [ "$(stat -c %u%g "$tlscacert")" -eq 00 ]; then
     pass "$check_3_19"
   else
     warn "$check_3_19"
@@ -325,7 +325,7 @@ fi
 check_3_21="3.21 - Verify that Docker server certificate file ownership is set to root:root"
 tlscert=$(get_command_line_args docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlscert" ]; then
-  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+  if [ "$(stat -c %u%g "$tlscert")" -eq 00 ]; then
     pass "$check_3_21"
   else
     warn "$check_3_21"
@@ -356,7 +356,7 @@ fi
 check_3_23="3.23 - Verify that Docker server key file ownership is set to root:root"
 tlskey=$(get_command_line_args docker | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlskey" ]; then
-  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+  if [ "$(stat -c %u%g "$tlskey")" -eq 00 ]; then
     pass "$check_3_23"
   else
     warn "$check_3_23"
