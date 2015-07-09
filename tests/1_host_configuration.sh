@@ -39,7 +39,7 @@ fi
 
 # 1.6
 check_1_6="1.6  - Keep Docker up to date"
-docker_version=$(docker version | grep 'Server version' | awk '{print $3}')
+docker_version=$(docker --version | awk '{print $3}' | tr -d '[:alpha:]-,')
 docker_current_version="1.7.0"
 do_version_check "$docker_current_version" "$docker_version"
 if [ $? -eq 11 ]; then
