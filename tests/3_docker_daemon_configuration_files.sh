@@ -338,7 +338,7 @@ fi
 
 # 3.22
 check_3_22="3.22 - Verify that Docker server certificate file permissions are set to 444"
-tlscacert=$(get_command_line_args docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+tlscert=$(get_command_line_args docker | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlscert" ]; then
   perms=$(ls -ld "$tlscert" | awk '{print $1}')
   if [ "$perms" = "-r--r--r--" ]; then
