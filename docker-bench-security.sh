@@ -75,7 +75,7 @@ done
 main () {
   # List all running containers
   containers=$(docker ps -q)
-  # If there is a container with label docker-bench-security, memorize it:
+  # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $containers; do
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
