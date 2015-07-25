@@ -79,7 +79,7 @@ main () {
   benchcont="nil"
   for c in $containers; do
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
-    contains "$labels" "docker-bench-security" && benchcont="$c"
+    contains "$labels" "docker_bench_security" && benchcont="$c"
   done
   # List all running containers except docker-bench (use names to improve readability in logs)
   containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
