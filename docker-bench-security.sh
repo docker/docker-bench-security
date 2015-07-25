@@ -81,8 +81,8 @@ main () {
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
     contains "$labels" "docker-bench-security" && benchcont="$c"
   done
-  # List all running containers except docker-bench
-  containers=$(docker ps -q | grep -v "$benchcont")
+  # List all running containers except docker-bench (use names to improve readability in logs)
+  containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
 
   for test in tests/*.sh
   do
