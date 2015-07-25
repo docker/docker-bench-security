@@ -1,6 +1,6 @@
 # REPOSITORY https://github.com/docker/docker-bench-security
 
-FROM alpine:3.1
+FROM alpine:3.2
 
 MAINTAINER dockerbench.com
 
