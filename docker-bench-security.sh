@@ -74,7 +74,7 @@ done
 # Load all the tests from tests/ and run them
 main () {
   # List all running containers
-  containers=$(docker ps -q)
+  containers=$(docker ps | sed '1d' | awk '{print $NF}')
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $containers; do
