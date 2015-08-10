@@ -271,3 +271,24 @@ else
   info "$check_1_18"
   info "     * File not found"
 fi
+
+
+# 1.19
+check_1_19="1.19 (extra) - Check cgroup limit for memory and swap"
+file="/proc/cmdline"
+if [ -f "$file" ]; then
+   swaplimit=`cat $file | grep "swapaccount=1"`
+   s_ret=$?
+   cgroup_mem=`cat $file | grep "cgroup_enable=memory"`
+   c_ret=$?
+
+   if [ $s_ret -eq 0  ] && [ $c_ret -eq 0 ]; then
+     pass "$check_1_19"
+   else
+     warn "$check_1_19" 
+     info "     * swapaccount=1 or cgroup_enable=memory not present in /etc/default/grub"
+   fi
+else
+  info "$check_1_19"
+  info "     * File not found"
+fi
