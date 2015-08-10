@@ -36,7 +36,7 @@ set +f; unset IFS
 
 # 6.6
 check_6_6="6.6 - Avoid image sprawl"
-images=$(docker images -q | wc -l | awk '{print $1}')
+images=$(docker images -q | sort -u | wc -l | awk '{print $1}')
 active_images=0
 
 for c in $(docker inspect -f "{{.Image}}" $(docker ps -qa)); do
