@@ -60,14 +60,8 @@ else
   check_5_3="5.3  - Verify that containers are running only a single main process"
 
   fail=0
+  printcheck=0
   for c in $containers; do
-    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
-    if [ $? -eq 255 ]; then
-      warn "$check_5_3"
-      warn "     * Docker exec fails: $c"
-      fail=1
-    fi
-
     processes=$(docker exec "$c" ps -el 2>/dev/null | wc -l | awk '{print $1}')
     if [ "$processes" -gt 5 ]; then
       # If it's the first container, fail the test
@@ -75,10 +69,22 @@ else
         warn "$check_5_3"
         warn "     * Too many proccesses running: $c"
         fail=1
+	printcheck=1
       else
         warn "     * Too many proccesses running: $c"
       fi
     fi
+
+    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
+    if [ $? -eq 255 ]; then
+        if [ $printcheck -eq 0 ]; then
+          warn "$check_5_3"
+	  printcheck=1
+        fi
+      warn "     * Docker exec fails: $c"
+      fail=1
+    fi
+
   done
   # We went through all the containers and found none with toom any processes
   if [ $fail -eq 0 ]; then
@@ -171,13 +177,8 @@ else
   check_5_7="5.7  - Do not run ssh within containers"
 
   fail=0
+  printcheck=0
   for c in $containers; do
-    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
-    if [ $? -eq 255 ]; then
-      warn "$check_5_7"
-      warn "     * Docker exec fails: $c"
-      fail=1
-    fi
 
     processes=$(docker exec "$c" ps -el 2>/dev/null | grep -c sshd | awk '{print $1}')
     if [ "$processes" -ge 1 ]; then
@@ -186,10 +187,22 @@ else
         warn "$check_5_7"
         warn "     * Container running sshd: $c"
         fail=1
+	printcheck=1
       else
         warn "     * Container running sshd: $c"
       fi
     fi
+
+    exec_check=$(docker exec "$c" ps -el 2>/dev/null)
+    if [ $? -eq 255 ]; then
+        if [ $printcheck -eq 0 ]; then
+          warn "$check_5_7"
+	  printcheck=1
+        fi
+      warn "     * Docker exec fails: $c"
+      fail=1
+    fi
+
   done
   # We went through all the containers and found none with sshd
   if [ $fail -eq 0 ]; then
