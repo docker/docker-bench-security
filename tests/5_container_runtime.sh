@@ -92,7 +92,7 @@ else
   for c in $containers; do
     caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
 
-    if [ "$caps" != "CapAdd=" -a "$caps" != "CapAdd=[]" -a "$caps" != "CapAdd=<no value>" ]; then
+    if [ "$caps" != 'CapAdd=' -a "$caps" != 'CapAdd=[]' -a "$caps" != 'CapAdd=<no value>' -a "$caps" != 'CapAdd=<nil>' ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_4"
