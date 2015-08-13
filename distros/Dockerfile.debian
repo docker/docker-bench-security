@@ -1,6 +1,6 @@
 # REPOSITORY https://github.com/konstruktoid/docker-bench-security/
 
-FROM debian:wheezy
+FROM debian:jessie
 
 MAINTAINER Thomas Sjögren <konstruktoid@users.noreply.github.com>
 
