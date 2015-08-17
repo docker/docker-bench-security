@@ -62,8 +62,8 @@ else
   fail=0
   printcheck=0
   for c in $containers; do
-    processes=$(docker exec "$c" ps -el 2>/dev/null | wc -l | awk '{print $1}')
-    if [ "$processes" -gt 5 ]; then
+    processes=$(docker exec "$c" ps -el 2>/dev/null | tail -n +2 | grep -c -v "ps -el")
+    if [ "$processes" -gt 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_3"
