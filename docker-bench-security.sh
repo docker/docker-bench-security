@@ -35,10 +35,12 @@ if [ $? -ne 0 ]; then
 fi
 
 usage () {
-  printf "
-  usage: %s [options]
+  cat <<EOF
+  usage: ${myname} [options]
 
-  -h           optional  Print this help message\n" "$myname"
+  -h           optional  Print this help message
+  -l PATH      optional  Log output in PATH
+EOF
   exit 1
 }
 
@@ -62,6 +64,8 @@ if [ "x$ID" != "x0" ]; then
 fi
 
 # Get the flags
+# If you add an option here, please
+# remember to update usage() above.
 while getopts hl: args
 do
   case $args in
