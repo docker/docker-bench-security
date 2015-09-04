@@ -41,7 +41,6 @@ usage () {
   -h           optional  Print this help message
   -l PATH      optional  Log output in PATH
 EOF
-  exit 1
 }
 
 yell "# ------------------------------------------------------------------------------
@@ -69,9 +68,9 @@ fi
 while getopts hl: args
 do
   case $args in
-  h) usage ;;
+  h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
-  *) usage ;;
+  *) usage; exit 1 ;;
   esac
 done
 
