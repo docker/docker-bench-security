@@ -62,7 +62,7 @@ if [ "x$ID" != "x0" ]; then
 fi
 
 # Get the flags
-while getopts :hlfi: args
+while getopts hl: args
 do
   case $args in
   h) usage ;;
