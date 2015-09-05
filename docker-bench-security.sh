@@ -52,13 +52,6 @@ yell "# ------------------------------------------------------------------------
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 # ------------------------------------------------------------------------------"
 
-# Warn if not root
-ID=$(id -u)
-if [ "x$ID" != "x0" ]; then
-    warn "Some tests might require root to run"
-    sleep 3
-fi
-
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
@@ -70,6 +63,13 @@ do
   *) usage; exit 1 ;;
   esac
 done
+
+# Warn if not root
+ID=$(id -u)
+if [ "x$ID" != "x0" ]; then
+    warn "Some tests might require root to run"
+    sleep 3
+fi
 
 if [ -z "$logger" ]; then
   logger="${myname}.log"
