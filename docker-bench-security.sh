@@ -42,16 +42,6 @@ usage () {
 EOF
 }
 
-yell "# ------------------------------------------------------------------------------
-# Docker Bench for Security v1.0.0
-#
-# Docker, Inc. (c) 2015
-#
-# Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker 1.6 Benchmark:
-# https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
-# ------------------------------------------------------------------------------"
-
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
@@ -64,15 +54,25 @@ do
   esac
 done
 
+if [ -z "$logger" ]; then
+  logger="${myname}.log"
+fi
+
+yell "# ------------------------------------------------------------------------------
+# Docker Bench for Security v1.0.0
+#
+# Docker, Inc. (c) 2015
+#
+# Checks for dozens of common best-practices around deploying Docker containers in production.
+# Inspired by the CIS Docker 1.6 Benchmark:
+# https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
+# ------------------------------------------------------------------------------"
+
 # Warn if not root
 ID=$(id -u)
 if [ "x$ID" != "x0" ]; then
     warn "Some tests might require root to run"
     sleep 3
-fi
-
-if [ -z "$logger" ]; then
-  logger="${myname}.log"
 fi
 
 logit "Initializing $(date)\n"
