@@ -19,7 +19,6 @@ this_path=$(abspath "$0")       ## Path of this file including filenamel
 myname=$(basename "${this_path}")     ## file name of this script.
 
 export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
-logger="${myname}.log"
 
 # Check for required program(s)
 req_progs='awk docker grep netstat stat'
@@ -53,8 +52,6 @@ yell "# ------------------------------------------------------------------------
 # https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
 # ------------------------------------------------------------------------------"
 
-logit "Initializing $(date)\n"
-
 # Warn if not root
 ID=$(id -u)
 if [ "x$ID" != "x0" ]; then
@@ -73,6 +70,12 @@ do
   *) usage; exit 1 ;;
   esac
 done
+
+if [ -z "$logger" ]; then
+  logger="${myname}.log"
+fi
+
+logit "Initializing $(date)\n"
 
 # Load all the tests from tests/ and run them
 main () {
