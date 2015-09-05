@@ -4,8 +4,9 @@ FROM alpine:3.2
 
 MAINTAINER dockerbench.com
 
+# http://wiki.alpinelinux.org/wiki/Upgrading_Alpine
 RUN apk update && \
-    apk upgrade && \
+    apk upgrade --available && \
     apk --update add docker
 
 RUN mkdir /docker-bench-security
