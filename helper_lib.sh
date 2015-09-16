@@ -46,3 +46,24 @@ get_command_line_args() {
         tr "\0" " " < /proc/"$PID"/cmdline
     done
 }
+
+# Set terminal colours used by functions in output_lib
+set_colours() {
+
+    case "$?" in
+        none)
+            bldred=
+            bldgrn=
+            bldblu=
+            bldylw=
+            txtrst=
+            ;;
+        default|*)
+            bldred='\033[1;31m'
+            bldgrn='\033[1;32m'
+            bldblu='\033[1;34m'
+            bldylw='\033[1;33m' # Yellow
+            txtrst='\033[0m'
+            ;;
+    esac
+}

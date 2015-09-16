@@ -18,6 +18,9 @@
 this_path=$(abspath "$0")       ## Path of this file including filenamel
 myname=$(basename "${this_path}")     ## file name of this script.
 
+# Defaults
+set_colours default
+
 export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
 
 # Check for required program(s)
@@ -37,6 +40,7 @@ usage () {
   cat <<EOF
   usage: ${myname} [options]
 
+  -n           optional  Don't colourise results
   -h           optional  Print this help message
   -l PATH      optional  Log output in PATH
 EOF
@@ -49,6 +53,7 @@ while getopts hl: args
 do
   case $args in
   h) usage; exit 0 ;;
+  n) set_colour none;;
   l) logger="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
