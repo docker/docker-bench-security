@@ -37,6 +37,7 @@ usage () {
   cat <<EOF
   usage: ${myname} [options]
 
+  -n           optional  Don't colourise results
   -h           optional  Print this help message
   -l PATH      optional  Log output in PATH
 EOF

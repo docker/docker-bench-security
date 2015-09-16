@@ -51,4 +51,10 @@ cd docker-bench-security
 sh docker-bench-security.sh
 ```
 
+Coloured output may be switched off to ease parsing:
+
+```sh
+sh docker-bench-security.sh -n |& grep '^\[WARN\]'
+```
+
 This script was build to be POSIX 2004 compliant, so it should be portable across any Unix platform.
