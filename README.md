@@ -43,6 +43,13 @@ docker run -it --net host --pid host --cap-add audit_control \
     docker-bench-security
 ```
 
+or use [Docker Compose](https://docs.docker.com/compose/):
+```sh
+git clone https://github.com/docker/docker-bench-security.git
+cd docker-bench-security
+docker-compose run --rm docker-bench-security
+```
+
 Also, this script can also be simply run from your base host by running:
 
 ```sh
