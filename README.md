@@ -22,7 +22,7 @@ docker run -it --net host --pid host --cap-add audit_control \
     docker/docker-bench-security
 ```
 
-Docker bench requires Docker 1.6.2 or later in order to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, I feel free to remove the `--label` flag or run the shell script locally (see below).
+Docker bench requires Docker 1.6.2 or later in order to run, since it depends on the `--label` to exclude the current container from being inspected. If you can't upgrade to 1.6.2, feel free to remove the `--label` flag or run the shell script locally (see below).
 
 Additionally, there was a bug in Docker 1.6.0 that would not allow mounting `-v /dev:/dev`. If you are getting an error while accessing `resolv.conf`, please update your docker to 1.6.2.  
 Also note that the default image and `Dockerfile` uses `FROM: alpine` which doesn't contain `auditctl`, this will generate errors in section 1.8 to 1.18. Distribution specific Dockerfiles that fixes this issue are available in the [distros directory](https://github.com/docker/docker-bench-security/tree/master/distros).
