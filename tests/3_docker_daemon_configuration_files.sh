@@ -387,7 +387,7 @@ fi
 check_3_25="3.25 - Verify that Docker socket file ownership is set to root:docker"
 file="/var/run/docker.sock"
 if [ -S "$file" ]; then
-  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+  if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
     pass "$check_3_25"
   else
     warn "$check_3_25"
