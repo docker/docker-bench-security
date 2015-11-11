@@ -386,8 +386,8 @@ fi
 # 3.25
 check_3_25="3.25 - Verify that Docker socket file ownership is set to root:docker"
 file="/var/run/docker.sock"
-if [ -f "$file" ]; then
-  if [ "$(stat -c %u%g $file)" -eq 00 ]; then
+if [ -S "$file" ]; then
+  if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
     pass "$check_3_25"
   else
     warn "$check_3_25"
@@ -401,7 +401,7 @@ fi
 # 3.26
 check_3_26="3.26 - Verify that Docker socket file permissions are set to 660"
 file="/var/run/docker.sock"
-if [ -f "$file" ]; then
+if [ -S "$file" ]; then
   perms=$(ls -ld "$file" | awk '{print $1}')
   if [ "$perms" = "srw-rw----" ]; then
     pass "$check_3_26"
