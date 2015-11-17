@@ -69,7 +69,11 @@ get_docker_cumulative_command_line_args() {
         |
     # get the last interesting option
     tr ' ' "\n" |
-    grep "^${OPTION}"
+    grep "^${OPTION}" |
+    # normalize quoting of values
+    sed \
+        -e 's/"//g' \
+        -e "s/'//g"
 }
 
 # Extract the effective command line arguments for the docker daemon
