@@ -37,7 +37,7 @@ contains() {
     fi
 }
 
-# Extracts all commandline args from all running processes named like the first parameter
+# Extracts all commandline args from the oldest running processes named like the first parameter
 get_command_line_args() {
     PROC="$1"
 
