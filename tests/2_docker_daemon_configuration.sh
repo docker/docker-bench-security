@@ -14,7 +14,7 @@ fi
 
 # 2.2
 check_2_2="2.2  - Restrict network traffic between containers"
-get_command_line_args docker | grep "icc=false" >/dev/null 2>&1 
+get_docker_effective_command_line_args '--icc' | grep "false" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_2"
 else
@@ -23,7 +23,7 @@ fi
 
 # 2.3
 check_2_3="2.3  - Set the logging level"
-get_command_line_args docker | grep "log-level=\"debug\"" >/dev/null 2>&1
+get_docker_effective_command_line_args '-l' | grep "debug" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_3"
 else
@@ -32,7 +32,7 @@ fi
 
 # 2.4
 check_2_4="2.4  - Allow Docker to make changes to iptables"
-get_command_line_args docker | grep "iptables=false" >/dev/null 2>&1
+get_docker_effective_command_line_args '--iptables' | grep "false" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_4"
 else
@@ -41,7 +41,7 @@ fi
 
 # 2.5
 check_2_5="2.5  - Do not use insecure registries"
-get_command_line_args docker | grep "insecure-registry" >/dev/null 2>&1
+get_docker_effective_command_line_args '--insecure-registry' | grep "insecure-registry" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_5"
 else
@@ -50,7 +50,7 @@ fi
 
 # 2.6
 check_2_6="2.6  - Setup a local registry mirror"
-get_command_line_args docker | grep "registry-mirror" >/dev/null 2>&1
+get_docker_effective_command_line_args '--registry-mirror' | grep "registry-mirror" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_6"
 else
@@ -69,7 +69,7 @@ fi
 
 # 2.8
 check_2_8="2.8  - Do not bind Docker to another IP/Port or a Unix socket"
-get_command_line_args docker | grep "\-H" >/dev/null 2>&1
+get_docker_effective_command_line_args '-H' | grep "\-H" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   info "$check_2_8"
   info "     * Docker daemon running with -H"
@@ -79,7 +79,7 @@ fi
 
 # 2.9
 check_2_9="2.9  - Configure TLS authentication for Docker daemon"
-get_command_line_args docker | tr "-" "\n" | grep -E '^(H|host)' | grep -vE '(unix|fd)://' >/dev/null 2>&1
+get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   get_command_line_args docker | grep "tlsverify" | grep "tlskey" >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -96,7 +96,7 @@ fi
 
 # 2.10
 check_2_10="2.10 - Set default ulimit as appropriate"
-get_command_line_args docker | grep "default-ulimit" >/dev/null 2>&1
+get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_10"
 else
