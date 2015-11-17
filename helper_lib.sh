@@ -46,3 +46,38 @@ get_command_line_args() {
         tr "\0" " " < /proc/"$PID"/cmdline
     done
 }
+
+# Extract the cumulative command line arguments for the docker daemon
+#
+# If specified multiple times, all matches are returned.
+# Accounts for long and short variants, call with short option.
+# Does not account for option defaults or implicit options.
+get_docker_cumulative_command_line_args() {
+    OPTION="$1"
+
+    get_command_line_args docker |
+    # normalize known long options to their short versions
+    sed \
+        -e 's/\-\-debug/-D/g' \
+        -e 's/\-\-host/-H/g' \
+        -e 's/\-\-log-level/-l/g' \
+        -e 's/\-\-version/-v/g' \
+        |
+    # normalize parameters separated by space(s) to -O=VALUE
+    sed \
+        -e 's/\-\([DHlv]\)[= ]\([^- ][^ ]\)/-\1=\2/g' \
+        |
+    # get the last interesting option
+    tr ' ' "\n" |
+    grep "^${OPTION}"
+}
+
+# Extract the effective command line arguments for the docker daemon
+#
+# Accounts for multiple specifications, takes the last option.
+# Accounts for long and short variants, call with short option
+# Does not account for option default or implicit options.
+get_docker_effective_command_line_args() {
+    OPTION="$1"
+    get_docker_cumulative_command_line_args $OPTION | tail -n1
+}
