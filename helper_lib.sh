@@ -85,3 +85,8 @@ get_docker_effective_command_line_args() {
     OPTION="$1"
     get_docker_cumulative_command_line_args $OPTION | tail -n1
 }
+
+get_systemd_service_file(){
+    SERVICE="$1"
+    systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
+}
