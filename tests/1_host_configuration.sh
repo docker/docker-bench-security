@@ -114,7 +114,7 @@ fi
 
 # 1.11
 check_1_11="1.11 - Audit Docker files and directories - docker-registry.service"
-file="/usr/lib/systemd/system/docker-registry.service"
+file="$(get_systemd_service_file docker-registry.service)"
 if [ -f "$file" ]; then
   command -v auditctl >/dev/null 2>&1
   if [ $? -eq 0 ]; then
@@ -134,7 +134,7 @@ fi
 
 # 1.12
 check_1_12="1.12 - Audit Docker files and directories - docker.service"
-file="/usr/lib/systemd/system/docker.service"
+file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   command -v auditctl >/dev/null 2>&1
   if [ $? -eq 0 ]; then
