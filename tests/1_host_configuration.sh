@@ -52,7 +52,7 @@ fi
 
 # 1.7
 check_1_7="1.7  - Only allow trusted users to control Docker daemon"
-docker_users=$(grep docker /etc/group)
+docker_users=$(getent group docker)
 info "$check_1_7"
 for u in $docker_users; do
   info "     * $u"
