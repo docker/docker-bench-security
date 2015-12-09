@@ -1,9 +1,21 @@
 #!/bin/sh
-bldred='\033[1;31m'
-bldgrn='\033[1;32m'
-bldblu='\033[1;34m'
-bldylw='\033[1;33m' # Yellow
-txtrst='\033[0m'
+getopts n opts
+case "$opts" in
+    n)
+        bldred=
+        bldgrn=
+        bldblu=
+        bldylw=
+        txtrst=
+        ;;
+    *)
+        bldred='\033[1;31m'
+        bldgrn='\033[1;32m'
+        bldblu='\033[1;34m'
+        bldylw='\033[1;33m' # Yellow
+        txtrst='\033[0m'
+        ;;
+esac
 
 logit () {
   printf "%b\n" "$1" | tee -a "$logger"
