@@ -65,7 +65,7 @@ fi
 
 # 3.5
 check_3_5="3.5  - Verify that docker.socket file ownership is set to root:root"
-file="/usr/lib/systemd/system/docker.socket"
+file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_5"
@@ -80,7 +80,7 @@ fi
 
 # 3.6
 check_3_6="3.6  - Verify that docker.socket file permissions are set to 644"
-file="/usr/lib/systemd/system/docker.socket"
+file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_6"
