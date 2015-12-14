@@ -89,10 +89,11 @@ get_docker_effective_command_line_args() {
 get_systemd_service_file(){
     SERVICE="$1"
 
-    systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2
-    if [ $? -eq 0 ]; then
-        systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
+    if [ -f "/etc/systemd/system/$SERVICE" ]; then
+      echo "/etc/systemd/system/$SERVICE"
+    elif systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
+      systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
     else
-        echo "/usr/lib/systemd/system/$SERVICE"
+      echo "/usr/lib/systemd/system/$SERVICE"
     fi
 }
