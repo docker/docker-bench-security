@@ -5,7 +5,7 @@ info "3 - Docker Daemon Configuration Files"
 
 # 3.1
 check_3_1="3.1  - Verify that docker.service file ownership is set to root:root"
-file="$(get_systemd_service_file docker-registry.service)"
+file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_1"
@@ -20,7 +20,7 @@ fi
 
 # 3.2
 check_3_2="3.2  - Verify that docker.service file permissions are set to 644"
-file="$(get_systemd_service_file docker-registry.service)"
+file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_2"
@@ -65,7 +65,7 @@ fi
 
 # 3.5
 check_3_5="3.5  - Verify that docker.socket file ownership is set to root:root"
-file="/usr/lib/systemd/system/docker.socket"
+file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_5"
@@ -80,7 +80,7 @@ fi
 
 # 3.6
 check_3_6="3.6  - Verify that docker.socket file permissions are set to 644"
-file="/usr/lib/systemd/system/docker.socket"
+file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 ]; then
     pass "$check_3_6"
