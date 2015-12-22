@@ -151,7 +151,13 @@ else
 /usr'
   fail=0
   for c in $containers; do
-    volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
+    docker inspect --format '{{ .VolumesRW }}' "$c" 2>/dev/null 1>&2
+
+    if [ $? -eq 0 ]; then
+      volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
+    else
+      volumes=$(docker inspect --format '{{ .Mounts }}' "$c")
+    fi
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
       sensitive=0
@@ -264,7 +270,13 @@ else
 
   fail=0
   for c in $containers; do
-    memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
+    docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2
+
+    if [ "$?" -eq 0 ]; then
+      memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
+    else
+      memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
+    fi
 
     if [ "$memory" = "0" ]; then
       # If it's the first container, fail the test
@@ -287,7 +299,13 @@ else
 
   fail=0
   for c in $containers; do
-    shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
+    docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2
+
+    if [ "$?" -eq 0 ]; then
+      shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
+    else
+      shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
+    fi
 
     if [ "$shares" = "0" ]; then
       # If it's the first container, fail the test
