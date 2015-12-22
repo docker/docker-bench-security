@@ -15,7 +15,13 @@ else
   set -f; IFS=$'
 '
   for c in $containers; do
-    volumes=$(docker inspect --format '{{ .Volumes }}' "$c")
+    docker inspect --format '{{ .Volumes }}' "$c" 2>/dev/null 1>&2
+
+    if [ $? -eq 0 ]; then
+      volumes=$(docker inspect --format '{{ .Volumes }}' "$c")
+    else
+      volumes=$(docker inspect --format '{{ .Config.Volumes }}' "$c")
+    fi
 
     if [ "$volumes" = "map[]" ]; then
       # If it's the first container, fail the test
