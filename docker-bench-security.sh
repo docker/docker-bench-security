@@ -13,6 +13,7 @@
 # Load dependencies
 . ./output_lib.sh
 . ./helper_lib.sh
+. ./functions_lib.sh
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filenamel
@@ -45,11 +46,12 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl: args
+while getopts hlt: args
 do
   case $args in
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
+  t) tests="$OPTARG";;
   *) usage; exit 1 ;;
   esac
 done
@@ -97,3 +99,10 @@ main () {
 }
 
 main "$@"
+
+if [ -z "$tests" ]; then
+  cis
+else
+  "$tests"
+fi
+
