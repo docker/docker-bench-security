@@ -1,16 +1,29 @@
 #!/bin/sh
 
+check_5() {
 logit "\n"
 info "5  - Container Runtime"
+}
 
-# If containers is empty, there are no running containers
-if [ -z "$containers" ]; then
-  info "     * No containers running, skipping Section 5"
-else
-  # Make the loop separator be a new-line in POSIX compliant fashion
-  set -f; IFS=$'
-'
-  # 5.1
+check_running_containers() {
+  # If containers is empty, there are no running containers
+  if [ -z "$containers" ]; then
+    info "     * No containers running, skipping Section 5"
+    running_containers=0
+  else
+    running_containers=1
+    # Make the loop separator be a new-line in POSIX compliant fashion
+    set -f; IFS=$'
+  '
+  fi
+}
+
+# 5.1
+check_5_1() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_1="5.1  - Verify AppArmor Profile, if applicable"
 
   fail=0
@@ -32,8 +45,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_1"
   fi
+}
 
-  # 5.2
+# 5.2
+check_5_2() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_2="5.2  - Verify SELinux security options, if applicable"
 
   fail=0
@@ -55,8 +74,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_2"
   fi
+}
 
-  # 5.3
+# 5.3
+check_5_3() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_3="5.3  - Verify that containers are running only a single main process"
 
   fail=0
@@ -90,8 +115,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_3"
   fi
+}
 
-  # 5.4
+# 5.4
+check_5_4() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_4="5.4  - Restrict Linux Kernel Capabilities within containers"
 
   fail=0
@@ -113,8 +144,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_4"
   fi
+}
 
-  # 5.5
+# 5.5
+check_5_5() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_5="5.5  - Do not use privileged containers"
 
   fail=0
@@ -136,8 +173,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_5"
   fi
+}
 
-  # 5.6
+# 5.6
+check_5_6() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_6="5.6  - Do not mount sensitive host system directories on containers"
 
   # List of sensitive directories to test for. Script uses new-lines as a separator.
@@ -178,8 +221,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_6"
   fi
+}
 
-  # 5.7
+# 5.7
+check_5_8() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_7="5.7  - Do not run ssh within containers"
 
   fail=0
@@ -214,8 +263,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_7"
   fi
+}
 
-  # 5.8
+# 5.8
+check_5_8() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_8="5.8  - Do not map privileged ports within containers"
 
   fail=0
@@ -241,8 +296,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_8"
   fi
+}
 
-  # 5.10
+# 5.10
+check_5_10() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_10="5.10 - Do not use host network mode on container"
 
   fail=0
@@ -264,8 +325,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_10"
   fi
+}
 
-  # 5.11
+# 5.11
+check_5_11() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_11="5.11 - Limit memory usage for container"
 
   fail=0
@@ -293,8 +360,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_11"
   fi
+}
 
-  # 5.12
+# 5.12
+check_5_12() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_12="5.12 - Set container CPU priority appropriately"
 
   fail=0
@@ -322,8 +395,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_12"
   fi
+}
 
-  # 5.13
+# 5.13
+check_5_12(){
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_13="5.13 - Mount container's root filesystem as read only"
 
   fail=0
@@ -345,8 +424,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_13"
   fi
+}
 
-  # 5.14
+# 5.14
+check_5_14() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_14="5.14 - Bind incoming container traffic to a specific host interface"
 
   fail=0
@@ -368,8 +453,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_14"
   fi
+}
 
-  # 5.15
+# 5.15
+check_5_15() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_15="5.15 - Do not set the 'on-failure' container restart policy to always"
 
   fail=0
@@ -391,8 +482,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_15"
   fi
+}
 
-  # 5.16
+# 5.16
+check_5_16() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_16="5.16 - Do not share the host's process namespace"
 
   fail=0
@@ -414,8 +511,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_16"
   fi
+}
 
-  # 5.17
+# 5.17
+check_5_17() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_17="5.17 - Do not share the host's IPC namespace"
 
   fail=0
@@ -437,8 +540,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_17"
   fi
+}
 
-  # 5.18
+# 5.18
+check_5_18() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_18="5.18 - Do not directly expose host devices to containers"
 
   fail=0
@@ -460,8 +569,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_18"
   fi
+}
 
-  # 5.19
+# 5.19
+check_5_19() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_19="5.19 - Override default ulimit at runtime only if needed"
 
   # List all the running containers, ouput their ID and host devices
@@ -484,4 +599,4 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_19"
   fi
-fi
+} 
