@@ -101,7 +101,7 @@ main () {
 main "$@"
 
 if [ -z "$tests" ]; then
-  cis_checks
+  cis
 else
   "$tests"
 fi
