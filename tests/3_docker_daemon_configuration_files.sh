@@ -402,8 +402,7 @@ fi
 check_3_26="3.26 - Verify that Docker socket file permissions are set to 660"
 file="/var/run/docker.sock"
 if [ -S "$file" ]; then
-  perms=$(ls -ld "$file" | awk '{print $1}')
-  if [ "$perms" = "srw-rw----" ]; then
+  if [ "$(stat -c %a $file)" -eq 660 ]; then
     pass "$check_3_26"
   else
     warn "$check_3_26"
