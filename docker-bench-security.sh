@@ -11,7 +11,6 @@
 # ------------------------------------------------------------------------------
 
 # Load dependencies
-. ./output_lib.sh
 . ./helper_lib.sh
 
 # Setup the paths
@@ -38,6 +37,7 @@ usage () {
   usage: ${myname} [options]
 
   -h           optional  Print this help message
+  -m           optional  Disable colors in output
   -l PATH      optional  Log output in PATH
 EOF
 }
@@ -45,14 +45,19 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl: args
+outputlib='output_lib.sh'
+
+while getopts hml: args
 do
   case $args in
   h) usage; exit 0 ;;
+  m) outputlib='textout_lib.sh' ;;
   l) logger="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
 done
+
+. ./${outputlib}
 
 if [ -z "$logger" ]; then
   logger="${myname}.log"
