@@ -67,11 +67,11 @@ else
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_3"
-        warn "     * Too many proccesses running: $c"
+        warn "     * Too many processes running: $c"
         fail=1
 	printcheck=1
       else
-        warn "     * Too many proccesses running: $c"
+        warn "     * Too many processes running: $c"
       fi
     fi
 
