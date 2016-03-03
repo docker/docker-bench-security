@@ -1,15 +1,14 @@
 # REPOSITORY https://github.com/konstruktoid/docker-bench-security/
 
-FROM debian:jessie
+FROM debian:stretch
 
 MAINTAINER Thomas Sjögren <konstruktoid@users.noreply.github.com>
 
 RUN \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get -y install auditd ca-certificates curl \
+    apt-get -y install auditd ca-certificates docker.io\
       gawk net-tools procps --no-install-recommends && \
-    curl -sSL https://get.docker.com/ | sh && \
     apt-get -y clean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/* \
