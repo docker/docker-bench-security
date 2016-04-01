@@ -5,7 +5,7 @@ info "2 - Docker Daemon Configuration"
 
 # 2.1
 check_2_1="2.1  - Do not use lxc execution driver"
-get_command_line_args docker | grep lxc >/dev/null 2>&1
+get_command_line_args "docker daemon" | grep lxc >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_1"
 else
