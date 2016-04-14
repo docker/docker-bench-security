@@ -22,6 +22,21 @@ else
   pass "$check_1_2"
 fi
 
+# 1.4
+check_1_4="1.4  - Remove all non-essential services from the host - Network"
+# Check for listening network services.
+listening_services=$(netstat -na | grep -v tcp6 | grep -v unix | grep -c LISTEN)
+if [ "$listening_services" -eq 0 ]; then
+  warn "1.4  - Failed to get listening services for check: $check_1_4"
+else
+  if [ "$listening_services" -gt 5 ]; then
+    warn "$check_1_4"
+    warn "     * Host listening on: $listening_services ports"
+else
+    pass "$check_1_4"
+  fi
+fi
+
 # 1.5
 check_1_5="1.5  - Keep Docker up to date"
 docker_version=$(docker version | grep -i -A1 '^server' | grep -i 'version:' \
