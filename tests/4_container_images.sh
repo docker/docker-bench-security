@@ -37,3 +37,11 @@ else
 fi
 # Make the loop separator go back to space
 set +f; unset IFS
+
+# 4.5
+check_4_5="4.5  - Enable Content trust for Docker"
+if [ "x$DOCKER_CONTENT_TRUST" = "x1" ]; then
+  pass "$check_4_5"
+else
+  warn "$check_4_5"
+fi
