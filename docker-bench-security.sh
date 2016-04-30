@@ -61,11 +61,11 @@ fi
 yell "# ------------------------------------------------------------------------------
 # Docker Bench for Security v1.0.0
 #
-# Docker, Inc. (c) 2015
+# Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker 1.6 Benchmark:
-# https://benchmarks.cisecurity.org/tools2/docker/CIS_Docker_1.6_Benchmark_v1.0.0.pdf
+# Inspired by the CIS Docker 1.11 Benchmark:
+# https://benchmarks.cisecurity.org/downloads/show-single/index.cfm?file=docker16.110
 # ------------------------------------------------------------------------------"
 
 # Warn if not root
