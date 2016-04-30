@@ -48,4 +48,4 @@ tests/
 
 To modify the Docker Bench for Security you should first clone the repository, make your changes, check your code with `shellcheck`, `checkbashisms` or similar tools, and then sign off on your commits. After that feel free to send us a pull-request with the changes.
 
-While this tool is inspired in the CIS Docker 1.6 Benchmark, feel free to add new tests. We will try to turn dockerbench.com into a list of good community benchmarks for both security and performance, and we would love community contributions.
+While this tool is inspired by the [CIS Docker 1.11.0 benchmark](https://benchmarks.cisecurity.org/downloads/show-single/index.cfm?file=docker16.110), feel free to add new tests. We will try to turn dockerbench.com into a list of good community benchmarks for both security and performance, and we would love community contributions.
