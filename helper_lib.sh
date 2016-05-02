@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# echo to stderr
+echoerr() { echo "$@" 1>&2; }
+
 # Returns the absolute path of a given string
 abspath () { case "$1" in /*)printf "%s\n" "$1";; *)printf "%s\n" "$PWD/$1";; esac; }
 
