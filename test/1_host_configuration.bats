@@ -1,34 +1,31 @@
 #!/usr/bin/env bats
 
+load 'test_helper/bats-support/load'
+load 'test_helper/bats-assert/load'
+
 setup() {
   . "$BATS_TEST_DIRNAME/../helper_lib.sh"
 }
 
 # 1.1
 @test "1.1  - Create a separate partition for containers" {
-  grep /var/lib/docker /etc/fstab
-  [ $status -eq 0 ]
+  run grep /var/lib/docker /etc/fstab
+  assert_success
 }
 
 # 1.2
 @test "1.2  - Use an updated Linux Kernel" {
   kernel_version=$(uname -r | cut -d "-" -f 1)
   run do_version_check 3.10 "$kernel_version"
-  [ $status -eq 9 ] || [ $status -eq 10 ]
+  assert [ $status -eq 9 -o $status -eq 10 ]
 }
 
 # 1.4
 @test "1.4  - Remove all non-essential services from the host - Network" {
   # Check for listening network services.
   listening_services=$(netstat -na | grep -v tcp6 | grep -v unix | grep -c LISTEN)
-  if [ "$listening_services" -eq 0 ]; then
-    echoerr "1.4  - Failed to get listening services for check: $BATS_TEST_NAME"
-  else
-    if [ "$listening_services" -gt 5 ]; then
-      echoerr "     * Host listening on: $listening_services ports"
-    fi
-  fi
-  [ "$listening_services" -ne 0 ] && [ "$listening_services" -le 5 ]
+  refute [ "$listening_services" -eq 0 ] "1.4  - Failed to get listening services for check: $BATS_TEST_NAME"
+  refute [ "$listening_services" -gt 5 ] "Host listening on: $listening_services ports"
 }
 
 # 1.5
@@ -39,22 +36,26 @@ setup() {
   docker_current_date="2016-04-27"
   run do_version_check "$docker_current_version" "$docker_version"
   if [ $status -eq 11 ]; then
-    echoerr "      * Using $docker_version, when $docker_current_version is current as of $docker_current_date"
-    echoerr "      * Your operating system vendor may provide support and security maintenance for docker"
-  else
-    pass "$check_1_5"
-    echoerr "      * Using $docker_version which is current as of $docker_current_date"
-    echoerr "      * Check with your operating system vendor for support and security maintenance for docker"
+    fail "Using $docker_version, when $docker_current_version is current as of $docker_current_date. Your operating system vendor may provide support and security maintenance for docker."
   fi
-  [ $status -eq 9 ] || [ $status -eq 10 ]
+  assert [ $status -eq 9 -o $status -eq 10 ]
 }
 
 # 1.6
 @test "1.6  - Only allow trusted users to control Docker daemon" {
-  docker_users=$(getent group docker)
-  echoerr "$BATS_TEST_NAME"
-  for u in $docker_users; do
-    echoerr "     * $u"
+  declare -a trusted_users=("vagrant" "docker" "ubuntu")
+  users_string=$(awk -F':' '/^docker/{print $4}' /etc/group)
+  docker_users=(${users_string//,/ })
+  for u in ${docker_users[@]}; do
+    local found=1
+    for tu in ${trusted_users[@]}; do
+      if [ "$u" = "$tu" ]; then
+        found=0
+      fi
+    done
+    if [ $found -eq 1 ]; then
+      fail "User $u is not a trusted user!"
+    fi
   done
 }
 
@@ -65,19 +66,43 @@ setup() {
   if [ $status -eq 0 ]; then
     auditctl -l | grep "$file" >/dev/null 2>&1
   else
-    echoerr "      * Failed to inspect: auditctl command not found."
+    fail "Failed to inspect: auditctl command not found."
   fi
   [ $status -eq 0 ]
 }
 
 # 1.8
 @test "1.8  - Audit Docker files and directories - /var/lib/docker" {
-  skip "TODO: need to implement"
+  directory="/var/lib/docker"
+  if [ -d "$directory" ]; then
+    run command -v auditctl >/dev/null
+    if [ $status -eq 0 ]; then
+      auditctl -l | grep $directory >/dev/null 2>&1
+    else
+      fail "1.8  - Failed to inspect: auditctl command not found."
+    fi
+    [ $status -eq 0 ]
+  else
+    fail "     * '$directory' Directory not found"
+    [ -d "$directory" ]
+  fi
 }
 
 # 1.9
 @test "1.9  - Audit Docker files and directories - /etc/docker" {
-  skip "TODO: need to implement"
+  directory="/etc/docker"
+  if [ -d "$directory" ]; then
+    run command -v auditctl >/dev/null
+    if [ $status -eq 0 ]; then
+      auditctl -l | grep $directory >/dev/null 2>&1
+    else
+      fail "1.9  - Failed to inspect: auditctl command not found."
+    fi
+    [ $status -eq 0 ]
+  else
+    fail "'$directory' Directory not found"
+    [ -d "$directory" ]
+  fi
 }
 
 # 1.10
