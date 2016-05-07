@@ -1,11 +1,8 @@
 #!/usr/bin/env bats
 
-load 'test_helper/bats-support/load'
-load 'test_helper/bats-assert/load'
-
-setup() {
-  . "$BATS_TEST_DIRNAME/../helper_lib.sh"
-}
+load "test_helper/bats-support/load"
+load "test_helper/bats-assert/load"
+load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 
 # 1.1
 @test "1.1  - Create a separate partition for containers" {
@@ -63,74 +60,87 @@ setup() {
 @test "1.7  - Audit docker daemon - /usr/bin/docker" {
   file="/usr/bin/docker"
   run command -v auditctl
-  if [ $status -eq 0 ]; then
-    auditctl -l | grep "$file" >/dev/null 2>&1
-  else
-    fail "Failed to inspect: auditctl command not found."
-  fi
-  [ $status -eq 0 ]
+  assert_success
+  run auditctl -l | grep "$file"
+  assert_success
 }
 
 # 1.8
 @test "1.8  - Audit Docker files and directories - /var/lib/docker" {
   directory="/var/lib/docker"
-  if [ -d "$directory" ]; then
-    run command -v auditctl >/dev/null
-    if [ $status -eq 0 ]; then
-      auditctl -l | grep $directory >/dev/null 2>&1
-    else
-      fail "1.8  - Failed to inspect: auditctl command not found."
-    fi
-    [ $status -eq 0 ]
-  else
-    fail "     * '$directory' Directory not found"
-    [ -d "$directory" ]
-  fi
+  refute [ -d "$directory" ] "'$directory' Directory not found"
+  run command -v auditctl >/dev/null
+  assert_success
+  run auditctl -l | grep $directory
+  assert_success
 }
 
 # 1.9
 @test "1.9  - Audit Docker files and directories - /etc/docker" {
   directory="/etc/docker"
-  if [ -d "$directory" ]; then
-    run command -v auditctl >/dev/null
-    if [ $status -eq 0 ]; then
-      auditctl -l | grep $directory >/dev/null 2>&1
-    else
-      fail "1.9  - Failed to inspect: auditctl command not found."
-    fi
-    [ $status -eq 0 ]
-  else
-    fail "'$directory' Directory not found"
-    [ -d "$directory" ]
-  fi
+  refute [ -d "$directory" ] "'$directory' Directory not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep $directory
+  assert_success
 }
 
 # 1.10
 @test "1.10 - Audit Docker files and directories - docker.service" {
-  skip "TODO: need to implement"
+  file="$(get_systemd_service_file docker.service)"
+  refute [ -f "$file" ] "'docker.service' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep "$file"
+  assert_success
 }
 
 # 1.11
 @test "1.11 - Audit Docker files and directories - docker.socket" {
-  skip "TODO: need to implement"
+  file="$(get_systemd_service_file docker.socket)"
+  refute [ -e "$file" ] "'docker.socket' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep "$file"
+  assert_success
 }
 
 # 1.12
 @test "1.12 - Audit Docker files and directories - /etc/default/docker" {
-  skip "TODO: need to implement"
+  file="/etc/default/docker"
+  refute [ -f "$file" ] "'$file' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep $file
+  assert_success
 }
 
 # 1.13
 @test "1.13 - Audit Docker files and directories - /etc/docker/daemon.json" {
-  skip "TODO: need to implement"
+  file="/etc/docker/daemon.json"
+  refute [ -f "$file" ] "'$file' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep $file
+  assert_success
 }
 
 # 1.14
 @test "1.14 - Audit Docker files and directories - /usr/bin/docker-containerd" {
-  skip "TODO: need to implement"
+  file="/usr/bin/docker-containerd"
+  refute [ -f "$file" ] "'$file' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep $file
+  assert_success
 }
 
 # 1.15
 @test "1.15 - Audit Docker files and directories - /usr/bin/docker-runc" {
-  skip "TODO: need to implement"
+  file="/usr/bin/docker-runc"
+  refute [ -f "$file" ] "'$file' file not found"
+  run command -v auditctl
+  assert_success
+  run auditctl -l | grep $file
+  assert_success
 }
