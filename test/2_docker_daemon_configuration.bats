@@ -69,7 +69,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
   result=$(get_docker_effective_command_line_args '--cgroup-parent')
   run grep "cgroup-parent" <<< "$result"
   if [ $status -eq 0 ]; then
-    refute_output_contains "docker"
+    assert_output_contains "docker"
   fi
 }
 

@@ -21,8 +21,13 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "1.4  - Remove all non-essential services from the host - Network" {
   # Check for listening network services.
   listening_services=$(netstat -na | grep -v tcp6 | grep -v unix | grep -c LISTEN)
-  refute [ "$listening_services" -eq 0 ] "1.4  - Failed to get listening services for check: $BATS_TEST_NAME"
-  refute [ "$listening_services" -gt 5 ] "Host listening on: $listening_services ports"
+  if [ "$listening_services" -eq 0 ]; then
+    fail "Failed to get listening services for check: $BATS_TEST_NAME"
+  else
+    if [ "$listening_services" -gt 5 ]; then
+      fail "Host listening on: $listening_services ports"
+    fi
+  fi
 }
 
 # 1.5
@@ -68,7 +73,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.8
 @test "1.8  - Audit Docker files and directories - /var/lib/docker" {
   directory="/var/lib/docker"
-  refute [ -d "$directory" ] "'$directory' Directory not found"
+  assert [ -d "$directory" ]
   run command -v auditctl >/dev/null
   assert_success
   run auditctl -l | grep $directory
@@ -78,7 +83,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.9
 @test "1.9  - Audit Docker files and directories - /etc/docker" {
   directory="/etc/docker"
-  refute [ -d "$directory" ] "'$directory' Directory not found"
+  assert [ -d "$directory" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep $directory
@@ -88,7 +93,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.10
 @test "1.10 - Audit Docker files and directories - docker.service" {
   file="$(get_systemd_service_file docker.service)"
-  refute [ -f "$file" ] "'docker.service' file not found"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep "$file"
@@ -98,7 +103,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.11
 @test "1.11 - Audit Docker files and directories - docker.socket" {
   file="$(get_systemd_service_file docker.socket)"
-  refute [ -e "$file" ] "'docker.socket' file not found"
+  assert [ -e "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep "$file"
@@ -108,7 +113,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.12
 @test "1.12 - Audit Docker files and directories - /etc/default/docker" {
   file="/etc/default/docker"
-  refute [ -f "$file" ] "'$file' file not found"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep $file
@@ -118,7 +123,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.13
 @test "1.13 - Audit Docker files and directories - /etc/docker/daemon.json" {
   file="/etc/docker/daemon.json"
-  refute [ -f "$file" ] "'$file' file not found"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep $file
@@ -128,7 +133,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.14
 @test "1.14 - Audit Docker files and directories - /usr/bin/docker-containerd" {
   file="/usr/bin/docker-containerd"
-  refute [ -f "$file" ] "'$file' file not found"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep $file
@@ -138,7 +143,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 1.15
 @test "1.15 - Audit Docker files and directories - /usr/bin/docker-runc" {
   file="/usr/bin/docker-runc"
-  refute [ -f "$file" ] "'$file' file not found"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
   run auditctl -l | grep $file
