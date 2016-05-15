@@ -70,9 +70,8 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
   assert_success
 }
 
-# 1.8
-@test "1.8  - Audit Docker files and directories - /var/lib/docker" {
-  directory="/var/lib/docker"
+test_audit_directory() {
+  local directory="$1"
   assert [ -d "$directory" ]
   run command -v auditctl >/dev/null
   assert_success
@@ -80,72 +79,51 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
   assert_success
 }
 
-# 1.9
-@test "1.9  - Audit Docker files and directories - /etc/docker" {
-  directory="/etc/docker"
-  assert [ -d "$directory" ]
+test_audit_file() {
+  file="$1"
+  assert [ -f "$file" ]
   run command -v auditctl
   assert_success
-  run auditctl -l | grep $directory
+  run auditctl -l | grep "$file"
   assert_success
+}
+
+# 1.8
+@test "1.8  - Audit Docker files and directories - /var/lib/docker" {
+  test_audit_directory "/var/lib/docker"
+}
+
+# 1.9
+@test "1.9  - Audit Docker files and directories - /etc/docker" {
+  test_audit_directory "/etc/docker"
 }
 
 # 1.10
 @test "1.10 - Audit Docker files and directories - docker.service" {
-  file="$(get_systemd_service_file docker.service)"
-  assert [ -f "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep "$file"
-  assert_success
+  test_audit_file "$(get_systemd_service_file docker.service)"
 }
 
 # 1.11
 @test "1.11 - Audit Docker files and directories - docker.socket" {
-  file="$(get_systemd_service_file docker.socket)"
-  assert [ -e "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep "$file"
-  assert_success
+  test_audit_file "$(get_systemd_service_file docker.socket)"
 }
 
 # 1.12
 @test "1.12 - Audit Docker files and directories - /etc/default/docker" {
-  file="/etc/default/docker"
-  assert [ -f "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep $file
-  assert_success
+  test_audit_file "/etc/default/docker"
 }
 
 # 1.13
 @test "1.13 - Audit Docker files and directories - /etc/docker/daemon.json" {
-  file="/etc/docker/daemon.json"
-  assert [ -f "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep $file
-  assert_success
+  test_audit_file "/etc/docker/daemon.json"
 }
 
 # 1.14
 @test "1.14 - Audit Docker files and directories - /usr/bin/docker-containerd" {
-  file="/usr/bin/docker-containerd"
-  assert [ -f "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep $file
-  assert_success
+  test_audit_file "/usr/bin/docker-containerd"
 }
 
 # 1.15
 @test "1.15 - Audit Docker files and directories - /usr/bin/docker-runc" {
-  file="/usr/bin/docker-runc"
-  assert [ -f "$file" ]
-  run command -v auditctl
-  assert_success
-  run auditctl -l | grep $file
-  assert_success
+  test_audit_file "/usr/bin/docker-runc"
 }
