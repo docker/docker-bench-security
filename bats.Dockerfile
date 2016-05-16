@@ -4,28 +4,26 @@ FROM alpine:3.3
 MAINTAINER dockerbench.com
 MAINTAINER Alexei Ledenev <alexei.led@gmail.com>
 
-ENV VERSION 1.10.0
+ENV VERSION 1.11.1
 ENV BATS_VERSION 0.4.0
 
 LABEL docker_bench_security=true
 
-WORKDIR /usr/bin
+RUN apk --update add curl bash \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm /var/cache/apk/*
 
-RUN apk update && \
-    apk upgrade && \
-    apk --update add curl bash ncurses ncurses-terminfo && \
-    curl -sS https://get.docker.com/builds/Linux/x86_64/docker-$VERSION > docker-$VERSION && \
-    curl -sS https://get.docker.com/builds/Linux/x86_64/docker-$VERSION.sha256 > docker-$VERSION.sha256 && \
-    sha256sum -c docker-$VERSION.sha256 && \
-    ln -s docker-$VERSION docker && \
-    chmod u+x docker-$VERSION && \
-    rm -rf /var/cache/apk/*
+RUN curl -o "/tmp/docker-$VERSION.tgz" -LS "https://get.docker.com/builds/Linux/x86_64/docker-$VERSION.tgz" && \
+    curl -o "/tmp/docker-$VERSION.tgz.sha256" -LS "https://get.docker.com/builds/Linux/x86_64/docker-$VERSION.tgz.sha256" && \
+    cd /tmp && sha256sum -c docker-$VERSION.tgz.sha256 && \
+    tar -xvzf "/tmp/docker-$VERSION.tgz" -C /tmp/ && \
+    chmod u+x /tmp/docker/docker && mv /tmp/docker/docker /usr/bin/ && \
+    rm -rf /tmp/*
 
-RUN curl -o "/tmp/v${BATS_VERSION}.tar.gz" -L \
-		"https://github.com/sstephenson/bats/archive/v${BATS_VERSION}.tar.gz" \
-	&& tar -x -z -f "/tmp/v${BATS_VERSION}.tar.gz" -C /tmp/ \
-	&& bash "/tmp/bats-${BATS_VERSION}/install.sh" /usr/local \
-	&& rm -rf /tmp/*
+RUN curl -o "/tmp/v${BATS_VERSION}.tar.gz" -LS "https://github.com/sstephenson/bats/archive/v${BATS_VERSION}.tar.gz" && \
+    tar -xvzf "/tmp/v${BATS_VERSION}.tar.gz" -C /tmp/ && \
+    bash "/tmp/bats-${BATS_VERSION}/install.sh" /usr/local && \
+    rm -rf /tmp/*
 
 RUN mkdir /docker-bench-security
 

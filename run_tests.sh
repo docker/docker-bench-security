@@ -22,9 +22,15 @@ OPT_OUTPUT=$TEST_RESULTS
 OPT_RESULTS=1
 
 #Set fonts for Help.
-BOLD=`tput bold`
-REV=`tput smso`
-NORM=`tput sgr0`
+if [ -e "/usr/bin/tput" ]; then
+  BOLD=`tput bold`
+  REV=`tput smso`
+  NORM=`tput sgr0`
+else
+  BOLD=""
+  REV=""
+  NORM=""
+fi
 
 #Help function
 HELP() {
