@@ -2,9 +2,9 @@
 
 . ./helper_lib.sh
 
-TEST_SRC=./test
+TEST_SRC=./bats_tests
 BENCH_ROOT=/var/docker-bench
-TEST_ROOT=$BENCH_ROOT/test
+TEST_ROOT=$BENCH_ROOT/bats_tests
 
 prepare_tests_directory()
 {
