@@ -1,0 +1,6 @@
+[submodule "bats_tests/test_helper/bats-assert"]
+	path = bats_tests/test_helper/bats-assert
+	url = https://github.com/ztombol/bats-assert
+[submodule "bats_tests/test_helper/bats-support"]
+	path = bats_tests/test_helper/bats-support
+	url = https://github.com/ztombol/bats-support
