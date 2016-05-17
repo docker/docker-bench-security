@@ -2,8 +2,6 @@
 
 . ./generate_tests.sh
 
-TERMINFO=/usr/share/terminfo
-
 TEST_RESULTS=$BENCH_ROOT/results
 
 # make result folder (inside VOLUME)
@@ -23,9 +21,9 @@ OPT_RESULTS=1
 
 #Set fonts for Help.
 if [ -e "/usr/bin/tput" ]; then
-  BOLD=`tput bold`
-  REV=`tput smso`
-  NORM=`tput sgr0`
+  BOLD=$(tput bold)
+  REV=$(tput smso)
+  NORM=$(tput sgr0)
 else
   BOLD=""
   REV=""
@@ -50,7 +48,7 @@ HELP() {
 
 #Check the number of arguments. If none are passed, print help and exit.
 NUMARGS=$#
-if [ $NUMARGS -eq 0 ]; then
+if [ "$NUMARGS" -eq 0 ]; then
   HELP
 fi
 
@@ -73,7 +71,7 @@ while getopts o:rptcgh FLAG; do
       ;;
     c)  # count tests
       if [ -d "$TEST_ROOT" ]; then
-        echo -e "There are ${BOLD}$(bats $TEST_ROOT -c)${NORM} tests in ${BOLD}$TEST_ROOT${NORM}"
+        echo -e "There are ${BOLD}$(bats "${TEST_ROOT}" -c)${NORM} tests in ${BOLD}${TEST_ROOT}${NORM}"
       else
         echo -e "No tests found, run ${BOLD}${SCRIPT}${NORM} with ${REV}-g${NORM} option first."
       fi
@@ -99,8 +97,8 @@ shift $((OPTIND-1))  #This tells getopts to move on to the next argument.
 
 ### Run Bats tests ###
 
-TESTS=$TEST_ROOT
-if [ ! -d $TEST_ROOT ]; then # generate tests if needed
+TESTS="${TEST_ROOT}"
+if [ ! -d "${TEST_ROOT}" ]; then # generate tests if needed
   generate_all_tests
 fi
 
@@ -108,13 +106,13 @@ if [ $# -ne 0 ]; then # get tests from command line
   TESTS=$*
 fi
 
-if [ $OPT_RESULTS -eq 0 ]; then # run tests and [create test result file]
+if [ ${OPT_RESULTS} -eq 0 ]; then # run tests and [create test result file]
   if [ ! -d "$OPT_OUTPUT" ]; then
     mkdir -p "$OPT_OUTPUT"
   fi
-  bats $TESTS -${OPT_FORMAT} > "${OPT_OUTPUT}/tests_$(date +%s).tap"
+  bats "${TESTS}" -${OPT_FORMAT} > "${OPT_OUTPUT}/tests_$(date +%s).tap"
 else
-  bats $TESTS -${OPT_FORMAT}
+  bats "${TESTS}" -${OPT_FORMAT}
 fi
 
 exit 0

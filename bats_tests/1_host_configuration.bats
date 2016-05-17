@@ -48,9 +48,9 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
   declare -a trusted_users=("vagrant" "docker" "ubuntu")
   users_string=$(awk -F':' '/^docker/{print $4}' /etc/group)
   docker_users=(${users_string//,/ })
-  for u in ${docker_users[@]}; do
+  for u in "${docker_users[@]}"; do
     local found=1
-    for tu in ${trusted_users[@]}; do
+    for tu in "${trusted_users[@]}"; do
       if [ "$u" = "$tu" ]; then
         found=0
       fi
@@ -75,7 +75,7 @@ test_audit_directory() {
   assert [ -d "$directory" ]
   run command -v auditctl >/dev/null
   assert_success
-  run auditctl -l | grep $directory
+  run auditctl -l | grep "$directory"
   assert_success
 }
 

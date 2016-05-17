@@ -8,7 +8,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "3.1  - Verify that docker.service file ownership is set to root:root" {
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %u%g $file)" -ne 00 ]; then
+    if [ "$(stat -c %u%g "$file")" -ne 00 ]; then
       fail "Wrong ownership for $file"
     fi
   fi
@@ -18,7 +18,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "3.2  - Verify that docker.service file permissions are set to 644" {
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -ne 644 ]; then
+    if [ "$(stat -c %a "$file")" -ne 644 ]; then
       fail "Wrong permissions for $file"
     fi
   fi
@@ -28,7 +28,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "3.3  - Verify that docker.socket file ownership is set to root:root" {
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %u%g $file)" -ne 00 ]; then
+    if [ "$(stat -c %u%g "$file")" -ne 00 ]; then
       fail "Wrong ownership for $file"
     fi
   fi
@@ -38,7 +38,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "3.4  - Verify that docker.socket file permissions are set to 644" {
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -ne 644 ]; then
+    if [ "$(stat -c %a "$file")" -ne 644 ]; then
       fail "Wrong permissions for $file"
     fi
   fi
@@ -58,7 +58,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 @test "3.6  - Verify that /etc/docker directory permissions are set to 755 or 700" {
   directory="/etc/docker"
   if [ -d "$directory" ]; then
-    if [ "$(stat -c %a $directory)" -ne 755 -a "$(stat -c %a $directory)" -ne 700 ]; then
+    if [ "$(stat -c %a $directory)" -ne 755 ] && [ "$(stat -c %a $directory)" -ne 700 ]; then
       fail "Wrong permissions for $directory : $(stat -c %a $directory)"
     fi
   fi
@@ -89,7 +89,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
     fail=0
     perms=$(ls -lL $directory | grep ".crt" | awk '{print $1}')
     for p in $perms; do
-      if [ "$p" != "-r--r--r--." -a "$p" = "-r--------." ]; then
+      if [ "$p" != "-r--r--r--." ] && [ "$p" = "-r--------." ]; then
         fail=1
       fi
     done

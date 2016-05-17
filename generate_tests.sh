@@ -20,10 +20,10 @@ prepare_tests_directory()
 
 list_running_containers() {
     # List all running containers
-  local containers=$(docker ps | sed '1d' | awk '{print $NF}')
+  containers=($(docker ps | sed '1d' | awk '{print $NF}' | tr "\n" " "))
   # If there is a container with label docker_bench_security, memorize it:
   local benchcont="nil"
-  for c in $containers; do
+  for c in "${containers[@]}"; do
     labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
     contains "$labels" "docker_bench_security" && benchcont="$c"
   done
@@ -35,9 +35,9 @@ generate_all_tests() {
   # prepare test direcory: copy tests and templates
   prepare_tests_directory
   # generate tests from templates for running containers
-  local containers=$(list_running_containers)
-  ( cd $TEST_ROOT
-  for c in ${containers[@]}; do
+  containers=($(list_running_containers))
+  ( cd $TEST_ROOT || exit 1
+  for c in "${containers[@]}"; do
     for t in *.bats.template; do
       sed -e "s/{{c}}/$c/g" "${t}" > "${t%.*.*}_${c}.bats"
     done

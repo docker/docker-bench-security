@@ -7,7 +7,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 5.1
 @test "5.1  - Verify AppArmor Profile, if applicable: {{c}}" {
   policy=$(docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' "{{c}}")
-  if [ "$policy" = "AppArmorProfile=" -o "$policy" = "AppArmorProfile=[]" -o "$policy" = "AppArmorProfile=<no value>" ]; then
+  if [ "$policy" = "AppArmorProfile=" ] || [ "$policy" = "AppArmorProfile=[]" ] || [ "$policy" = "AppArmorProfile=<no value>" ]; then
     fail "No AppArmorProfile Found: {{c}}"
   fi
 }
@@ -15,7 +15,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 5.2
 @test "5.2  - Verify SELinux security options, if applicable: {{c}}" {
   policy=$(docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' "{{c}}")
-  if [ "$policy" = "SecurityOpt=" -o "$policy" = "SecurityOpt=[]" -o "$policy" = "SecurityOpt=<no value>" ]; then
+  if [ "$policy" = "SecurityOpt=" ] || [ "$policy" = "SecurityOpt=[]" ] || [ "$policy" = "SecurityOpt=<no value>" ]; then
     fail "No SecurityOptions Found: {{c}}"
   fi
 }
@@ -23,7 +23,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 5.3
 @test "5.3  - Restrict Linux Kernel Capabilities within containers: {{c}}" {
   caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "{{c}}")
-  if [ "$caps" != 'CapAdd=' -a "$caps" != 'CapAdd=[]' -a "$caps" != 'CapAdd=<no value>' -a "$caps" != 'CapAdd=<nil>' ]; then
+  if [ "$caps" != 'CapAdd=' ] && [ "$caps" != 'CapAdd=[]' ] && [ "$caps" != 'CapAdd=<no value>' ] && [ "$caps" != 'CapAdd=<nil>' ]; then
     fail "Capabilities added: $caps to {{c}}"
   fi
 }
@@ -48,7 +48,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
     volumes=$(docker inspect --format '{{ .Mounts }}' "{{c}}")
   fi
   # Go over each directory in sensitive dir and see if they exist in the volumes
-  for v in ${sensitive_dirs[@]}; do
+  for v in "${sensitive_dirs[@]}"; do
     run contains "$volumes" "$v"
     if [ $status -eq 0 ]; then
       fail "Sensitive directory $v mounted in: {{c}}"
@@ -146,7 +146,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 5.17
 @test "5.17 - Do not directly expose host devices to containers: {{c}}" {
   devices=$(docker inspect --format 'Devices={{ .HostConfig.Devices }}' "{{c}}")
-  if [ "$devices" != "Devices=" -a "$devices" != "Devices=[]" -a "$devices" != "Devices=<no value>" ]; then
+  if [ "$devices" != "Devices=" ] && [ "$devices" != "Devices=[]" ] && [ "$devices" != "Devices=<no value>" ]; then
     fail "Container has devices exposed directly: {{c}}"
   fi
 }
@@ -154,7 +154,7 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 # 5.18
 @test "5.18 - Override default ulimit at runtime only if needed: {{c}}" {
   ulimits=$(docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' "{{c}}")
-  if [ "$ulimits" = "Ulimits=" -o "$ulimits" = "Ulimits=[]" -o "$ulimits" = "Ulimits=<no value>" ]; then
+  if [ "$ulimits" = "Ulimits=" ] || [ "$ulimits" = "Ulimits=[]" ] || [ "$ulimits" = "Ulimits=<no value>" ]; then
     fail "Container no default ulimit override: {{c}}"
   fi
 }
