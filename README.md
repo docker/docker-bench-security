@@ -78,7 +78,10 @@ docker run -it --net host --pid host --cap-add audit_control \
     -v /etc:/etc --label docker_bench_security \
     docker-bench-tests
 ```
+<<<<<<< HEAD
 >>>>>>> update README.md file with info about running Bats tests
+=======
+>>>>>>> a888600cbb2c08e85ce279b335345e136d529f9b
 
 ## Building Docker Bench for Security
 
