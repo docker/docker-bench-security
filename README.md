@@ -48,7 +48,7 @@ Command line switches are optional. The following switches are recognized.
 -g  --Generates all CIS Bats tests without execution. No further functions are performed.
 -p  --Show results in pretty format.
 -t  --Show results in TAP format. This is the default format.
--t  --Create test results files: tests_<timestamp>.tap in test result folder.
+-r  --Create test results files: tests_<timestamp>.tap in test result folder.
 -o  --Specify test result folder. Default to /var/docker-bench/results.
 -h  --Displays this help message. No further functions are performed.
 
@@ -74,8 +74,12 @@ docker run -it --net host --pid host --cap-add audit_control \
     -v /var/lib:/var/lib \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -v /usr/lib/systemd:/usr/lib/systemd \
-    -v /var/docker-bench:/var/docker-bench
-    -v /etc:/etc --label docker_bench_security \
+    -v /var/docker-bench:/var/docker-bench \
+    -v /etc/fstab:/etc/fstab \
+    -v /etc/docker:/etc/docker \
+    -v /etc/default/docker:/etc/default/docker \
+    -v /etc/group:/etc/group \
+    --label docker_bench_security \
     docker-bench-tests
 ```
 

@@ -39,7 +39,7 @@ HELP() {
   echo -e "${REV}-g${NORM}  --Generates all CIS Bats tests without execution. No further functions are performed."
   echo -e "${REV}-p${NORM}  --Show results in pretty format."
   echo -e "${REV}-t${NORM}  --Show results in TAP format. This is the default format."
-  echo -e "${REV}-t${NORM}  --Create test results files: ${BOLD}tests_<timestamp>.tap${NORM} in test result folder."
+  echo -e "${REV}-r${NORM}  --Create test results files: ${BOLD}tests_<timestamp>.tap${NORM} in test result folder."
   echo -e "${REV}-o${NORM}  --Specify test result folder. Default to ${BOLD}$TEST_RESULTS${NORM}."
   echo -e "${REV}-h${NORM}  --Displays this help message. No further functions are performed."\\n
   echo -e "Example: ${BOLD}$SCRIPT -t -o $TEST_RESULTS${NORM}"\\n

@@ -10,7 +10,7 @@ ENV BATS_SHA_256 480d8d64f1681eee78d1002527f3f06e1ac01e173b761bc73d0cf33f4dc1d8d
 
 LABEL docker_bench_security=true
 
-RUN apk --update add curl bash \
+RUN apk --update add curl bash ncurses \
     && rm -rf /var/lib/apt/lists/* \
     && rm /var/cache/apk/*
 
