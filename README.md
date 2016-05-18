@@ -32,7 +32,7 @@ The [distribution specific Dockerfiles](https://github.com/docker/docker-bench-s
 
 [Bats](https://github.com/sstephenson/bats) is a [TAP](http://testanything.org/)-compliant testing framework for Bash. It provides a simple way to verify that the UNIX programs you write behave as expected.
 
-All Docker Bench scipts are also available as Bats tests. Also container level (and image level) tests are automatically generated for all containers avaiable on host. It's possible to run all or only selected test(s), if you like.
+All Docker Bench scipts are also available as Bats tests. Also container level (and image level) tests are automatically generated for all containers available on host. It's possible to run all or only selected test(s), if you like.
 
 By default TAP test results are reported, but it's possible to produce a "pretty" printed output too.
 
