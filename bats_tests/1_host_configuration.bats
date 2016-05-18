@@ -1,5 +1,6 @@
 #!/usr/bin/env bats
 
+load "0_config"
 load "test_helper/bats-support/load"
 load "test_helper/bats-assert/load"
 load "$BATS_TEST_DIRNAME/../helper_lib.sh"
@@ -45,12 +46,11 @@ load "$BATS_TEST_DIRNAME/../helper_lib.sh"
 
 # 1.6
 @test "1.6  - Only allow trusted users to control Docker daemon" {
-  declare -a trusted_users=("vagrant" "docker" "ubuntu")
   users_string=$(awk -F':' '/^docker/{print $4}' /etc/group)
   docker_users=(${users_string//,/ })
   for u in "${docker_users[@]}"; do
     local found=1
-    for tu in "${trusted_users[@]}"; do
+    for tu in "${config_trusted_users[@]}"; do
       if [ "$u" = "$tu" ]; then
         found=0
       fi
