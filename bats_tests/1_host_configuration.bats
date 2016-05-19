@@ -1,6 +1,5 @@
 #!/usr/bin/env bats
 
-load "0_config"
 load "test_helper/bats-support/load"
 load "test_helper/bats-assert/load"
 load "$BATS_TEST_DIRNAME/../helper_lib.sh"
