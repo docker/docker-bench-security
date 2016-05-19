@@ -1,2 +1,2 @@
 *.log
-bats_tests/0_config
+config/*_config.sh
