@@ -41,7 +41,7 @@ contains() {
 get_command_line_args() {
     PROC="$1"
 
-    for PID in $(pgrep -x -o "$PROC")
+    for PID in $(pgrep -f -n "$PROC")
     do
         tr "\0" " " < /proc/"$PID"/cmdline
     done
@@ -55,7 +55,7 @@ get_command_line_args() {
 get_docker_cumulative_command_line_args() {
     OPTION="$1"
 
-    get_command_line_args docker |
+    get_command_line_args "docker daemon" |
     # normalize known long options to their short versions
     sed \
         -e 's/\-\-debug/-D/g' \
