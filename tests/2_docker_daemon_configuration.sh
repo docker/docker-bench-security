@@ -52,18 +52,25 @@ fi
 check_2_6="2.6  - Configure TLS authentication for Docker daemon"
 get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' >/dev/null 2>&1
 if [ $? -eq 0 ]; then
-  get_command_line_args docker | grep "tlsverify" | grep "tlskey" >/dev/null 2>&1
+  get_docker_cumulative_command_line_args '--tlskey' | grep 'tlskey=' >/dev/null 2>&1
   if [ $? -eq 0 ]; then
-    pass "$check_2_6"
-    info "     * Docker daemon currently listening on TCP"
+    get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify' >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      pass "$check_2_6"
+      #pass "     * Docker daemon currently listening on TCP with TLS and verification"
+    else
+      warn "$check_2_6"
+      warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
+    fi
   else
     warn "$check_2_6"
-    warn "     * Docker daemon currently listening on TCP without --tlsverify"
+    warn "     * Docker daemon currently listening on TCP without TLS"
   fi
 else
   info "$check_2_6"
   info "     * Docker daemon not listening on TCP"
 fi
+
 
 # 2.7
 check_2_7="2.7 - Set default ulimit as appropriate"
