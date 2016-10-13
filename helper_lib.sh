@@ -55,7 +55,13 @@ get_command_line_args() {
 get_docker_cumulative_command_line_args() {
     OPTION="$1"
 
-    get_command_line_args "docker daemon" |
+    if ! get_command_line_args "docker daemon" > 1 ; then
+      line_arg="docker daemon"
+    else
+      line_arg="dockerd"
+    fi
+
+    get_command_line_args "$line_arg" |
     # normalize known long options to their short versions
     sed \
         -e 's/\-\-debug/-D/g' \
