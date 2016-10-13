@@ -14,9 +14,14 @@ fi
 
 # 2.2
 check_2_2="2.2  - Set the logging level"
-get_docker_effective_command_line_args '-l' | grep "debug" >/dev/null 2>&1
+get_docker_effective_command_line_args '-l' >/dev/null 2>&1
 if [ $? -eq 0 ]; then
-  warn "$check_2_2"
+  get_docker_effective_command_line_args '-l' | grep "info" >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    pass "$check_2_2"
+  else
+    warn "$check_2_2"
+  fi
 else
   pass "$check_2_2"
 fi
