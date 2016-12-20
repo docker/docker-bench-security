@@ -1,10 +1,10 @@
-# REPOSITORY https://github.com/docker/docker-bench-security
-
 FROM alpine:3.2
 
-ENV VERSION 1.10.0
+LABEL org.label-schema.name="docker-bench-security" \
+      org.label-schema.url="https://dockerbench.com" \
+      org.label-schema.vcs-url="https://github.com/docker/docker-bench-security.git"
 
-MAINTAINER dockerbench.com
+ENV VERSION 1.10.0
 
 WORKDIR /usr/bin
 

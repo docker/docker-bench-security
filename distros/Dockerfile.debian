@@ -1,8 +1,8 @@
-# REPOSITORY https://github.com/konstruktoid/docker-bench-security/
-
 FROM debian:sid
 
-MAINTAINER Thomas Sjögren <konstruktoid@users.noreply.github.com>
+LABEL org.label-schema.name="docker-bench-security" \
+      org.label-schema.url="https://github.com/konstruktoid/docker-bench-security" \
+      org.label-schema.vcs-url="https://github.com/konstruktoid/docker-bench-security.git"
 
 RUN \
     apt-get update && \
