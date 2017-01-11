@@ -1,4 +1,4 @@
-FROM alpine:3.2
+FROM alpine:3.5
 
 LABEL org.label-schema.name="docker-bench-security" \
       org.label-schema.url="https://dockerbench.com" \
