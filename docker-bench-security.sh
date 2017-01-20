@@ -10,13 +10,13 @@
 #
 # ------------------------------------------------------------------------------
 
-# Load dependencies
-. ./output_lib.sh
-. ./helper_lib.sh
-
 # Setup the paths
-this_path=$(abspath "$0")       ## Path of this file including filenamel
-myname=$(basename "${this_path}")     ## file name of this script.
+this_path=$(dirname "${0}")         ## Path of this file including filenamel
+myname=$(basename "${this_path}")   ## file name of this script.
+
+# Load dependencies
+. ${this_path}/output_lib.sh
+. ${this_path}/helper_lib.sh
 
 export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
 
@@ -90,9 +90,9 @@ main () {
   # List all running containers except docker-bench (use names to improve readability in logs)
   containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
 
-  for test in tests/*.sh
+  for test in ${this_path}/tests/*.sh
   do
-     . ./"$test"
+    . "${test}"
   done
 }
 
