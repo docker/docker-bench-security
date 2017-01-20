@@ -41,8 +41,8 @@ fi
 check_1_5="1.5  - Keep Docker up to date"
 docker_version=$(docker version | grep -i -A1 '^server' | grep -i 'version:' \
   | awk '{print $NF; exit}' | tr -d '[:alpha:]-,')
-docker_current_version="1.12.6"
-docker_current_date="2017-01-10"
+docker_current_version="1.13.0"
+docker_current_date="2017-01-18"
 do_version_check "$docker_current_version" "$docker_version"
 if [ $? -eq 11 ]; then
   warn "$check_1_5"
