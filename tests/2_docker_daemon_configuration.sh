@@ -148,7 +148,11 @@ get_docker_effective_command_line_args '--live-restore' 2>/dev/null | grep "live
 if [ $? -eq 0 ]; then
   pass "$check_2_14"
 else
-  warn "$check_2_14"
+  if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+    pass "$check_2_14 (Incompatible with swarm mode)"
+  else
+    warn "$check_2_14"
+  fi
 fi
 
 # 2.15
@@ -162,11 +166,15 @@ fi
 
 # 2.16
 check_2_16="2.16 - Control the number of manager nodes in a swarm"
-docker node ls 2>/dev/null | grep "Leader" >/dev/null 2>&1
-if [ $? -eq 1 ]; then
-  pass "$check_2_16"
+if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+  managernodes=$(docker node ls | grep "Leader" | wc -l)
+  if [ $managernodes -le 1 ]; then
+    pass "$check_2_16"
+  else
+    warn "$check_2_16"
+  fi
 else
-  warn "$check_2_16"
+  pass "$check_2_16 (Swarm mode not enabled)"
 fi
 
 # 2.17
