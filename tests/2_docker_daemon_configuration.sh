@@ -141,3 +141,48 @@ if [ $? -eq 0 ]; then
 else
   warn "$check_2_13"
 fi
+
+# 2.14
+check_2_14="2.14 - Enable live restore"
+get_docker_effective_command_line_args '--live-restore' 2>/dev/null | grep "live-restore" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  pass "$check_2_14"
+else
+  warn "$check_2_14"
+fi
+
+# 2.15
+check_2_15="2.15 - Do not enable swarm mode, if not needed"
+docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1
+if [ $? -eq 1 ]; then
+  pass "$check_2_15"
+else
+  warn "$check_2_15"
+fi
+
+# 2.16
+check_2_16="2.16 - Control the number of manager nodes in a swarm"
+docker node ls 2>/dev/null | grep "Leader" >/dev/null 2>&1
+if [ $? -eq 1 ]; then
+  pass "$check_2_16"
+else
+  warn "$check_2_16"
+fi
+
+# 2.17
+check_2_17="2.17 - Bind swarm services to a specific host interface"
+netstat -lt 2>/dev/null | grep -i 2377 >/dev/null 2>&1
+if [ $? -eq 1 ]; then
+  pass "$check_2_17"
+else
+  warn "$check_2_17"
+fi
+
+# 2.18
+check_2_18="2.18 - Disable Userland Proxy"
+get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  pass "$check_2_18"
+else
+  warn "$check_2_18"
+fi

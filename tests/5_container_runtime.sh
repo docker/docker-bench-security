@@ -514,7 +514,7 @@ else
       fi
     fi
   done
-  # We went through all the containers and found none with UTSMode as host
+  # We went through all the containers and found none with default secomp profile disabled
   if [ $fail -eq 0 ]; then
       pass "$check_5_21"
   fi
@@ -561,8 +561,123 @@ else
       fi
     fi
   done
-  # We went through all the containers and found none with UTSMode as host
+  # We went through all the containers and found none with capability to acquire additional privileges
   if [ $fail -eq 0 ]; then
       pass "$check_5_25"
+  fi
+
+  # 5.26
+  check_5_26="5.26 - Check container health at runtime"
+
+  fail=0
+  for c in $containers; do
+    docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2
+    if [ $? -ne 0 ]; then
+      if [ $fail -eq 0 ]; then
+        warn "$check_5_26"
+        warn "     * Health check not set for $c"
+        fail=1
+      else
+        warn "     * Health check not set for $c"
+      fi
+    fi
+  done
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_26"
+  fi
+
+  # 5.28
+  check_5_28="5.28 - Use PIDs cgroup limit"
+
+  fail=0
+  for c in $containers; do
+    pidslimit=`docker inspect --format '{{.HostConfig.PidsLimit }}' "$c"`
+
+    if [ $pidslimit -le 0 ]; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn "$check_5_28"
+        warn "     * pidslimit not set: $c"
+        fail=1
+      else
+        warn "     * pidslimit not set: $c"
+      fi
+    fi
+  done
+  # We went through all the containers and found all with PIDs limit
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_28"
+  fi
+
+  # 5.29
+  check_5_29="5.29 - Do not use Docker's default bridge docker0"
+
+  fail=0
+  networks=`docker network ls -q 2>/dev/null`
+  for net in $networks; do
+    docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+      docker0Containers=`docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" 2>/dev/null`
+      if [ -n "$docker0Containers" ]; then
+        if [ $fail -eq 0 ]; then
+          warn "$check_5_29"
+          fail=1
+        fi
+        for c in $docker0Containers; do
+          warn "     * container in docker0 network: $c"
+        done
+      fi
+    fi
+  done
+  # We went through all the containers and found none in docker0 network
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_29"
+  fi
+
+  # 5.30
+  check_5_30="5.30 - Do not share the host's user namespaces"
+
+  fail=0
+  for c in $containers; do
+    docker inspect --format '{{ .HostConfig.UsernsMode }}' "$c" 2>/dev/null | grep -i 'host' >/dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn "$check_5_30"
+        warn "     * Namespace shared: $c"
+        fail=1
+      else
+        warn "     * Namespace shared: $c"
+      fi
+    fi
+  done
+  # We went through all the containers and found none with host's user namespace shared
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_30"
+  fi
+
+  # 5.31
+  check_5_31="5.31 - Do not mount the Docker socket inside any containers"
+
+  fail=0
+  for c in $containers; do
+    docker inspect --format '{{ .Mounts }}' "$c" 2>/dev/null | grep 'docker.sock' >/dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn "$check_5_31"
+        warn "     * Docker sock shared: $c"
+        fail=1
+      else
+        warn "     * Docekr sock shared: $c"
+      fi
+    fi
+  done
+  # We went through all the containers and found none with docker.sock shared
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_31"
   fi
 fi
