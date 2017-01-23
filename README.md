@@ -36,7 +36,7 @@ docker run -it --net host --pid host --cap-add audit_control \
 Docker bench requires Docker 1.10.0 or later in order to run.
 
 Also note that the default image and `Dockerfile` uses `FROM: alpine` which
-doesn't contain `auditctl`, this will generate errors in section 1.8 to 1.18.
+doesn't contain `auditctl`, this will generate errors in section 1.8 to 1.15.
 Distribution specific Dockerfiles that fixes this issue are available in the
 [distros directory](https://github.com/docker/docker-bench-security/tree/master/distros).
 
