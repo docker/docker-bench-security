@@ -625,7 +625,7 @@ else
           fail=1
         fi
         for c in $docker0Containers; do
-          warn "     * container in docker0 network: $c"
+          warn "     * Container in docker0 network: $c"
         done
       fi
     fi
@@ -669,10 +669,10 @@ else
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_31"
-        warn "     * Docker sock shared: $c"
+        warn "     * Docker socket shared: $c"
         fail=1
       else
-        warn "     * Docekr sock shared: $c"
+        warn "     * Docker socket shared: $c"
       fi
     fi
   done
