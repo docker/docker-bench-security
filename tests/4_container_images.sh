@@ -59,7 +59,9 @@ for img in $images; do
       warn "$check_4_6"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
-    warn "     * No Healthcheck found : $imgName"
+    if ! [ "$imgName" = '[]' ]; then
+      warn "     * No Healthcheck found: $imgName"
+    fi
   fi
 done
 if [ $fail -eq 0 ]; then
@@ -77,7 +79,9 @@ for img in $images; do
       info "$check_4_7"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
-    info "     * Update instruction found in history of $imgName"
+    if ! [ "$imgName" = '[]' ]; then
+      info "     * Update instruction found: $imgName"
+    fi
   fi
 done
 if [ $fail -eq 0 ]; then
@@ -95,7 +99,9 @@ for img in $images; do
       info "$check_4_9"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
-    info "     * Found ADD in docker history of $imgName"
+    if ! [ "$imgName" = '[]' ]; then
+      info "     * ADD in image history: $imgName"
+    fi
   fi
 done
 if [ $fail -eq 0 ]; then

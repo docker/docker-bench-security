@@ -575,10 +575,10 @@ else
     if [ $? -ne 0 ]; then
       if [ $fail -eq 0 ]; then
         warn "$check_5_26"
-        warn "     * Health check not set for $c"
+        warn "     * Health check not set: $c"
         fail=1
       else
-        warn "     * Health check not set for $c"
+        warn "     * Health check not set: $c"
       fi
     fi
   done
@@ -597,10 +597,10 @@ else
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
-        warn "     * pidslimit not set: $c"
+        warn "     * PID limit not set: $c"
         fail=1
       else
-        warn "     * pidslimit not set: $c"
+        warn "     * PID limit not set: $c"
       fi
     fi
   done
