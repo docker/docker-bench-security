@@ -46,12 +46,12 @@ docker_current_date="2017-01-18"
 do_version_check "$docker_current_version" "$docker_version"
 if [ $? -eq 11 ]; then
   warn "$check_1_5"
-  warn "      * Using $docker_version, when $docker_current_version is current as of $docker_current_date"
-  info "      * Your operating system vendor may provide support and security maintenance for docker"
+  warn "     * Using $docker_version, when $docker_current_version is current as of $docker_current_date"
+  info "     * Your operating system vendor may provide support and security maintenance for docker"
 else
   pass "$check_1_5"
-  info "      * Using $docker_version which is current as of $docker_current_date"
-  info "      * Check with your operating system vendor for support and security maintenance for docker"
+  info "     * Using $docker_version which is current as of $docker_current_date"
+  info "     * Check with your operating system vendor for support and security maintenance for docker"
 fi
 
 # 1.6
