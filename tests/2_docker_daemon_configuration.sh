@@ -78,7 +78,7 @@ fi
 
 
 # 2.7
-check_2_7="2.7 - Set default ulimit as appropriate"
+check_2_7="2.7  - Set default ulimit as appropriate"
 get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   pass "$check_2_7"

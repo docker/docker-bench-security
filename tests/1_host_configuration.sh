@@ -22,16 +22,20 @@ else
   pass "$check_1_2"
 fi
 
+# 1.3
+check_1_3="1.3  - Harden the container host"
+info "$check_1_3"
+
 # 1.4
 check_1_4="1.4  - Remove all non-essential services from the host - Network"
 # Check for listening network services.
 listening_services=$(netstat -na | grep -v tcp6 | grep -v unix | grep -c LISTEN)
 if [ "$listening_services" -eq 0 ]; then
-  warn "1.4  - Failed to get listening services for check: $check_1_4"
+  info "1.4  - Failed to get listening services for check: $check_1_4"
 else
   if [ "$listening_services" -gt 5 ]; then
-    warn "$check_1_4"
-    warn "     * Host listening on: $listening_services ports"
+    info "$check_1_4"
+    info "     * Host listening on: $listening_services ports"
 else
     pass "$check_1_4"
   fi
@@ -45,8 +49,8 @@ docker_current_version="1.13.0"
 docker_current_date="2017-01-18"
 do_version_check "$docker_current_version" "$docker_version"
 if [ $? -eq 11 ]; then
-  warn "$check_1_5"
-  warn "     * Using $docker_version, when $docker_current_version is current as of $docker_current_date"
+  info "$check_1_5"
+  info "     * Using $docker_version, when $docker_current_version is current as of $docker_current_date"
   info "     * Your operating system vendor may provide support and security maintenance for docker"
 else
   pass "$check_1_5"

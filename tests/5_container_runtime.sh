@@ -1,7 +1,7 @@
 #!/bin/sh
 
 logit "\n"
-info "5  - Container Runtime"
+info "5 - Container Runtime"
 
 # If containers is empty, there are no running containers
 if [ -z "$containers" ]; then
@@ -207,8 +207,12 @@ else
       pass "$check_5_7"
   fi
 
+  # 5.8
+  check_5_8="5.8  - Open only needed ports on container"
+  info "$check_5_8"
+
   # 5.9
-  check_5_9="5.9 - Do not share the host's network namespace"
+  check_5_9="5.9  - Do not share the host's network namespace"
 
   fail=0
   for c in $containers; do
@@ -519,6 +523,13 @@ else
       pass "$check_5_21"
   fi
 
+  # 5.22
+  check_5_22="5.22 - Do not docker exec commands with privileged option"
+  info "$check_5_22"
+
+  # 5.23
+  check_5_23="5.23 - Do not docker exec commands with user option"
+  info "$check_5_23"
 
   # 5.24
   check_5_24="5.24 - Confirm cgroup usage"
@@ -586,6 +597,10 @@ else
       pass "$check_5_26"
   fi
 
+  # 5.27
+  check_5_27="5.27 - Ensure docker commands always get the latest version of the image"
+  info "$check_5_27"
+
   # 5.28
   check_5_28="5.28 - Use PIDs cgroup limit"
 
@@ -597,10 +612,10 @@ else
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
-        warn "     * PID limit not set: $c"
+        warn "     * PIDs limit not set: $c"
         fail=1
       else
-        warn "     * PID limit not set: $c"
+        warn "     * PIDs limit not set: $c"
       fi
     fi
   done
@@ -621,11 +636,11 @@ else
       docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" 2>/dev/null)
       if [ -n "$docker0Containers" ]; then
         if [ $fail -eq 0 ]; then
-          warn "$check_5_29"
+          info "$check_5_29"
           fail=1
         fi
         for c in $docker0Containers; do
-          warn "     * Container in docker0 network: $c"
+          info "     * Container in docker0 network: $c"
         done
       fi
     fi
