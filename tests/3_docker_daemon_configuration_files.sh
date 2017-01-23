@@ -19,10 +19,10 @@ else
 fi
 
 # 3.2
-check_3_2="3.2  - Verify that docker.service file permissions are set to 644"
+check_3_2="3.2  - Verify that docker.service file permissions are set to 644 or more restrictive"
 file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
-  if [ "$(stat -c %a $file)" -eq 644 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_2"
   else
     warn "$check_3_2"
@@ -49,10 +49,10 @@ else
 fi
 
 # 3.4
-check_3_4="3.4  - Verify that docker.socket file permissions are set to 644"
+check_3_4="3.4  - Verify that docker.socket file permissions are set to 644 or more restrictive"
 file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
-  if [ "$(stat -c %a $file)" -eq 644 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_4"
   else
     warn "$check_3_4"
@@ -79,7 +79,7 @@ else
 fi
 
 # 3.6
-check_3_6="3.6  - Verify that /etc/docker directory permissions are set to 755"
+check_3_6="3.6  - Verify that /etc/docker directory permissions are set to 755 or more restrictive"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
   if [ "$(stat -c %a $directory)" -eq 755 ]; then
@@ -119,7 +119,7 @@ else
 fi
 
 # 3.8
-check_3_8="3.8  - Verify that registry certificate file permissions are set to 444"
+check_3_8="3.8  - Verify that registry certificate file permissions are set to 444 or more restrictive"
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
@@ -156,7 +156,7 @@ else
 fi
 
 # 3.10
-check_3_10="3.10 - Verify that TLS CA certificate file permissions are set to 444"
+check_3_10="3.10 - Verify that TLS CA certificate file permissions are set to 444 or more restrictive"
 tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlscacert" ]; then
   perms=$(ls -ld "$tlscacert" | awk '{print $1}')
@@ -187,7 +187,7 @@ else
 fi
 
 # 3.12
-check_3_12="3.12 - Verify that Docker server certificate file permissions are set to 444"
+check_3_12="3.12 - Verify that Docker server certificate file permissions are set to 444 or more restrictive"
 tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlscert" ]; then
   perms=$(ls -ld "$tlscert" | awk '{print $1}')
@@ -218,7 +218,7 @@ else
 fi
 
 # 3.14
-check_3_14="3.14 - Verify that Docker server key file permissions are set to 400"
+check_3_14="3.14 - Verify that Docker server key file permissions are set to 400 or more restrictive"
 tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 if [ -f "$tlskey" ]; then
   perms=$(ls -ld "$tlskey" | awk '{print $1}')
@@ -249,10 +249,10 @@ else
 fi
 
 # 3.16
-check_3_16="3.16 - Verify that Docker socket file permissions are set to 660"
+check_3_16="3.16 - Verify that Docker socket file permissions are set to 660 or more restrictive"
 file="/var/run/docker.sock"
 if [ -S "$file" ]; then
-  if [ "$(stat -c %a $file)" -eq 660 ]; then
+  if [ "$(stat -c %a $file)" -eq 660 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_16"
   else
     warn "$check_3_16"
@@ -279,10 +279,10 @@ else
 fi
 
 # 3.18
-check_3_18="3.18 - Verify that daemon.json file permissions are set to 644"
+check_3_18="3.18 - Verify that daemon.json file permissions are set to 644 or more restrictive"
 file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
-  if [ "$(stat -c %a $file)" -eq 644 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_18"
   else
     warn "$check_3_18"
@@ -309,10 +309,10 @@ else
 fi
 
 # 3.20
-check_3_20="3.20 - Verify that /etc/default/docker file permissions are set to 644"
+check_3_20="3.20 - Verify that /etc/default/docker file permissions are set to 644 or more restrictive"
 file="/etc/default/docker"
 if [ -f "$file" ]; then
-  if [ "$(stat -c %a $file)" -eq 644 ]; then
+  if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_20"
   else
     warn "$check_3_20"
