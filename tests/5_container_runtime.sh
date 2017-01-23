@@ -591,7 +591,7 @@ else
 
   fail=0
   for c in $containers; do
-    pidslimit=`docker inspect --format '{{.HostConfig.PidsLimit }}' "$c"`
+    pidslimit=$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")
 
     if [ $pidslimit -le 0 ]; then
       # If it's the first container, fail the test
@@ -613,12 +613,12 @@ else
   check_5_29="5.29 - Do not use Docker's default bridge docker0"
 
   fail=0
-  networks=`docker network ls -q 2>/dev/null`
+  networks=$(docker network ls -q 2>/dev/null)
   for net in $networks; do
     docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1
 
     if [ $? -eq 0 ]; then
-      docker0Containers=`docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" 2>/dev/null`
+      docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" 2>/dev/null)
       if [ -n "$docker0Containers" ]; then
         if [ $fail -eq 0 ]; then
           warn "$check_5_29"
