@@ -62,7 +62,6 @@ if [ $? -eq 0 ]; then
     get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify' >/dev/null 2>&1
     if [ $? -eq 0 ]; then
       pass "$check_2_6"
-      #pass "     * Docker daemon currently listening on TCP with TLS and verification"
     else
       warn "$check_2_6"
       warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
@@ -100,7 +99,7 @@ fi
 check_2_9="2.9  - Confirm default cgroup usage"
 get_docker_effective_command_line_args '--cgroup-parent' | grep "cgroup-parent" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
-  info "$check_2_9"
+  warn "$check_2_9"
   info "     * Confirm cgroup usage"
 else
   pass "$check_2_9"
@@ -144,8 +143,7 @@ fi
 
 # 2.14
 check_2_14="2.14 - Enable live restore"
-get_docker_effective_command_line_args '--live-restore' 2>/dev/null | grep "live-restore" >/dev/null 2>&1
-if [ $? -eq 0 ]; then
+if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
   pass "$check_2_14"
 else
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
@@ -167,8 +165,8 @@ fi
 # 2.16
 check_2_16="2.16 - Control the number of manager nodes in a swarm"
 if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-  managernodes=$(docker node ls | grep "Leader" | wc -l)
-  if [ $managernodes -le 1 ]; then
+  managernodes=$(docker node ls | grep -c "Leader")
+  if [ "$managernodes" -le 1 ]; then
     pass "$check_2_16"
   else
     warn "$check_2_16"
@@ -194,3 +192,63 @@ if [ $? -eq 0 ]; then
 else
   warn "$check_2_18"
 fi
+
+# 2.19
+check_2_19="2.19 - Encrypt data exchanged between containers on different nodes on the overlay network"
+if docker network ls --filter driver=overlay --quiet | \
+  xargs docker network inspect --format '{{.Name}} {{ .Options }}' 2>/dev/null | \
+    grep -v 'encrypted:' 2>/dev/null 1>&2; then
+  warn "$check_2_19"
+  for encnet in $(docker network ls --filter driver=overlay --quiet); do
+    if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
+       grep -v 'encrypted:' 2>/dev/null 1>&2; then
+      warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
+    fi
+  done
+else
+  pass "$check_2_19"
+fi
+
+# 2.20
+check_2_20="2.20 - Apply a daemon-wide custom seccomp profile, if needed"
+if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
+  pass "$check_2_20"
+else
+  info "$check_2_20"
+fi
+
+# 2.21
+check_2_21="2.21 - Avoid experimental features in production"
+if docker info 2>/dev/null | grep -e "^Live Restore Enabled:\s*false\s*$" >/dev/null 2>&1; then
+  pass "$check_2_21"
+else
+  warn "$check_2_21"
+fi
+
+# 2.22
+check_2_22="2.22 - Use Docker's secret management commands for managing secrets in a Swarm cluster"
+if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+  if [ "$(docker secret ls -q | wc -l)" -ge 1 ]; then
+    pass "$check_2_22"
+  else
+    info "$check_2_22"
+  fi
+else
+  pass "$check_2_22 (Swarm mode not enabled)"
+fi
+
+# 2.23
+check_2_23="2.23 - Run swarm manager in auto-lock mode"
+if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+  if ! docker swarm unlock-key 2>/dev/null | grep 'SWMKEY' 2>/dev/null 1>&2; then
+    warn "$check_2_23"
+  else
+    pass "$check_2_23"
+  fi
+else
+  pass "$check_2_23 (Swarm mode not enabled)"
+fi
+
+# 2.24
+check_2_24="2.24 - Rotate swarm manager auto-lock key periodically"
+info "$check_2_24"
