@@ -11,7 +11,7 @@ else
   set -f; IFS=$'
 '
   # 5.1
-  check_5_1="5.1  - Verify AppArmor Profile, if applicable"
+  check_5_1="5.1  - Do not disable AppArmor Profile"
 
   fail=0
   for c in $containers; do
@@ -116,9 +116,7 @@ else
 /usr'
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .VolumesRW }}' "$c" 2>/dev/null 1>&2
-
-    if [ $? -eq 0 ]; then
+    if docker inspect --format '{{ .VolumesRW }}' "$c" 2>/dev/null 1>&2; then
       volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
     else
       volumes=$(docker inspect --format '{{ .Mounts }}' "$c")
@@ -126,7 +124,7 @@ else
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
       sensitive=0
-      contains "$volumes" "$v:" && sensitive=1
+      contains "$volumes" "$v" && sensitive=1
       if [ $sensitive -eq 1 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
@@ -433,7 +431,6 @@ else
   # 5.18
   check_5_18="5.18 - Override default ulimit at runtime only if needed"
 
-  # List all the running containers, ouput their ID and host devices
   fail=0
   for c in $containers; do
     ulimits=$(docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' "$c")
@@ -505,9 +502,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'seccomp:unconfined' 2>/dev/null 1>&2
-
-    if [ $? -eq 0 ]; then
+    if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'seccomp:unconfined' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_21"
@@ -541,11 +536,11 @@ else
     if [ "$mode" != "CgroupParent=x" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        info "$check_5_24"
-        info "     * Confirm cgroup usage: $c"
+        warn "$check_5_24"
+        warn "     * Confirm cgroup usage: $c"
         fail=1
       else
-        info "     * Confirm cgroup usage: $c"
+        warn "     * Confirm cgroup usage: $c"
       fi
     fi
   done
@@ -582,8 +577,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2
-    if [ $? -ne 0 ]; then
+    if ! docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2; then
       if [ $fail -eq 0 ]; then
         warn "$check_5_26"
         warn "     * Health check not set: $c"
@@ -608,7 +602,7 @@ else
   for c in $containers; do
     pidslimit=$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")
 
-    if [ $pidslimit -le 0 ]; then
+    if [ "$pidslimit" -le 0 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
@@ -630,17 +624,17 @@ else
   fail=0
   networks=$(docker network ls -q 2>/dev/null)
   for net in $networks; do
-    docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1
-
-    if [ $? -eq 0 ]; then
-      docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" 2>/dev/null)
+    if docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1; then
+      docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" | \
+       sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
       if [ -n "$docker0Containers" ]; then
         if [ $fail -eq 0 ]; then
           info "$check_5_29"
           fail=1
         fi
         for c in $docker0Containers; do
-          info "     * Container in docker0 network: $c"
+	  cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+          info "     * Container in docker0 network: $cName"
         done
       fi
     fi
@@ -655,9 +649,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .HostConfig.UsernsMode }}' "$c" 2>/dev/null | grep -i 'host' >/dev/null 2>&1
-
-    if [ $? -eq 0 ]; then
+    if docker inspect --format '{{ .HostConfig.UsernsMode }}' "$c" 2>/dev/null | grep -i 'host' >/dev/null 2>&1; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_30"
@@ -678,9 +670,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Mounts }}' "$c" 2>/dev/null | grep 'docker.sock' >/dev/null 2>&1
-
-    if [ $? -eq 0 ]; then
+    if docker inspect --format '{{ .Mounts }}' "$c" 2>/dev/null | grep 'docker.sock' >/dev/null 2>&1; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_31"
