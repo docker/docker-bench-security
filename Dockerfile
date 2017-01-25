@@ -8,6 +8,7 @@ RUN \
   apk add --no-cache \
     docker \
     dumb-init && \
+  rm -rf /usr/bin/docker-* /usr/bin/dockerd && \
   mkdir /usr/local/bin/tests
 
 COPY ./*.sh /usr/local/bin/
