@@ -61,7 +61,10 @@ else
 
   fail=0
   for c in $containers; do
-    caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
+      sed 's/CAPADD/CapAdd/' | \
+      sed -r "s/AUDIT_WRITE|CHOWN|DAC_OVERRIDE|FOWNER|FSETID|KILL|MKNOD|NET_BIND_SERVICE|NET_RAW|SETFCAP|SETGID|SETPCAP|SETUID|SYS_CHROOT|\s//g")
 
     if [ "$caps" != 'CapAdd=' -a "$caps" != 'CapAdd=[]' -a "$caps" != 'CapAdd=<no value>' -a "$caps" != 'CapAdd=<nil>' ]; then
       # If it's the first container, fail the test
