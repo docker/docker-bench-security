@@ -2,11 +2,11 @@
 
 logit ""
 info "1 - Host Configuration"
+auditrules="/etc/audit/audit.rules"
 
 # 1.1
 check_1_1="1.1  - Create a separate partition for containers"
-grep /var/lib/docker /etc/fstab >/dev/null 2>&1
-if [ $? -eq 0 ]; then
+if grep /var/lib/docker /etc/fstab >/dev/null 2>&1; then
   pass "$check_1_1"
 else
   warn "$check_1_1"
@@ -43,33 +43,33 @@ done
 
 # 1.5
 check_1_5="1.5  - Audit docker daemon - /usr/bin/docker"
-file="/usr/bin/docker"
-command -v auditctl >/dev/null 2>&1
-if [ $? -eq 0 ]; then
-  auditctl -l | grep "$file" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+file="/usr/bin/docker "
+if command -v auditctl >/dev/null 2>&1; then
+  if auditctl -l | grep "$file" >/dev/null 2>&1; then
     pass "$check_1_5"
   else
     warn "$check_1_5"
   fi
+elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_5"
 else
-  warn "1.5  - Failed to inspect: auditctl command not found."
+    warn "$check_1_5"
 fi
 
 # 1.6
 check_1_6="1.6  - Audit Docker files and directories - /var/lib/docker"
 directory="/var/lib/docker"
 if [ -d "$directory" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $directory >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $directory >/dev/null 2>&1; then
       pass "$check_1_6"
     else
       warn "$check_1_6"
     fi
+  elif grep "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_6"
   else
-    warn "1.6  - Failed to inspect: auditctl command not found."
+    warn "$check_1_6"
   fi
 else
   info "$check_1_6"
@@ -80,16 +80,16 @@ fi
 check_1_7="1.7  - Audit Docker files and directories - /etc/docker"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $directory >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $directory >/dev/null 2>&1; then
       pass "$check_1_7"
     else
       warn "$check_1_7"
     fi
+  elif grep "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass "$check_1_7"
   else
-    warn "1.7  - Failed to inspect: auditctl command not found."
+      warn "$check_1_7"
   fi
 else
   info "$check_1_7"
@@ -100,16 +100,16 @@ fi
 check_1_8="1.8  - Audit Docker files and directories - docker.service"
 file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep "$file" >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass "$check_1_8"
     else
       warn "$check_1_8"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass "$check_1_8"
   else
-    warn "1.8  - Failed to inspect: auditctl command not found."
+      warn "$check_1_8"
   fi
 else
   info "$check_1_8"
@@ -120,16 +120,16 @@ fi
 check_1_9="1.9  - Audit Docker files and directories - docker.socket"
 file="$(get_systemd_service_file docker.socket)"
 if [ -e "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep "$file" >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass "$check_1_9"
     else
       warn "$check_1_9"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_9"
   else
-    warn "1.9  - Failed to inspect: auditctl command not found."
+    warn "$check_1_9"
   fi
 else
   info "$check_1_9"
@@ -140,16 +140,16 @@ fi
 check_1_10="1.10 - Audit Docker files and directories - /etc/default/docker"
 file="/etc/default/docker"
 if [ -f "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $file >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_10"
     else
       warn "$check_1_10"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_10"
   else
-    warn "1.10 - Failed to inspect: auditctl command not found."
+    warn "$check_1_10"
   fi
 else
   info "$check_1_10"
@@ -160,16 +160,16 @@ fi
 check_1_11="1.11 - Audit Docker files and directories - /etc/docker/daemon.json"
 file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $file >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_11"
     else
       warn "$check_1_11"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_11"
   else
-    warn "1.11 - Failed to inspect: auditctl command not found."
+    warn "$check_1_11"
   fi
 else
   info "$check_1_11"
@@ -180,16 +180,16 @@ fi
 check_1_12="1.12 - Audit Docker files and directories - /usr/bin/docker-containerd"
 file="/usr/bin/docker-containerd"
 if [ -f "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $file >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_12"
     else
       warn "$check_1_12"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_12"
   else
-    warn "1.12 - Failed to inspect: auditctl command not found."
+    warn "$check_1_12"
   fi
 else
   info "$check_1_12"
@@ -200,16 +200,16 @@ fi
 check_1_13="1.13 - Audit Docker files and directories - /usr/bin/docker-runc"
 file="/usr/bin/docker-runc"
 if [ -f "$file" ]; then
-  command -v auditctl >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    auditctl -l | grep $file >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
+  if command -v auditctl >/dev/null 2>&1; then
+    if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_13"
     else
       warn "$check_1_13"
     fi
+  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass "$check_1_13"
   else
-    warn "1.13 - Failed to inspect: auditctl command not found."
+    warn "$check_1_13"
   fi
 else
   info "$check_1_13"
