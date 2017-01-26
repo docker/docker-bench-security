@@ -7,12 +7,14 @@ LABEL org.label-schema.name="docker-bench-security" \
 RUN \
   apk add --no-cache \
     docker \
-    dumb-init \
-    git && \
-  git clone https://github.com/docker/docker-bench-security.git /tmp/bench-security && \
-  cp /tmp/bench-security/*.sh /usr/local/bin && \
-  cp -R /tmp/bench-security/tests /usr/local/bin && \
-  rm -rf /tmp/*
+    dumb-init && \
+  rm -rf /usr/bin/docker-* /usr/bin/dockerd && \
+  mkdir /usr/local/bin/tests
+
+COPY ./*.sh /usr/local/bin/
+
+COPY ./tests/*.sh /usr/local/bin/tests/
+
 
 WORKDIR /usr/local/bin
 
