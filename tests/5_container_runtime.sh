@@ -552,9 +552,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2
-
-    if [ $? -ne 0 ]; then
+    if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_25"
