@@ -240,9 +240,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2
-
-    if [ "$?" -eq 0 ]; then
+    if docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2; then
       memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
     else
       memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
@@ -269,9 +267,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2
-
-    if [ "$?" -eq 0 ]; then
+    if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
       shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
     else
       shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
