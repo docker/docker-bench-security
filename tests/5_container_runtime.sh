@@ -240,9 +240,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2
-
-    if [ "$?" -eq 0 ]; then
+    if docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2; then
       memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
     else
       memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
@@ -269,9 +267,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2
-
-    if [ "$?" -eq 0 ]; then
+    if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
       shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
     else
       shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
@@ -459,9 +455,8 @@ else
 
   fail=0
   for c in $containers; do
-    mode=$(docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c")
-
-    if [ "$mode" = "Propagation=shared" ]; then
+    if docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c" | \
+     grep shared 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_19"
@@ -557,9 +552,7 @@ else
 
   fail=0
   for c in $containers; do
-    docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2
-
-    if [ $? -ne 0 ]; then
+    if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_25"
