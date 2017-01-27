@@ -455,9 +455,8 @@ else
 
   fail=0
   for c in $containers; do
-    mode=$(docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c")
-
-    if [ "$mode" = "Propagation=shared" ]; then
+    if docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c" | \
+     grep shared 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_19"
