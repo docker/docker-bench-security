@@ -5,6 +5,7 @@ LABEL org.label-schema.name="docker-bench-security" \
       org.label-schema.vcs-url="https://github.com/docker/docker-bench-security.git"
 
 RUN \
+  apk upgrade --no-cache && \
   apk add --no-cache \
     docker \
     dumb-init && \
@@ -14,7 +15,6 @@ RUN \
 COPY ./*.sh /usr/local/bin/
 
 COPY ./tests/*.sh /usr/local/bin/tests/
-
 
 WORKDIR /usr/local/bin
 
