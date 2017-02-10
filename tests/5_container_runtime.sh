@@ -127,7 +127,9 @@ else
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
       sensitive=0
-      contains "$volumes" "$v" && sensitive=1
+      if echo "$volumes" | grep -e "{.*\s$v\s.*true\s}" 2>/tmp/null 1>&2; then
+        sensitive=1
+      fi
       if [ $sensitive -eq 1 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
