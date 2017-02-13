@@ -110,7 +110,8 @@ else
 
   # List of sensitive directories to test for. Script uses new-lines as a separator.
   # Note the lack of identation. It needs it for the substring comparison.
-  sensitive_dirs='/boot
+  sensitive_dirs='/
+/boot
 /dev
 /etc
 /lib
