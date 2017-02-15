@@ -45,8 +45,8 @@ else
 fi
 
 # 2.5
-check_2_5="2.5  - Do not use the aufs storage driver"
-docker info 2>/dev/null | grep -e "^Storage Driver:\s*aufs\s*$" >/dev/null 2>&1
+check_2_5="2.5  - Do not use the aufs/overlayfs storage driver"
+docker info 2>/dev/null | grep -e "^Storage Driver:\s*aufs\s*$" -e "^Storage Driver:\s*overlay\s*$" >/dev/null 2>&1
 if [ $? -eq 0 ]; then
   warn "$check_2_5"
 else
