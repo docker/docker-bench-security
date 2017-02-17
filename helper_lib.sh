@@ -25,18 +25,6 @@ do_version_check() {
     fi
 }
 
-# Compares two strings and returns 0 if the second is a substring of the first
-contains() {
-    string="$1"
-    substring="$2"
-    if [ "${string#*$substring}" != "$string" ]
-    then
-        return 0    # $substring is in $string
-    else
-        return 1    # $substring is not in $string
-    fi
-}
-
 # Extracts commandline args from the newest running processes named like the first parameter
 get_command_line_args() {
     PROC="$1"

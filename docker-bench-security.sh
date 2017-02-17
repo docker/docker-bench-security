@@ -25,8 +25,7 @@ for p in $req_progs; do
 done
 
 # Ensure we can connect to docker daemon
-docker ps -q >/dev/null 2>&1
-if [ $? -ne 0 ]; then
+if ! docker ps -q >/dev/null 2>&1; then
   printf "Error connecting to docker daemon (does docker ps work?)\n"
   exit 1
 fi
@@ -81,8 +80,10 @@ main () {
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $containers; do
-    labels=$(docker inspect --format '{{ .Config.Labels }}' "$c")
-    contains "$labels" "docker_bench_security" && benchcont="$c"
+    if docker inspect --format '{{ .Config.Labels }}' "$c" | \
+     grep -e 'docker.bench.security' >/dev/null 2>&1; then
+      benchcont="$c"
+    fi
   done
   # List all running containers except docker-bench (use names to improve readability in logs)
   containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
