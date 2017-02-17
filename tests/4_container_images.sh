@@ -64,8 +64,7 @@ fi
 check_4_6="4.6  - Add HEALTHCHECK instruction to the container image"
 fail=0
 for img in $images; do
-  docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1; then
     if [ $fail -eq 0 ]; then
       fail=1
       warn "$check_4_6"
@@ -84,8 +83,7 @@ fi
 check_4_7="4.7  - Do not use update instructions alone in the Dockerfile"
 fail=0
 for img in $images; do
-  docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1
-  if [ $? -eq 0 ]; then
+  if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
     if [ $fail -eq 0 ]; then
       fail=1
       info "$check_4_7"
