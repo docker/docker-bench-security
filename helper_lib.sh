@@ -77,7 +77,16 @@ get_docker_cumulative_command_line_args() {
 # Does not account for option default or implicit options.
 get_docker_effective_command_line_args() {
     OPTION="$1"
-    get_docker_cumulative_command_line_args $OPTION | tail -n1
+    get_docker_cumulative_command_line_args "$OPTION" | tail -n1
+}
+
+get_docker_configuration_file_args() {
+    OPTION="$1"
+    FILE="$(get_docker_effective_command_line_args '--config-file' | \
+        sed 's/.*=//g')"
+    if ! grep "$OPTION" "$FILE"; then
+      echo 0
+    fi
 }
 
 get_systemd_service_file(){
