@@ -84,7 +84,14 @@ get_docker_configuration_file_args() {
     OPTION="$1"
     FILE="$(get_docker_effective_command_line_args '--config-file' | \
         sed 's/.*=//g')"
-    if ! grep "$OPTION" "$FILE"; then
+
+    if [ -f "$FILE" ]; then
+      CONFIG_FILE="$FILE"
+    else
+      CONFIG_FILE="/etc/docker/daemon.json"
+    fi
+
+    if ! grep "$OPTION" "$CONFIG_FILE"; then
       echo 0
     fi
 }
