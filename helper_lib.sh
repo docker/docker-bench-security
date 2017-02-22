@@ -87,12 +87,10 @@ get_docker_configuration_file_args() {
 
     if [ -f "$FILE" ]; then
       CONFIG_FILE="$FILE"
+    elif [ -f '/etc/docker/daemon.json' ]; then
+      CONFIG_FILE='/etc/docker/daemon.json'
     else
-      CONFIG_FILE="/etc/docker/daemon.json"
-    fi
-
-    if ! grep "$OPTION" "$CONFIG_FILE"; then
-      echo 0
+      CONFIG_FILE='/dev/null'
     fi
 }
 
