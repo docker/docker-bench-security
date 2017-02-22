@@ -130,7 +130,7 @@ check_2_14="2.14 - Enable live restore"
 if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
   pass "$check_2_14"
 else
-  if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+  if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
     pass "$check_2_14 (Incompatible with swarm mode)"
   else
     warn "$check_2_14"
@@ -139,7 +139,7 @@ fi
 
 # 2.15
 check_2_15="2.15 - Do not enable swarm mode, if not needed"
-if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+if docker info 2>/dev/null | grep -e "Swarm:*\sinactive\s*" >/dev/null 2>&1; then
   pass "$check_2_15"
 else
   warn "$check_2_15"
@@ -147,7 +147,7 @@ fi
 
 # 2.16
 check_2_16="2.16 - Control the number of manager nodes in a swarm"
-if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
   managernodes=$(docker node ls | grep -c "Leader")
   if [ "$managernodes" -le 1 ]; then
     pass "$check_2_16"
@@ -160,11 +160,15 @@ fi
 
 # 2.17
 check_2_17="2.17 - Bind swarm services to a specific host interface"
-netstat -lt | grep -e '\[::]:2377' -e '*:2377' -e '0.0.0.0:2377' >/dev/null 2>&1
-if [ $? -eq 1 ]; then
-  pass "$check_2_17"
+if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
+  netstat -lt | grep -e '\[::]:2377' -e '*:2377' -e '0.0.0.0:2377' >/dev/null 2>&1
+  if [ $? -eq 1 ]; then
+    pass "$check_2_17"
+  else
+    warn "$check_2_17"
+  fi
 else
-  warn "$check_2_17"
+  pass "$check_2_17 (Swarm mode not enabled)"
 fi
 
 # 2.18
