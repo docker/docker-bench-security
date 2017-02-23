@@ -205,7 +205,7 @@ fi
 
 # 2.21
 check_2_21="2.21 - Avoid experimental features in production"
-if docker version --format '{{ .Server.Experimental }}' | grep 'false' 2>/dev/null 1>&2; then
+if docker info 2>/dev/null | grep -e "Experimental:\s*false*" 2>/dev/null 1>&2; then
   pass "$check_2_21"
 else
   warn "$check_2_21"
