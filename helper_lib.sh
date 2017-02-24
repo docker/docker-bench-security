@@ -77,7 +77,21 @@ get_docker_cumulative_command_line_args() {
 # Does not account for option default or implicit options.
 get_docker_effective_command_line_args() {
     OPTION="$1"
-    get_docker_cumulative_command_line_args $OPTION | tail -n1
+    get_docker_cumulative_command_line_args "$OPTION" | tail -n1
+}
+
+get_docker_configuration_file_args() {
+    OPTION="$1"
+    FILE="$(get_docker_effective_command_line_args '--config-file' | \
+        sed 's/.*=//g')"
+
+    if [ -f "$FILE" ]; then
+      CONFIG_FILE="$FILE"
+    elif [ -f '/etc/docker/daemon.json' ]; then
+      CONFIG_FILE='/etc/docker/daemon.json'
+    else
+      CONFIG_FILE='/dev/null'
+    fi
 }
 
 get_systemd_service_file(){

@@ -142,7 +142,11 @@ fi
 
 # 3.9
 check_3_9="3.9  - Verify that TLS CA certificate file ownership is set to root:root"
-tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlscacert' | grep -v ""; then
+  tlscacert=$(get_docker_configuration_file_args 'tlscacert' | sed 's/.*://g' | tr -d "",)
+else
+  tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlscacert" ]; then
   if [ "$(stat -c %u%g "$tlscacert")" -eq 00 ]; then
     pass "$check_3_9"
@@ -157,7 +161,11 @@ fi
 
 # 3.10
 check_3_10="3.10 - Verify that TLS CA certificate file permissions are set to 444 or more restrictive"
-tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlscacert' | grep -v ""; then
+  tlscacert=$(get_docker_configuration_file_args 'tlscacert' | sed 's/.*://g' | tr -d "",)
+else
+  tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlscacert" ]; then
   perms=$(ls -ld "$tlscacert" | awk '{print $1}')
   if [ "$perms" = "-r--r--r--" ]; then
@@ -173,7 +181,11 @@ fi
 
 # 3.11
 check_3_11="3.11 - Verify that Docker server certificate file ownership is set to root:root"
-tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlscert' | grep -v ""; then
+  tlscert=$(get_docker_configuration_file_args 'tlscert' | sed 's/.*://g' | tr -d "",)
+else
+  tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlscert" ]; then
   if [ "$(stat -c %u%g "$tlscert")" -eq 00 ]; then
     pass "$check_3_11"
@@ -188,7 +200,11 @@ fi
 
 # 3.12
 check_3_12="3.12 - Verify that Docker server certificate file permissions are set to 444 or more restrictive"
-tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlscert' | grep -v ""; then
+  tlscert=$(get_docker_configuration_file_args 'tlscert' | sed 's/.*://g' | tr -d "",)
+else
+  tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlscert" ]; then
   perms=$(ls -ld "$tlscert" | awk '{print $1}')
   if [ "$perms" = "-r--r--r--" ]; then
@@ -204,7 +220,11 @@ fi
 
 # 3.13
 check_3_13="3.13 - Verify that Docker server key file ownership is set to root:root"
-tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlskey' | grep -v ""; then
+  tlskey=$(get_docker_configuration_file_args 'tlskey' | sed 's/.*://g' | tr -d "",)
+else
+  tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlskey" ]; then
   if [ "$(stat -c %u%g "$tlskey")" -eq 00 ]; then
     pass "$check_3_13"
@@ -219,7 +239,11 @@ fi
 
 # 3.14
 check_3_14="3.14 - Verify that Docker server key file permissions are set to 400 or more restrictive"
-tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+if get_docker_configuration_file_args 'tlskey' | grep -v ""; then
+  tlskey=$(get_docker_configuration_file_args 'tlskey' | sed 's/.*://g' | tr -d "",)
+else
+  tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
+fi
 if [ -f "$tlskey" ]; then
   perms=$(ls -ld "$tlskey" | awk '{print $1}')
   if [ "$perms" = "-r--------" ]; then

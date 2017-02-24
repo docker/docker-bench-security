@@ -5,7 +5,9 @@ info "2 - Docker Daemon Configuration"
 
 # 2.1
 check_2_1="2.1  - Restrict network traffic between containers"
-if get_docker_effective_command_line_args '--icc' | grep "false" >/dev/null 2>&1; then
+if get_docker_effective_command_line_args '--icc' | grep false >/dev/null 2>&1; then
+  pass "$check_2_1"
+elif get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
   pass "$check_2_1"
 else
   warn "$check_2_1"
@@ -13,7 +15,15 @@ fi
 
 # 2.2
 check_2_2="2.2  - Set the logging level"
-if get_docker_effective_command_line_args '-l' >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'log-level' >/dev/null 2>&1; then
+  if get_docker_configuration_file_args 'log-level' | grep info >/dev/null 2>&1; then
+    pass "$check_2_2"
+  elif [ -z "$(get_docker_configuration_file_args 'log-level')" ]; then
+    pass "$check_2_2"
+  else
+    warn "$check_2_2"
+  fi
+elif get_docker_effective_command_line_args '-l'; then
   if get_docker_effective_command_line_args '-l' | grep "info" >/dev/null 2>&1; then
     pass "$check_2_2"
   else
@@ -27,6 +37,8 @@ fi
 check_2_3="2.3  - Allow Docker to make changes to iptables"
 if get_docker_effective_command_line_args '--iptables' | grep "false" >/dev/null 2>&1; then
   warn "$check_2_3"
+elif get_docker_configuration_file_args 'iptables' | grep "false" >/dev/null 2>&1; then
+  warn "$check_2_3"
 else
   pass "$check_2_3"
 fi
@@ -35,6 +47,12 @@ fi
 check_2_4="2.4  - Do not use insecure registries"
 if get_docker_effective_command_line_args '--insecure-registry' | grep "insecure-registry" >/dev/null 2>&1; then
   warn "$check_2_4"
+elif ! [ -z "$(get_docker_configuration_file_args 'insecure-registries')" ]; then
+  if get_docker_configuration_file_args 'insecure-registries' | grep '\[]' >/dev/null 2>&1; then
+    pass "$check_2_4"
+  else
+    warn "$check_2_4"
+  fi
 else
   pass "$check_2_4"
 fi
@@ -49,7 +67,19 @@ fi
 
 # 2.6
 check_2_6="2.6  - Configure TLS authentication for Docker daemon"
-if get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'tls' | grep true >/dev/null 2>&1; then
+  if get_docker_configuration_file_args 'tlskey' | grep -v '""' >/dev/null 2>&1; then
+    if get_docker_configuration_file_args 'tlsverify' | grep 'true' >/dev/null 2>&1; then
+      pass "$check_2_6"
+    else
+      warn "$check_2_6"
+      warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
+    fi
+  else
+    warn "$check_2_6"
+    warn "     * Docker daemon currently listening on TCP without TLS"
+  fi
+elif get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' >/dev/null 2>&1; then
   if get_docker_cumulative_command_line_args '--tlskey' | grep 'tlskey=' >/dev/null 2>&1; then
     if get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify' >/dev/null 2>&1; then
       pass "$check_2_6"
@@ -69,7 +99,9 @@ fi
 
 # 2.7
 check_2_7="2.7  - Set default ulimit as appropriate"
-if get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'default-ulimit' | grep -v '{}' >/dev/null 2>&1; then
+  pass "$check_2_7"
+elif get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1; then
   pass "$check_2_7"
 else
   info "$check_2_7"
@@ -78,7 +110,9 @@ fi
 
 # 2.8
 check_2_8="2.8  - Enable user namespace support"
-if get_docker_effective_command_line_args '--userns-remap' | grep "userns-remap" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'userns-remap' | grep -v '""'; then
+  pass "$check_2_8"
+elif get_docker_effective_command_line_args '--userns-remap' | grep "userns-remap" >/dev/null 2>&1; then
   pass "$check_2_8"
 else
   warn "$check_2_8"
@@ -86,7 +120,10 @@ fi
 
 # 2.9
 check_2_9="2.9  - Confirm default cgroup usage"
-if get_docker_effective_command_line_args '--cgroup-parent' | grep "cgroup-parent" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'cgroup-parent' | grep -v '""'; then
+  warn "$check_2_9"
+  info "     * Confirm cgroup usage"
+elif get_docker_effective_command_line_args '--cgroup-parent' | grep "cgroup-parent" >/dev/null 2>&1; then
   warn "$check_2_9"
   info "     * Confirm cgroup usage"
 else
@@ -95,7 +132,9 @@ fi
 
 # 2.10
 check_2_10="2.10 - Do not change base device size until needed"
-if get_docker_effective_command_line_args '--storage-opt' | grep "dm.basesize" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'storage-opts' | grep "dm.basesize" >/dev/null 2>&1; then
+  warn "$check_2_10"
+elif get_docker_effective_command_line_args '--storage-opt' | grep "dm.basesize" >/dev/null 2>&1; then
   warn "$check_2_10"
 else
   pass "$check_2_10"
@@ -103,7 +142,9 @@ fi
 
 # 2.11
 check_2_11="2.11 - Use authorization plugin"
-if get_docker_effective_command_line_args '--authorization-plugin' | grep "authorization-plugin" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]'; then
+  pass "$check_2_11"
+elif get_docker_effective_command_line_args '--authorization-plugin' | grep "authorization-plugin" >/dev/null 2>&1; then
   pass "$check_2_11"
 else
   warn "$check_2_11"
@@ -111,15 +152,17 @@ fi
 
 # 2.12
 check_2_12="2.12 - Configure centralized and remote logging"
-if get_docker_effective_command_line_args '--log-driver' | grep "log-driver" >/dev/null 2>&1; then
-  pass "$check_2_12"
-else
+if docker info --format '{{ .LoggingDriver }}' | grep 'json-file' >/dev/null 2>&1; then
   warn "$check_2_12"
+else
+  pass "$check_2_12"
 fi
 
 # 2.13
 check_2_13="2.13 - Disable operations on legacy registry (v1)"
-if get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
+  pass "$check_2_13"
+elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
   pass "$check_2_13"
 else
   warn "$check_2_13"
@@ -173,7 +216,9 @@ fi
 
 # 2.18
 check_2_18="2.18 - Disable Userland Proxy"
-if get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
+if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
+  pass "$check_2_18"
+elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
   pass "$check_2_18"
 else
   warn "$check_2_18"
