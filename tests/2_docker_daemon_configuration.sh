@@ -161,7 +161,7 @@ fi
 # 2.17
 check_2_17="2.17 - Bind swarm services to a specific host interface"
 if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
-  netstat -lnt | grep -e '\[::]:2377' -e '*:2377' -e '0.0.0.0:2377' >/dev/null 2>&1
+  netstat -lnt | grep -e '\[::]:2377' -e '*:2377' -e '0\.0\.0\.0:2377' >/dev/null 2>&1
   if [ $? -eq 1 ]; then
     pass "$check_2_17"
   else
