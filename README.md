@@ -18,7 +18,7 @@ We packaged docker bench as a small container for your convenience. Note that
 this container is being run with a *lot* of privilege -- sharing the host's
 filesystem, pid and network namespaces, due to portions of the benchmark
 applying to the running host. Don't forget to adjust the shared volumes
-according to your operating system, it may not for example use systemd.
+according to your operating system, for example it might not use systemd.
 
 The easiest way to run your hosts against the Docker Bench for Security is by
 running our pre-built container:
