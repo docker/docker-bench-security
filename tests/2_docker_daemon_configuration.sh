@@ -68,7 +68,8 @@ fi
 # 2.6
 check_2_6="2.6  - Configure TLS authentication for Docker daemon"
 if grep -i 'tcp://' "$CONFIG_FILE" 2>/dev/null 1>&2; then
-  if get_docker_configuration_file_args '"tls":' | grep 'true' 2>/dev/null 1>&2; then
+  if [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
+    [ $(get_docker_configuration_file_args '"tlsverify' | grep 'true') ] ; then
     if get_docker_configuration_file_args 'tlskey' | grep -v '""' >/dev/null 2>&1; then
       if get_docker_configuration_file_args 'tlsverify' | grep 'true' >/dev/null 2>&1; then
         pass "$check_2_6"
