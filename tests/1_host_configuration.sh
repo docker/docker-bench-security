@@ -14,7 +14,7 @@ fi
 
 # 1.2
 check_1_2="1.2  - Harden the container host"
-info "$check_1_2"
+note "$check_1_2"
 
 # 1.3
 check_1_3="1.3  - Keep Docker up to date"

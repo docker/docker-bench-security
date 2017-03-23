@@ -285,4 +285,4 @@ fi
 
 # 2.24
 check_2_24="2.24 - Rotate swarm manager auto-lock key periodically"
-info "$check_2_24"
+note "$check_2_24"
