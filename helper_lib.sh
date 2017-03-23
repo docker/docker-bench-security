@@ -92,6 +92,8 @@ get_docker_configuration_file_args() {
     else
       CONFIG_FILE='/dev/null'
     fi
+
+    grep "$OPTION" "$CONFIG_FILE" | sed 's/.*: //g' | tr -d \",
 }
 
 get_systemd_service_file(){
