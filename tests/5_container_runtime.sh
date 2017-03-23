@@ -213,7 +213,7 @@ else
 
   # 5.8
   check_5_8="5.8  - Open only needed ports on container"
-  info "$check_5_8"
+  note "$check_5_8"
 
   # 5.9
   check_5_9="5.9  - Do not share the host's network namespace"
@@ -521,11 +521,11 @@ else
 
   # 5.22
   check_5_22="5.22 - Do not docker exec commands with privileged option"
-  info "$check_5_22"
+  note "$check_5_22"
 
   # 5.23
   check_5_23="5.23 - Do not docker exec commands with user option"
-  info "$check_5_23"
+  note "$check_5_23"
 
   # 5.24
   check_5_24="5.24 - Confirm cgroup usage"

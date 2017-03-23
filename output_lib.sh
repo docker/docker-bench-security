@@ -21,6 +21,10 @@ warn () {
   printf "%b\n" "${bldred}[WARN]${txtrst} $1" | tee -a "$logger"
 }
 
+note () {
+  printf "%b\n" "${bldylw}[NOTE]${txtrst} $1" | tee -a "$logger"
+}
+
 yell () {
   printf "%b\n" "${bldylw}$1${txtrst}\n"
 }

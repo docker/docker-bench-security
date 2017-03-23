@@ -42,15 +42,15 @@ images=$(docker images -q)
 
 # 4.2
 check_4_2="4.2  - Use trusted base images for containers"
-info "$check_4_2"
+note "$check_4_2"
 
 # 4.3
 check_4_3="4.3  - Do not install unnecessary packages in the container"
-info "$check_4_3"
+note "$check_4_3"
 
 # 4.4
 check_4_4="4.4  - Scan and rebuild the images to include security patches"
-info "$check_4_4"
+note "$check_4_4"
 
 # 4.5
 check_4_5="4.5  - Enable Content trust for Docker"
@@ -100,7 +100,7 @@ fi
 
 # 4.8
 check_4_8="4.8  - Remove setuid and setgid permissions in the images"
-info "$check_4_8"
+note "$check_4_8"
 
 # 4.9
 check_4_9="4.9  - Use COPY instead of ADD in Dockerfile"
@@ -124,8 +124,8 @@ fi
 
 # 4.10
 check_4_10="4.10 - Do not store secrets in Dockerfiles"
-info "$check_4_10"
+note "$check_4_10"
 
 # 4.11
 check_4_11="4.11 - Install verified packages only"
-info "$check_4_11"
+note "$check_4_11"
