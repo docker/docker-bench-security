@@ -1,0 +1,202 @@
+#!/usr/bin/env bats
+
+load "test_helper/bats-support/load"
+load "test_helper/bats-assert/load"
+load "$BATS_TEST_DIRNAME/../helper_lib.sh"
+
+# 5.1
+@test "5.1  - Verify AppArmor Profile, if applicable: {{c}}" {
+  policy=$(docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' "{{c}}")
+  if [ "$policy" = "AppArmorProfile=" ] || [ "$policy" = "AppArmorProfile=[]" ] || [ "$policy" = "AppArmorProfile=<no value>" ]; then
+    fail "No AppArmorProfile Found: {{c}}"
+  fi
+}
+
+# 5.2
+@test "5.2  - Verify SELinux security options, if applicable: {{c}}" {
+  policy=$(docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' "{{c}}")
+  if [ "$policy" = "SecurityOpt=" ] || [ "$policy" = "SecurityOpt=[]" ] || [ "$policy" = "SecurityOpt=<no value>" ]; then
+    fail "No SecurityOptions Found: {{c}}"
+  fi
+}
+
+# 5.3
+@test "5.3  - Restrict Linux Kernel Capabilities within containers: {{c}}" {
+  caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "{{c}}")
+  if [ "$caps" != 'CapAdd=' ] && [ "$caps" != 'CapAdd=[]' ] && [ "$caps" != 'CapAdd=<no value>' ] && [ "$caps" != 'CapAdd=<nil>' ]; then
+    fail "Capabilities added: $caps to {{c}}"
+  fi
+}
+
+# 5.4
+@test "5.4  - Do not use privileged containers: {{c}}" {
+  privileged=$(docker inspect --format '{{ .HostConfig.Privileged }}' "{{c}}")
+  if [ "$privileged" = "true" ]; then
+    fail "Container running in Privileged mode: {{c}}"
+  fi
+}
+
+# 5.5
+@test "5.5  - Do not mount sensitive host system directories on containers: {{c}}" {
+  # List of sensitive directories to test for. Script uses new-lines as a separator.
+  # Note the lack of identation. It needs it for the substring comparison.
+  sensitive_dirs=(/boot /dev /etc /lib /proc /sys /usr)
+  run docker inspect --format '{{ .VolumesRW }}' "{{c}}"
+  if [ $status -eq 0 ]; then
+    volumes=$(docker inspect --format '{{ .VolumesRW }}' "{{c}}")
+  else
+    volumes=$(docker inspect --format '{{ .Mounts }}' "{{c}}")
+  fi
+  # Go over each directory in sensitive dir and see if they exist in the volumes
+  for v in "${sensitive_dirs[@]}"; do
+    run contains "$volumes" "$v"
+    if [ $status -eq 0 ]; then
+      fail "Sensitive directory $v mounted in: {{c}}"
+    fi
+  done
+}
+
+# 5.7
+@test "5.7  - Do not map privileged ports within containers: {{c}}" {
+  # Port format is private port -> ip: public port
+  ports=$(docker port "{{c}}" | awk '{print $3}' | cut -d ':' -f2 | tr "\n" " ")
+  # iterate through port range (line delimited)
+  for port in $ports; do
+    if [ ! -z "$port" ] && [ "0$port" -lt 1024 ]; then
+      fail "Privileged Port in use: $port in {{c}}"
+    fi
+  done
+}
+
+# 5.9
+@test "5.9 - Do not share the host's network namespace: {{c}}" {
+  mode=$(docker inspect --format 'NetworkMode={{ .HostConfig.NetworkMode }}' "{{c}}")
+  if [ "$mode" = "NetworkMode=host" ]; then
+    fail "Container running with networking mode 'host': {{c}}"
+  fi
+}
+
+# 5.10
+@test "5.10 - Limit memory usage for container: {{c}}" {
+  run docker inspect --format '{{ .Config.Memory }}' "{{c}}"
+  if [ $status -eq 0 ]; then
+    memory=$(docker inspect --format '{{ .Config.Memory }}' "{{c}}")
+  else
+    memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "{{c}}")
+  fi
+  if [ "$memory" = "0" ]; then
+    fail "Container running without memory restrictions: {{c}}"
+  fi
+}
+
+# 5.11
+@test "5.11 - Set container CPU priority appropriately: {{c}}" {
+  run docker inspect --format '{{ .Config.CpuShares }}' "{{c}}"
+  if [ $status -eq 0 ]; then
+    shares=$(docker inspect --format '{{ .Config.CpuShares }}' "{{c}}")
+  else
+    shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "{{c}}")
+  fi
+  if [ "$shares" = "0" ]; then
+    fail "Container running without CPU restrictions: {{c}}"
+  fi
+}
+
+# 5.12
+@test "5.12 - Mount container's root filesystem as read only: {{c}}" {
+  read_status=$(docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' "{{c}}")
+  if [ "$read_status" = "false" ]; then
+    fail "Container running with root FS mounted R/W: {{c}}"
+  fi
+}
+
+# 5.13
+@test "5.13 - Bind incoming container traffic to a specific host interface: {{c}}" {
+  for ip in $(docker port "{{c}}" | awk '{print $3}' | cut -d ':' -f1 | tr "\n" " "); do
+    if [ "$ip" = "0.0.0.0" ]; then
+      fail "Port being bound to wildcard IP: $ip in {{c}}"
+    fi
+  done
+}
+
+# 5.14
+@test "5.14 - Set the 'on-failure' container restart policy to 5: {{c}}" {
+  policy=$(docker inspect --format MaximumRetryCount='{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "{{c}}")
+  if [ "$policy" != "MaximumRetryCount=5" ]; then
+    fail "MaximumRetryCount is not set to 5: {{c}}"
+  fi
+}
+
+# 5.15
+@test "5.15 - Do not share the host's process namespace: {{c}}" {
+  mode=$(docker inspect --format 'PidMode={{.HostConfig.PidMode }}' "{{c}}")
+  if [ "$mode" = "PidMode=host" ]; then
+    fail "Host PID namespace being shared with: {{c}}"
+  fi
+}
+
+# 5.16
+@test "5.16 - Do not share the host's IPC namespace: {{c}}" {
+  mode=$(docker inspect --format 'IpcMode={{.HostConfig.IpcMode }}' "{{c}}")
+  if [ "$mode" = "IpcMode=host" ]; then
+    fail "Host IPC namespace being shared with: {{c}}"
+  fi
+}
+
+# 5.17
+@test "5.17 - Do not directly expose host devices to containers: {{c}}" {
+  devices=$(docker inspect --format 'Devices={{ .HostConfig.Devices }}' "{{c}}")
+  if [ "$devices" != "Devices=" ] && [ "$devices" != "Devices=[]" ] && [ "$devices" != "Devices=<no value>" ]; then
+    fail "Container has devices exposed directly: {{c}}"
+  fi
+}
+
+# 5.18
+@test "5.18 - Override default ulimit at runtime only if needed: {{c}}" {
+  ulimits=$(docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' "{{c}}")
+  if [ "$ulimits" = "Ulimits=" ] || [ "$ulimits" = "Ulimits=[]" ] || [ "$ulimits" = "Ulimits=<no value>" ]; then
+    fail "Container no default ulimit override: {{c}}"
+  fi
+}
+
+# 5.19
+@test "5.19 - Do not set mount propagation mode to shared: {{c}}" {
+  mode=$(docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "{{c}}")
+  if [ "$mode" = "Propagation=shared" ]; then
+    fail "Mount propagation mode is shared: {{c}}"
+  fi
+}
+
+# 5.20
+@test "5.20 - Do not share the host's UTS namespace: {{c}}" {
+  mode=$(docker inspect --format 'UTSMode={{.HostConfig.UTSMode }}' "{{c}}")
+  if [ "$mode" = "UTSMode=host" ]; then
+    fail "Host UTS namespace being shared with: {{c}}"
+  fi
+}
+
+# 5.21
+@test "5.21 - Do not disable default seccomp profile: {{c}}" {
+  result=$(docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "{{c}}")
+  run grep "seccomp:unconfined" <<< "$result"
+  if [ $status -eq 0 ]; then
+    fail "Default seccomp profile disabled: {{c}}"
+  fi
+}
+
+# 5.24
+@test "5.24 - Confirm cgroup usage: {{c}}" {
+  mode=$(docker inspect --format 'CgroupParent={{.HostConfig.CgroupParent }}x' "{{c}}")
+  if [ "$mode" != "CgroupParent=x" ]; then
+    fail "Confirm cgroup usage: {{c}}"
+  fi
+}
+
+# 5.25
+@test "5.25 - Restrict container from acquiring additional privileges: {{c}}" {
+  result=$(docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "{{c}}")
+  run grep "no-new-privileges" <<< "$result"
+  if [ $status -ne 0 ]; then
+    fail "Privileges not restricted: {{c}}"
+  fi
+}

@@ -45,6 +45,61 @@ The [distribution specific Dockerfiles](https://github.com/docker/docker-bench-s
 may also help if the distribution you're using haven't yet shipped Docker
 version 1.10.0 or later.
 
+## Running Docker Bench Bats tests
+
+[Bats](https://github.com/sstephenson/bats) is a [TAP](http://testanything.org/)-compliant testing framework for Bash. It provides a simple way to verify that the UNIX programs you write behave as expected.
+
+All Docker Bench scipts are also available as Bats tests. Also container level (and image level) tests are automatically generated for all containers available on host. It's possible to run all or only selected test(s), if you like.
+
+By default TAP test results are reported, but it's possible to produce a "pretty" printed output too.
+
+Use the following command to run Docker Bench Bats tests:
+
+```
+Help documentation for run_tests.sh
+
+Basic usage: run_tests.sh [-c] [-p|-t] [-o path] <test> [<test> ...]
+
+Command line switches are optional. The following switches are recognized.
+-c  --Displays number of tests. No further functions are performed.
+-g  --Generates all CIS Bats tests without execution. No further functions are performed.
+-p  --Show results in pretty format.
+-t  --Show results in TAP format. This is the default format.
+-r  --Create test results files: tests_<timestamp>.tap in test result folder.
+-o  --Specify test result folder. Default to /var/docker-bench/results.
+-h  --Displays this help message. No further functions are performed.
+
+Example: run_tests.sh -t -o /var/docker-bench/results
+```
+
+**Note:**: You need to run `run_tests.sh` on Docker host as `root` user.
+
+### Running Docker Bench Bats tests from Docker image
+
+First, clone and compile your `docker-bench-tests` Docker image.
+
+```sh
+git clone https://github.com/gaia-adm/docker-bench-security.git
+cd docker-bench-security
+docker build -t docker-bench-tests -f bats.Dockerfile .
+```
+
+Then run `docker-bench-tests` container (as bellow). Test results will be saved into `/var/docker-bench` folder in TAP format. Test results file is named accoring to the `test_<timestamp>.tap` pattern.
+
+```sh
+docker run -it --net host --pid host --cap-add audit_control \
+    -v /var/lib:/var/lib \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /usr/lib/systemd:/usr/lib/systemd \
+    -v /var/docker-bench:/var/docker-bench \
+    -v /etc/fstab:/etc/fstab \
+    -v /etc/docker:/etc/docker \
+    -v /etc/default/docker:/etc/default/docker \
+    -v /etc/group:/etc/group \
+    --label docker_bench_security \
+    docker-bench-tests
+```
+
 ## Building Docker Bench for Security
 
 If you wish to build and run this container yourself, you can follow the

@@ -1,0 +1,18 @@
+#!/usr/bin/env bats
+
+load "test_helper/bats-support/load"
+load "test_helper/bats-assert/load"
+load "$BATS_TEST_DIRNAME/../helper_lib.sh"
+
+
+# 4.1
+@test "4.1  - Create a user for the container: {{c}}" {
+  user=$(docker inspect --format 'User={{.Config.User}}' "{{c}}")
+  if [ "$user" = "User=" ] || [ "$user" = "User=[]" ] || [ "$user" = "User=<no value>" ]; then
+    # get PID 1 and check if it's running as root (uid=0)
+    uid=$(docker exec {{c}} awk '/^Uid:/{print $2}' /proc/1/status)
+    if [ $uid -eq 0 ]; then
+      fail "Running as root: {{c}}"
+    fi
+  fi
+}
