@@ -50,10 +50,10 @@ if command -v auditctl >/dev/null 2>&1; then
   else
     warn "$check_1_5"
   fi
-elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-    pass "$check_1_5"
+elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  pass "$check_1_5"
 else
-    warn "$check_1_5"
+  warn "$check_1_5"
 fi
 
 # 1.6
@@ -66,7 +66,7 @@ if [ -d "$directory" ]; then
     else
       warn "$check_1_6"
     fi
-  elif grep "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_6"
   else
     warn "$check_1_6"
@@ -86,7 +86,7 @@ if [ -d "$directory" ]; then
     else
       warn "$check_1_7"
     fi
-  elif grep "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
       pass "$check_1_7"
   else
       warn "$check_1_7"
@@ -106,7 +106,7 @@ if [ -f "$file" ]; then
     else
       warn "$check_1_8"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
       pass "$check_1_8"
   else
       warn "$check_1_8"
@@ -126,7 +126,7 @@ if [ -e "$file" ]; then
     else
       warn "$check_1_9"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_9"
   else
     warn "$check_1_9"
@@ -146,7 +146,7 @@ if [ -f "$file" ]; then
     else
       warn "$check_1_10"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_10"
   else
     warn "$check_1_10"
@@ -166,7 +166,7 @@ if [ -f "$file" ]; then
     else
       warn "$check_1_11"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_11"
   else
     warn "$check_1_11"
@@ -186,7 +186,7 @@ if [ -f "$file" ]; then
     else
       warn "$check_1_12"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_12"
   else
     warn "$check_1_12"
@@ -206,7 +206,7 @@ if [ -f "$file" ]; then
     else
       warn "$check_1_13"
     fi
-  elif grep "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_13"
   else
     warn "$check_1_13"
