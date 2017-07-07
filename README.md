@@ -76,7 +76,7 @@ Also, this script can also be simply run from your base host by running:
 ```sh
 git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
-sh docker-bench-security.sh
+sudo sh docker-bench-security.sh
 ```
 
 This script was build to be POSIX 2004 compliant, so it should be portable

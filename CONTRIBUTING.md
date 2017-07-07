@@ -30,7 +30,7 @@ Or you can simply run the shell script locally:
 ```sh
 git clone git@github.com:docker/docker-bench-security.git
 cd docker-bench-security
-sh docker-bench-security.sh
+sudo sh docker-bench-security.sh
 ```
 
 The Docker Bench has the main script called `docker-bench-security.sh`.
