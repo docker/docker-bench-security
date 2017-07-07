@@ -11,7 +11,7 @@ else
   set -f; IFS=$'
 '
   # 5.1
-  check_5_1="5.1  - Do not disable AppArmor Profile"
+  check_5_1="5.1  - Ensure AppArmor Profile is Enabled"
 
   fail=0
   for c in $containers; do
@@ -34,7 +34,7 @@ else
   fi
 
   # 5.2
-  check_5_2="5.2  - Verify SELinux security options, if applicable"
+  check_5_2="5.2  - Ensure SELinux security options are set, if applicable"
 
   fail=0
   for c in $containers; do
@@ -57,7 +57,7 @@ else
   fi
 
   # 5.3
-  check_5_3="5.3  - Restrict Linux Kernel Capabilities within containers"
+  check_5_3="5.3  - Ensure Linux Kernel Capabilities are restricted within containers"
 
   fail=0
   for c in $containers; do
@@ -83,7 +83,7 @@ else
   fi
 
   # 5.4
-  check_5_4="5.4  - Do not use privileged containers"
+  check_5_4="5.4  - Ensure privileged containers are not used"
 
   fail=0
   for c in $containers; do
@@ -106,7 +106,7 @@ else
   fi
 
   # 5.5
-  check_5_5="5.5  - Do not mount sensitive host system directories on containers"
+  check_5_5="5.5  - Ensure sensitive host system directories are not mounted on containers"
 
   # List of sensitive directories to test for. Script uses new-lines as a separator.
   # Note the lack of identation. It needs it for the substring comparison.
@@ -149,7 +149,7 @@ else
   fi
 
   # 5.6
-  check_5_6="5.6  - Do not run ssh within containers"
+  check_5_6="5.6  - Ensure ssh is not run within containers"
 
   fail=0
   printcheck=0
@@ -185,7 +185,7 @@ else
   fi
 
   # 5.7
-  check_5_7="5.7  - Do not map privileged ports within containers"
+  check_5_7="5.7  - Ensure privileged ports are not mapped within containers"
 
   fail=0
   for c in $containers; do
@@ -194,7 +194,7 @@ else
 
     # iterate through port range (line delimited)
     for port in $ports; do
-    if [ ! -z "$port" ] && [ "0$port" -lt 1024 ]; then
+    if [ ! -z "$port" ] && [ "$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
           warn "$check_5_7"
@@ -212,11 +212,11 @@ else
   fi
 
   # 5.8
-  check_5_8="5.8  - Open only needed ports on container"
+  check_5_8="5.8  - Ensure only needed ports are open on the container"
   note "$check_5_8"
 
   # 5.9
-  check_5_9="5.9  - Do not share the host's network namespace"
+  check_5_9="5.9  - Ensure the host's network namespace is not shared"
 
   fail=0
   for c in $containers; do
@@ -239,7 +239,7 @@ else
   fi
 
   # 5.10
-  check_5_10="5.10 - Limit memory usage for container"
+  check_5_10="5.10 - Ensure memory usage for container is limited"
 
   fail=0
   for c in $containers; do
@@ -266,7 +266,7 @@ else
   fi
 
   # 5.11
-  check_5_11="5.11 - Set container CPU priority appropriately"
+  check_5_11="5.11 - Ensure CPU priority is set appropriately on the container"
 
   fail=0
   for c in $containers; do
@@ -293,7 +293,7 @@ else
   fi
 
   # 5.12
-  check_5_12="5.12 - Mount container's root filesystem as read only"
+  check_5_12="5.12 - Ensure the container's root filesystem is mounted as read only"
 
   fail=0
   for c in $containers; do
@@ -316,7 +316,7 @@ else
   fi
 
   # 5.13
-  check_5_13="5.13 - Bind incoming container traffic to a specific host interface"
+  check_5_13="5.13 -  Ensure incoming container traffic is binded to a specific host interface"
 
   fail=0
   for c in $containers; do
@@ -339,7 +339,7 @@ else
   fi
 
   # 5.14
-  check_5_14="5.14 - Set the 'on-failure' container restart policy to 5"
+  check_5_14="5.14 - Ensure 'on-failure' container restart policy is set to '5'"
 
   fail=0
   for c in $containers; do
@@ -362,7 +362,7 @@ else
   fi
 
   # 5.15
-  check_5_15="5.15 - Do not share the host's process namespace"
+  check_5_15="5.15 - Ensure the host's process namespace is not shared"
 
   fail=0
   for c in $containers; do
@@ -385,7 +385,7 @@ else
   fi
 
   # 5.16
-  check_5_16="5.16 - Do not share the host's IPC namespace"
+  check_5_16="5.16 - Ensure the host's IPC namespace is not shared"
 
   fail=0
   for c in $containers; do
@@ -408,7 +408,7 @@ else
   fi
 
   # 5.17
-  check_5_17="5.17 - Do not directly expose host devices to containers"
+  check_5_17="5.17 - Ensure host devices are not directly exposed to containers"
 
   fail=0
   for c in $containers; do
@@ -431,7 +431,7 @@ else
   fi
 
   # 5.18
-  check_5_18="5.18 - Override default ulimit at runtime only if needed"
+  check_5_18="5.18 - Ensure the default ulimit is overwritten at runtime, only if needed"
 
   fail=0
   for c in $containers; do
@@ -454,7 +454,7 @@ else
   fi
 
   # 5.19
-  check_5_19="5.19 - Do not set mount propagation mode to shared"
+  check_5_19="5.19 - Ensure mount propagation mode is not set to shared"
 
   fail=0
   for c in $containers; do
@@ -476,7 +476,7 @@ else
   fi
 
   # 5.20
-  check_5_20="5.20 - Do not share the host's UTS namespace"
+  check_5_20="5.20 - Ensure the host's UTS namespace is not shared"
 
   fail=0
   for c in $containers; do
@@ -499,7 +499,7 @@ else
   fi
 
   # 5.21
-  check_5_21="5.21 - Do not disable default seccomp profile"
+  check_5_21="5.21 - Ensure the default seccomp profile is not Disabled"
 
   fail=0
   for c in $containers; do
@@ -520,15 +520,15 @@ else
   fi
 
   # 5.22
-  check_5_22="5.22 - Do not docker exec commands with privileged option"
+  check_5_22="5.22 - Ensure docker exec commands are not used with privileged option"
   note "$check_5_22"
 
   # 5.23
-  check_5_23="5.23 - Do not docker exec commands with user option"
+  check_5_23="5.23 - Ensure docker exec commands are not used with user option"
   note "$check_5_23"
 
   # 5.24
-  check_5_24="5.24 - Confirm cgroup usage"
+  check_5_24="5.24 - Ensure cgroup usage is confirmed"
 
   fail=0
   for c in $containers; do
@@ -551,7 +551,7 @@ else
   fi
 
   # 5.25
-  check_5_25="5.25 - Restrict container from acquiring additional privileges"
+  check_5_25="5.25 - Ensure the container is restricted from acquiring additional privileges"
 
   fail=0
   for c in $containers; do
@@ -572,7 +572,7 @@ else
   fi
 
   # 5.26
-  check_5_26="5.26 - Check container health at runtime"
+  check_5_26="5.26 - Ensure container health is checked at runtime"
 
   fail=0
   for c in $containers; do
@@ -595,7 +595,7 @@ else
   info "$check_5_27"
 
   # 5.28
-  check_5_28="5.28 - Use PIDs cgroup limit"
+  check_5_28="5.28 - Ensure PIDs cgroup limit is used"
 
   fail=0
   for c in $containers; do
@@ -618,7 +618,7 @@ else
   fi
 
   # 5.29
-  check_5_29="5.29 - Do not use Docker's default bridge docker0"
+  check_5_29="5.29 - Ensure Docker's default bridge docker0 is not used"
 
   fail=0
   networks=$(docker network ls -q 2>/dev/null)
@@ -644,7 +644,7 @@ else
   fi
 
   # 5.30
-  check_5_30="5.30 - Do not share the host's user namespaces"
+  check_5_30="5.30 - Ensure the host's user namespaces is not shared"
 
   fail=0
   for c in $containers; do
@@ -665,7 +665,7 @@ else
   fi
 
   # 5.31
-  check_5_31="5.31 - Do not mount the Docker socket inside any containers"
+  check_5_31="5.31 - Ensure the Docker socket is not mounted inside any containers"
 
   fail=0
   for c in $containers; do
