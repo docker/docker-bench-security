@@ -79,7 +79,11 @@ fi
 
 # 7.7
 check_7_7="7.7  - Ensure swarm manager auto-lock key is rotated periodically"
-note "$check_7_7"
+if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
+  note "$check_7_7"
+else
+  pass "$check_7_8 (Swarm mode not enabled)"
+fi
 
 # 7.8
 check_7_8="7.8  - Ensure node certificates are rotated as appropriate"
