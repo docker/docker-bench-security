@@ -1,10 +1,10 @@
 #!/bin/sh
 
 logit "\n"
-info "4 - Container Images and Build Files"
+info "4 - Container Images and Build File"
 
 # 4.1
-check_4_1="4.1  - Create a user for the container"
+check_4_1="4.1  - Ensure a user for the container has been created"
 
 # If container_users is empty, there are no running containers
 if [ -z "$containers" ]; then
@@ -41,19 +41,19 @@ set +f; unset IFS
 images=$(docker images -q)
 
 # 4.2
-check_4_2="4.2  - Use trusted base images for containers"
+check_4_2="4.2  - Ensure that containers use trusted base images"
 note "$check_4_2"
 
 # 4.3
-check_4_3="4.3  - Do not install unnecessary packages in the container"
+check_4_3="4.3  - Ensure unnecessary packages are not installed in the container"
 note "$check_4_3"
 
 # 4.4
-check_4_4="4.4  - Scan and rebuild the images to include security patches"
+check_4_4="4.4  - Ensure images are scanned and rebuilt to include security patches"
 note "$check_4_4"
 
 # 4.5
-check_4_5="4.5  - Enable Content trust for Docker"
+check_4_5="4.5  - Ensure Content trust for Docker is Enabled"
 if [ "x$DOCKER_CONTENT_TRUST" = "x1" ]; then
   pass "$check_4_5"
 else
@@ -61,7 +61,7 @@ else
 fi
 
 # 4.6
-check_4_6="4.6  - Add HEALTHCHECK instruction to the container image"
+check_4_6="4.6  - Ensure HEALTHCHECK instructions have been added to the container image"
 fail=0
 for img in $images; do
   if docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1; then
@@ -80,7 +80,7 @@ if [ $fail -eq 0 ]; then
 fi
 
 # 4.7
-check_4_7="4.7  - Do not use update instructions alone in the Dockerfile"
+check_4_7="4.7  - Ensure update instructions are not use alone in the Dockerfile"
 fail=0
 for img in $images; do
   if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
@@ -99,11 +99,11 @@ if [ $fail -eq 0 ]; then
 fi
 
 # 4.8
-check_4_8="4.8  - Remove setuid and setgid permissions in the images"
+check_4_8="4.8  - Ensure setuid and setgid permissions are removed in the images"
 note "$check_4_8"
 
 # 4.9
-check_4_9="4.9  - Use COPY instead of ADD in Dockerfile"
+check_4_9="4.9  - Ensure COPY is used instead of ADD in Dockerfile"
 fail=0
 for img in $images; do
   docker history "$img" 2> /dev/null | grep 'ADD' >/dev/null 2>&1
@@ -123,9 +123,9 @@ if [ $fail -eq 0 ]; then
 fi
 
 # 4.10
-check_4_10="4.10 - Do not store secrets in Dockerfiles"
+check_4_10="4.10 - Ensure secrets are not stored in Dockerfiles"
 note "$check_4_10"
 
 # 4.11
-check_4_11="4.11 - Install verified packages only"
+check_4_11="4.11 - Ensure verified packages are only Installed"
 note "$check_4_11"
