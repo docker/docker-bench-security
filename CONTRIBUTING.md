@@ -20,17 +20,17 @@ compliant shell. We try to keep the project compliant for maximum portability.
 You can build the container that wraps the docker-bench for security:
 
 ```sh
-$ git clone git@github.com:docker/docker-bench-security.git
-$ cd docker-bench-security
-$ docker build -t docker-bench-security .
+git clone git@github.com:docker/docker-bench-security.git
+cd docker-bench-security
+docker build -t docker-bench-security .
 ```
 
 Or you can simply run the shell script locally:
 
 ```sh
-$ git clone git@github.com:docker/docker-bench-security.git
-$ cd docker-bench-security
-$ sh docker-bench-security.sh
+git clone git@github.com:docker/docker-bench-security.git
+cd docker-bench-security
+sh docker-bench-security.sh
 ```
 
 The Docker Bench has the main script called `docker-bench-security.sh`.
