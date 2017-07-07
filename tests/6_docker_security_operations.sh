@@ -8,7 +8,7 @@ check_6_1="6.1  - Avoid image sprawl"
 images=$(docker images -q | sort -u | wc -l | awk '{print $1}')
 active_images=0
 
-for c in $(docker inspect -f "{{.Image}}" $(docker ps -qa)); do
+for c in $(docker inspect -f "{{.Image}}" $(docker ps -qa) 2>/dev/null); do
   if docker images --no-trunc -a | grep "$c" > /dev/null ; then
     active_images=$(( active_images += 1 ))
   fi
