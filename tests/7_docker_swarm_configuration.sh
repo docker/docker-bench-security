@@ -88,7 +88,7 @@ fi
 # 7.8
 check_7_8="7.8  - Ensure node certificates are rotated as appropriate"
 if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-  if docker info | grep "Expiry Duration: 2 days"; then
+  if docker info 2>/dev/null | grep "Expiry Duration: 2 days"; then
     pass "$check_7_8"
   else
     info "$check_7_8"
