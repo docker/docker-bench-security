@@ -1,10 +1,10 @@
 #!/bin/sh
 
 logit "\n"
-info "3 - Docker Daemon Configuration Files"
+info "3 - Docker daemon configuration files"
 
 # 3.1
-check_3_1="3.1  - Verify that docker.service file ownership is set to root:root"
+check_3_1="3.1  - Ensure that docker.service file ownership is set to root:root"
 file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
@@ -19,7 +19,7 @@ else
 fi
 
 # 3.2
-check_3_2="3.2  - Verify that docker.service file permissions are set to 644 or more restrictive"
+check_3_2="3.2  - Ensure that docker.service file permissions are set to 644 or more restrictive"
 file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
@@ -34,7 +34,7 @@ else
 fi
 
 # 3.3
-check_3_3="3.3  - Verify that docker.socket file ownership is set to root:root"
+check_3_3="3.3  - Ensure that docker.socket file ownership is set to root:root"
 file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
@@ -49,7 +49,7 @@ else
 fi
 
 # 3.4
-check_3_4="3.4  - Verify that docker.socket file permissions are set to 644 or more restrictive"
+check_3_4="3.4  - Ensure that docker.socket file permissions are set to 644 or more restrictive"
 file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
@@ -64,7 +64,7 @@ else
 fi
 
 # 3.5
-check_3_5="3.5  - Verify that /etc/docker directory ownership is set to root:root"
+check_3_5="3.5  - Ensure that /etc/docker directory ownership is set to root:root"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
   if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
@@ -79,7 +79,7 @@ else
 fi
 
 # 3.6
-check_3_6="3.6  - Verify that /etc/docker directory permissions are set to 755 or more restrictive"
+check_3_6="3.6  - Ensure that /etc/docker directory permissions are set to 755 or more restrictive"
 directory="/etc/docker"
 if [ -d "$directory" ]; then
   if [ "$(stat -c %a $directory)" -eq 755 -o "$(stat -c %a $directory)" -eq 700 ]; then
@@ -94,7 +94,7 @@ else
 fi
 
 # 3.7
-check_3_7="3.7  - Verify that registry certificate file ownership is set to root:root"
+check_3_7="3.7  - Ensure that registry certificate file ownership is set to root:root"
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
@@ -116,7 +116,7 @@ else
 fi
 
 # 3.8
-check_3_8="3.8  - Verify that registry certificate file permissions are set to 444 or more restrictive"
+check_3_8="3.8  - Ensure that registry certificate file permissions are set to 444 or more restrictive"
 directory="/etc/docker/certs.d/"
 if [ -d "$directory" ]; then
   fail=0
@@ -138,7 +138,7 @@ else
 fi
 
 # 3.9
-check_3_9="3.9  - Verify that TLS CA certificate file ownership is set to root:root"
+check_3_9="3.9  - Ensure that TLS CA certificate file ownership is set to root:root"
 if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
   tlscacert=$(get_docker_configuration_file_args 'tlscacert')
 else
@@ -157,7 +157,7 @@ else
 fi
 
 # 3.10
-check_3_10="3.10 - Verify that TLS CA certificate file permissions are set to 444 or more restrictive"
+check_3_10="3.10 - Ensure that TLS CA certificate file permissions are set to 444 or more restrictive"
 if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
   tlscacert=$(get_docker_configuration_file_args 'tlscacert')
 else
@@ -176,7 +176,7 @@ else
 fi
 
 # 3.11
-check_3_11="3.11 - Verify that Docker server certificate file ownership is set to root:root"
+check_3_11="3.11 - Ensure that Docker server certificate file ownership is set to root:root"
 if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
   tlscert=$(get_docker_configuration_file_args 'tlscert')
 else
@@ -195,7 +195,7 @@ else
 fi
 
 # 3.12
-check_3_12="3.12 - Verify that Docker server certificate file permissions are set to 444 or more restrictive"
+check_3_12="3.12 - Ensure that Docker server certificate file permissions are set to 444 or more restrictive"
 if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
   tlscert=$(get_docker_configuration_file_args 'tlscert')
 else
@@ -214,7 +214,7 @@ else
 fi
 
 # 3.13
-check_3_13="3.13 - Verify that Docker server key file ownership is set to root:root"
+check_3_13="3.13 - Ensure that Docker server certificate key file ownership is set to root:root"
 if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
   tlskey=$(get_docker_configuration_file_args 'tlskey')
 else
@@ -233,14 +233,14 @@ else
 fi
 
 # 3.14
-check_3_14="3.14 - Verify that Docker server key file permissions are set to 400 or more restrictive"
+check_3_14="3.14 - Ensure that Docker server certificate key file permissions are set to 400"
 if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
   tlskey=$(get_docker_configuration_file_args 'tlskey')
 else
   tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
 fi
 if [ -f "$tlskey" ]; then
-  if [ "$(stat -c %a $tlskey)" -eq 444 -o "$(stat -c %a $tlskey)" -eq 400 ]; then
+  if [ "$(stat -c %a $tlskey)" -eq 400 ]; then
     pass "$check_3_14"
   else
     warn "$check_3_14"
@@ -252,7 +252,7 @@ else
 fi
 
 # 3.15
-check_3_15="3.15 - Verify that Docker socket file ownership is set to root:docker"
+check_3_15="3.15 - Ensure that Docker socket file ownership is set to root:docker"
 file="/var/run/docker.sock"
 if [ -S "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
@@ -267,7 +267,7 @@ else
 fi
 
 # 3.16
-check_3_16="3.16 - Verify that Docker socket file permissions are set to 660 or more restrictive"
+check_3_16="3.16 - Ensure that Docker socket file permissions are set to 660 or more restrictive"
 file="/var/run/docker.sock"
 if [ -S "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 660 -o "$(stat -c %a $file)" -eq 600 ]; then
@@ -282,7 +282,7 @@ else
 fi
 
 # 3.17
-check_3_17="3.17 - Verify that daemon.json file ownership is set to root:root"
+check_3_17="3.17 - Ensure that daemon.json file ownership is set to root:root"
 file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
@@ -297,7 +297,7 @@ else
 fi
 
 # 3.18
-check_3_18="3.18 - Verify that daemon.json file permissions are set to 644 or more restrictive"
+check_3_18="3.18 - Ensure that daemon.json file permissions are set to 644 or more restrictive"
 file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
@@ -312,7 +312,7 @@ else
 fi
 
 # 3.19
-check_3_19="3.19 - Verify that /etc/default/docker file ownership is set to root:root"
+check_3_19="3.19 - Ensure that /etc/default/docker file ownership is set to root:root"
 file="/etc/default/docker"
 if [ -f "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
@@ -327,7 +327,7 @@ else
 fi
 
 # 3.20
-check_3_20="3.20 - Verify that /etc/default/docker file permissions are set to 644 or more restrictive"
+check_3_20="3.20 -  Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
 file="/etc/default/docker"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
