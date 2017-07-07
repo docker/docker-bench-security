@@ -327,7 +327,7 @@ else
 fi
 
 # 3.20
-check_3_20="3.20 -  Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+check_3_20="3.20 - Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
 file="/etc/default/docker"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
