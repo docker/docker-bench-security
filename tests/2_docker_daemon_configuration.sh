@@ -4,7 +4,7 @@ logit "\n"
 info "2 - Docker daemon configuration"
 
 # 2.1
-check_2_1="2.1  -  Ensure network traffic is restricted between containers on the default bridge"
+check_2_1="2.1  - Ensure network traffic is restricted between containers on the default bridge"
 if get_docker_effective_command_line_args '--icc' | grep false >/dev/null 2>&1; then
   pass "$check_2_1"
 elif get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
