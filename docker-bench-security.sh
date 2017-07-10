@@ -1,11 +1,11 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.2
+# Docker Bench for Security v1.3.3
 #
 # Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker 1.13 Benchmark.
+# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
 # ------------------------------------------------------------------------------
 
 # Load dependencies
@@ -56,12 +56,12 @@ if [ -z "$logger" ]; then
 fi
 
 yell "# ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.2
+# Docker Bench for Security v1.3.3
 #
 # Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker 1.13 Benchmark.
+# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
 # ------------------------------------------------------------------------------"
 
 # Warn if not root

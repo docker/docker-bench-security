@@ -1,10 +1,10 @@
 #!/bin/sh
 
 logit "\n"
-info "2 - Docker Daemon Configuration"
+info "2 - Docker daemon configuration"
 
 # 2.1
-check_2_1="2.1  - Restrict network traffic between containers"
+check_2_1="2.1  - Ensure network traffic is restricted between containers on the default bridge"
 if get_docker_effective_command_line_args '--icc' | grep false >/dev/null 2>&1; then
   pass "$check_2_1"
 elif get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
@@ -14,7 +14,7 @@ else
 fi
 
 # 2.2
-check_2_2="2.2  - Set the logging level"
+check_2_2="2.2  - Ensure the logging level is set to 'info'"
 if get_docker_configuration_file_args 'log-level' >/dev/null 2>&1; then
   if get_docker_configuration_file_args 'log-level' | grep info >/dev/null 2>&1; then
     pass "$check_2_2"
@@ -34,7 +34,7 @@ else
 fi
 
 # 2.3
-check_2_3="2.3  - Allow Docker to make changes to iptables"
+check_2_3="2.3  - Ensure Docker is allowed to make changes to iptables"
 if get_docker_effective_command_line_args '--iptables' | grep "false" >/dev/null 2>&1; then
   warn "$check_2_3"
 elif get_docker_configuration_file_args 'iptables' | grep "false" >/dev/null 2>&1; then
@@ -44,7 +44,7 @@ else
 fi
 
 # 2.4
-check_2_4="2.4  - Do not use insecure registries"
+check_2_4="2.4  - Ensure insecure registries are not used"
 if get_docker_effective_command_line_args '--insecure-registry' | grep "insecure-registry" >/dev/null 2>&1; then
   warn "$check_2_4"
 elif ! [ -z "$(get_docker_configuration_file_args 'insecure-registries')" ]; then
@@ -58,7 +58,7 @@ else
 fi
 
 # 2.5
-check_2_5="2.5  - Do not use the aufs storage driver"
+check_2_5="2.5  - Ensure aufs storage driver is not used"
 if docker info 2>/dev/null | grep -e "^Storage Driver:\s*aufs\s*$" >/dev/null 2>&1; then
   warn "$check_2_5"
 else
@@ -66,7 +66,7 @@ else
 fi
 
 # 2.6
-check_2_6="2.6  - Configure TLS authentication for Docker daemon"
+check_2_6="2.6  - Ensure TLS authentication for Docker daemon is configured"
 if grep -i 'tcp://' "$CONFIG_FILE" 2>/dev/null 1>&2; then
   if [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
     [ $(get_docker_configuration_file_args '"tlsverify' | grep 'true') ] ; then
@@ -101,7 +101,7 @@ fi
 
 
 # 2.7
-check_2_7="2.7  - Set default ulimit as appropriate"
+check_2_7="2.7  - Ensure the default ulimit is configured appropriately"
 if get_docker_configuration_file_args 'default-ulimit' | grep -v '{}' >/dev/null 2>&1; then
   pass "$check_2_7"
 elif get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1; then
@@ -122,7 +122,7 @@ else
 fi
 
 # 2.9
-check_2_9="2.9  - Confirm default cgroup usage"
+check_2_9="2.9  - Ensure the default cgroup usage has been confirmed"
 if get_docker_configuration_file_args 'cgroup-parent' | grep -v '""'; then
   warn "$check_2_9"
   info "     * Confirm cgroup usage"
@@ -134,7 +134,7 @@ else
 fi
 
 # 2.10
-check_2_10="2.10 - Do not change base device size until needed"
+check_2_10="2.10 - Ensure base device size is not changed until needed"
 if get_docker_configuration_file_args 'storage-opts' | grep "dm.basesize" >/dev/null 2>&1; then
   warn "$check_2_10"
 elif get_docker_effective_command_line_args '--storage-opt' | grep "dm.basesize" >/dev/null 2>&1; then
@@ -144,7 +144,7 @@ else
 fi
 
 # 2.11
-check_2_11="2.11 - Use authorization plugin"
+check_2_11="2.11 - Ensure that authorization for Docker client commands is enabled"
 if get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]'; then
   pass "$check_2_11"
 elif get_docker_effective_command_line_args '--authorization-plugin' | grep "authorization-plugin" >/dev/null 2>&1; then
@@ -154,7 +154,7 @@ else
 fi
 
 # 2.12
-check_2_12="2.12 - Configure centralized and remote logging"
+check_2_12="2.12 - Ensure centralized and remote logging is configured"
 if docker info --format '{{ .LoggingDriver }}' | grep 'json-file' >/dev/null 2>&1; then
   warn "$check_2_12"
 else
@@ -162,7 +162,7 @@ else
 fi
 
 # 2.13
-check_2_13="2.13 - Disable operations on legacy registry (v1)"
+check_2_13="2.13 - Ensure operations on legacy registry (v1) are Disabled"
 if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
   pass "$check_2_13"
 elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
@@ -172,7 +172,7 @@ else
 fi
 
 # 2.14
-check_2_14="2.14 - Enable live restore"
+check_2_14="2.14 - Ensure live restore is Enabled"
 if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
   pass "$check_2_14"
 else
@@ -184,105 +184,37 @@ else
 fi
 
 # 2.15
-check_2_15="2.15 - Do not enable swarm mode, if not needed"
-if docker info 2>/dev/null | grep -e "Swarm:*\sinactive\s*" >/dev/null 2>&1; then
+check_2_15="2.15 - Ensure Userland Proxy is Disabled"
+if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
+  pass "$check_2_15"
+elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
   pass "$check_2_15"
 else
   warn "$check_2_15"
 fi
 
 # 2.16
-check_2_16="2.16 - Control the number of manager nodes in a swarm"
-if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
-  managernodes=$(docker node ls | grep -c "Leader")
-  if [ "$managernodes" -le 1 ]; then
-    pass "$check_2_16"
-  else
-    warn "$check_2_16"
-  fi
+check_2_16="2.16 - Ensure daemon-wide custom seccomp profile is applied, if needed"
+if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
+  pass "$check_2_16"
 else
-  pass "$check_2_16 (Swarm mode not enabled)"
+  info "$check_2_16"
 fi
 
 # 2.17
-check_2_17="2.17 - Bind swarm services to a specific host interface"
-if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
-  netstat -lnt | grep -e '\[::]:2377 ' -e ':::2377' -e '*:2377 ' -e ' 0\.0\.0\.0:2377 ' >/dev/null 2>&1
-  if [ $? -eq 1 ]; then
-    pass "$check_2_17"
-  else
-    warn "$check_2_17"
-  fi
+check_2_17="2.17 - Ensure experimental features are avoided in production"
+if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
+  pass "$check_2_17"
 else
-  pass "$check_2_17 (Swarm mode not enabled)"
+  warn "$check_2_17"
 fi
 
 # 2.18
-check_2_18="2.18 - Disable Userland Proxy"
-if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
+check_2_18="2.18 - Ensure containers are restricted from acquiring new privileges"
+if get_docker_effective_command_line_args '--no-new-privileges' >/dev/null 2>&1; then
   pass "$check_2_18"
-elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
+elif get_docker_configuration_file_args 'no-new-privileges' >/dev/null 2>&1; then
   pass "$check_2_18"
 else
   warn "$check_2_18"
 fi
-
-# 2.19
-check_2_19="2.19 - Encrypt data exchanged between containers on different nodes on the overlay network"
-if docker network ls --filter driver=overlay --quiet | \
-  xargs docker network inspect --format '{{.Name}} {{ .Options }}' 2>/dev/null | \
-    grep -v 'encrypted:' 2>/dev/null 1>&2; then
-  warn "$check_2_19"
-  for encnet in $(docker network ls --filter driver=overlay --quiet); do
-    if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
-       grep -v 'encrypted:' 2>/dev/null 1>&2; then
-      warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
-    fi
-  done
-else
-  pass "$check_2_19"
-fi
-
-# 2.20
-check_2_20="2.20 - Apply a daemon-wide custom seccomp profile, if needed"
-if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
-  pass "$check_2_20"
-else
-  info "$check_2_20"
-fi
-
-# 2.21
-check_2_21="2.21 - Avoid experimental features in production"
-if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
-  pass "$check_2_21"
-else
-  warn "$check_2_21"
-fi
-
-# 2.22
-check_2_22="2.22 - Use Docker's secret management commands for managing secrets in a Swarm cluster"
-if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-  if [ "$(docker secret ls -q | wc -l)" -ge 1 ]; then
-    pass "$check_2_22"
-  else
-    info "$check_2_22"
-  fi
-else
-  pass "$check_2_22 (Swarm mode not enabled)"
-fi
-
-# 2.23
-check_2_23="2.23 - Run swarm manager in auto-lock mode"
-if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-  if ! docker swarm unlock-key 2>/dev/null | grep 'SWMKEY' 2>/dev/null 1>&2; then
-    warn "$check_2_23"
-  else
-    pass "$check_2_23"
-  fi
-else
-  pass "$check_2_23 (Swarm mode not enabled)"
-fi
-
-# 2.24
-check_2_24="2.24 - Rotate swarm manager auto-lock key periodically"
-note "$check_2_24"
