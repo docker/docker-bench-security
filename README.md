@@ -33,7 +33,7 @@ docker run -it --net host --pid host --cap-add audit_control \
     docker/docker-bench-security
 ```
 
-Docker bench requires Docker 1.10.0 or later in order to run.
+Docker bench requires Docker 1.13.0 or later in order to run.
 
 Note that when distributions doesn't contain `auditctl`, the audit tests will
 check `/etc/audit/audit.rules` to see if a rule is present instead.
