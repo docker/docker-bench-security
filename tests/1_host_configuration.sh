@@ -8,6 +8,8 @@ auditrules="/etc/audit/audit.rules"
 check_1_1="1.1  - Ensure a separate partition for containers has been created"
 if grep /var/lib/docker /etc/fstab >/dev/null 2>&1; then
   pass "$check_1_1"
+elif mountpoint -q  -- /var/lib/docker >/dev/null 2>&1; then
+  pass "$check_1_1"
 else
   warn "$check_1_1"
 fi
