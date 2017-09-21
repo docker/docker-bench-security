@@ -178,6 +178,8 @@ if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/nul
 else
   if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
     pass "$check_2_14 (Incompatible with swarm mode)"
+  elif get_docker_effective_command_line_args '--live-restore' | grep "live-restore" >/dev/null 2>&1; then
+    pass "$check_2_14"
   else
     warn "$check_2_14"
   fi
