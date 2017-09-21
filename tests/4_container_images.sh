@@ -86,11 +86,11 @@ for img in $images; do
   if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
     if [ $fail -eq 0 ]; then
       fail=1
-      info "$check_4_7"
+      warn "$check_4_7"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
     if ! [ "$imgName" = '[]' ]; then
-      info "     * Update instruction found: $imgName"
+      warn "     * Update instruction found: $imgName"
     fi
   fi
 done
