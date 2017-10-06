@@ -1,6 +1,6 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.3
+# Docker Bench for Security v1.3.4
 #
 # Docker, Inc. (c) 2015-
 #
@@ -56,7 +56,7 @@ if [ -z "$logger" ]; then
 fi
 
 yell "# ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.3
+# Docker Bench for Security v1.3.4
 #
 # Docker, Inc. (c) 2015-
 #
