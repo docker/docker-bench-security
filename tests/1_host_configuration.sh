@@ -75,17 +75,22 @@ if [ -d "$directory" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $directory >/dev/null 2>&1; then
       pass "$check_1_6"
+      logjson "1.6" "PASS"
     else
       warn "$check_1_6"
+      logjson "1.6" "WARN"
     fi
   elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_6"
+    logjson "1.6" "PASS"
   else
     warn "$check_1_6"
+    logjson "1.6" "WARN"
   fi
 else
   info "$check_1_6"
   info "     * Directory not found"
+  logjson "1.6" "INFO"
 fi
 
 # 1.7
@@ -95,17 +100,22 @@ if [ -d "$directory" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $directory >/dev/null 2>&1; then
       pass "$check_1_7"
+      logjson "1.7" "PASS"
     else
       warn "$check_1_7"
+      logjson "1.7" "WARN"
     fi
   elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
       pass "$check_1_7"
+      logjson "1.7" "PASS"
   else
       warn "$check_1_7"
+      logjson "1.7" "WARN"
   fi
 else
   info "$check_1_7"
   info "     * Directory not found"
+  logjson "1.7" "INFO"
 fi
 
 # 1.8
@@ -115,17 +125,22 @@ if [ -f "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass "$check_1_8"
+      logjson "1.8" "PASS"
     else
       warn "$check_1_8"
+      logjson "1.8" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
       pass "$check_1_8"
+      logjson "1.8" "pass"
   else
       warn "$check_1_8"
+      logjson "1.8" "WARN"
   fi
 else
   info "$check_1_8"
   info "     * File not found"
+  logjson "1.8" "INFO"
 fi
 
 # 1.9
@@ -135,17 +150,22 @@ if [ -e "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass "$check_1_9"
+      logjson "1.9" "PASS"
     else
       warn "$check_1_9"
+      logjson "1.9" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_9"
+    logjson "1.9" "PASS"
   else
     warn "$check_1_9"
+    logjson "1.9" "WARN"
   fi
 else
   info "$check_1_9"
   info "     * File not found"
+  logjson "1.9" "INFO"
 fi
 
 # 1.10
@@ -155,17 +175,22 @@ if [ -f "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_10"
+      logjson "1.10" "PASS"
     else
       warn "$check_1_10"
+      logjson "1.10" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_10"
+    logjson "1.10" "PASS"
   else
     warn "$check_1_10"
+    logjson "1.10" "WARN"
   fi
 else
   info "$check_1_10"
   info "     * File not found"
+  logjson "1.10" "INFO"
 fi
 
 # 1.11
@@ -175,17 +200,22 @@ if [ -f "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_11"
+      logjson "1.11" "PASS"
     else
       warn "$check_1_11"
+      logjson "1.11" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_11"
+    logjson "1.11" "PASS"
   else
     warn "$check_1_11"
+    logjson "1.11" "WARN"
   fi
 else
   info "$check_1_11"
   info "     * File not found"
+  logjson "1.11" "INFO"
 fi
 
 # 1.12
@@ -195,17 +225,22 @@ if [ -f "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_12"
+      logjson "1.12" "PASS"
     else
       warn "$check_1_12"
+      logjson "1.12" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_12"
+    logjson "1.12" "PASS"
   else
     warn "$check_1_12"
+    logjson "1.12" "WARN"
   fi
 else
   info "$check_1_12"
   info "     * File not found"
+  logjson "1.12" "INFO"
 fi
 
 # 1.13
@@ -215,15 +250,20 @@ if [ -f "$file" ]; then
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep $file >/dev/null 2>&1; then
       pass "$check_1_13"
+      logjson "1.13" "PASS"
     else
       warn "$check_1_13"
+      logjson "1.13" "WARN"
     fi
   elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
     pass "$check_1_13"
+    logjson "1.13" "PASS"
   else
     warn "$check_1_13"
+    logjson "1.13" "WARN"
   fi
 else
   info "$check_1_13"
   info "     * File not found"
+  logjson "1.13" "INFO"
 fi
