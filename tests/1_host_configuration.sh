@@ -8,15 +8,19 @@ auditrules="/etc/audit/audit.rules"
 check_1_1="1.1  - Ensure a separate partition for containers has been created"
 if grep /var/lib/docker /etc/fstab >/dev/null 2>&1; then
   pass "$check_1_1"
+  logjson "1.1" "PASS"
 elif mountpoint -q  -- /var/lib/docker >/dev/null 2>&1; then
   pass "$check_1_1"
+  logjson "1.1" "PASS"
 else
   warn "$check_1_1"
+  logjson "1.1" "WARN"
 fi
 
 # 1.2
 check_1_2="1.2  - Ensure the container host has been Hardened"
 note "$check_1_2"
+logjson "1.2" "INFO"
 
 # 1.3
 check_1_3="1.3  - Ensure Docker is up to date"
@@ -28,10 +32,12 @@ if [ $? -eq 11 ]; then
   info "$check_1_3"
   info "     * Using $docker_version, verify is it up to date as deemed necessary"
   info "     * Your operating system vendor may provide support and security maintenance for Docker"
+  logjson "1.3" "INFO"
 else
   pass "$check_1_3"
   info "     * Using $docker_version which is current"
   info "     * Check with your operating system vendor for support and security maintenance for Docker"
+  logjson "1.3" "PASS"
 fi
 
 # 1.4
@@ -40,6 +46,7 @@ docker_users=$(getent group docker)
 info "$check_1_4"
 for u in $docker_users; do
   info "     * $u"
+  logjson "1.4" "$u"
 done
 
 # 1.5
@@ -48,13 +55,17 @@ file="/usr/bin/docker "
 if command -v auditctl >/dev/null 2>&1; then
   if auditctl -l | grep "$file" >/dev/null 2>&1; then
     pass "$check_1_5"
+    logjson "1.5" "PASS"
   else
     warn "$check_1_5"
+    logjson "1.5" "WARN"
   fi
 elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
   pass "$check_1_5"
+  logjson "1.5" "PASS"
 else
   warn "$check_1_5"
+  logjson "1.5" "WARN"
 fi
 
 # 1.6
