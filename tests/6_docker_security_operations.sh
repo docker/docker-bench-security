@@ -19,6 +19,7 @@ done
 
 if [ "$active_images" -lt "$((images / 2))" ]; then
   info "     * Only $active_images out of $images are in use"
+  logjson "6.1" "INFO: $active_images"
 fi
 
 # 6.2
@@ -29,7 +30,9 @@ diff="$((total_containers - running_containers))"
 if [ "$diff" -gt 25 ]; then
   info "$check_6_2"
   info "     * There are currently a total of $total_containers containers, with only $running_containers of them currently running"
+  logjson "6.2" "INFO: $running_containers"
 else
   info "$check_6_2"
   info "     * There are currently a total of $total_containers containers, with $running_containers of them currently running"
+  logjson "6.2" "INFO: $running_containers"
 fi
