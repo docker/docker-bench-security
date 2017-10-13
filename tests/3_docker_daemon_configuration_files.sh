@@ -9,13 +9,16 @@ file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_1"
+    logjson "3.1" "PASS"
   else
     warn "$check_3_1"
     warn "     * Wrong ownership for $file"
+    logjson "3.1" "WARN"
   fi
 else
   info "$check_3_1"
   info "     * File not found"
+  logjson "3.1" "INFO"
 fi
 
 # 3.2
@@ -24,13 +27,16 @@ file="$(get_systemd_service_file docker.service)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_2"
+    logjson "3.2" "PASS"
   else
     warn "$check_3_2"
     warn "     * Wrong permissions for $file"
+    logjson "3.2" "WARN"
   fi
 else
   info "$check_3_2"
   info "     * File not found"
+  logjson "3.2" "INFO"
 fi
 
 # 3.3
@@ -39,13 +45,16 @@ file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %u%g $file)" -eq 00 ]; then
     pass "$check_3_3"
+    logjson "3.3" "PASS"
   else
     warn "$check_3_3"
     warn "     * Wrong ownership for $file"
+    logjson "3.3" "WARN"
   fi
 else
   info "$check_3_3"
   info "     * File not found"
+  logjson "3.3" "INFO"
 fi
 
 # 3.4
@@ -54,13 +63,16 @@ file="$(get_systemd_service_file docker.socket)"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_4"
+    logjson "3.4" "PASS"
   else
     warn "$check_3_4"
     warn "     * Wrong permissions for $file"
+    logjson "3.4" "WARN"
   fi
 else
   info "$check_3_4"
   info "     * File not found"
+  logjson "3.4" "INFO"
 fi
 
 # 3.5
@@ -69,13 +81,16 @@ directory="/etc/docker"
 if [ -d "$directory" ]; then
   if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
     pass "$check_3_5"
+    logjson "3.5" "PASS"
   else
     warn "$check_3_5"
     warn "     * Wrong ownership for $directory"
+    logjson "3.5" "WARN"
   fi
 else
   info "$check_3_5"
   info "     * Directory not found"
+  logjson "3.5" "INFO"
 fi
 
 # 3.6
@@ -84,13 +99,16 @@ directory="/etc/docker"
 if [ -d "$directory" ]; then
   if [ "$(stat -c %a $directory)" -eq 755 -o "$(stat -c %a $directory)" -eq 700 ]; then
     pass "$check_3_6"
+    logjson "3.6" "PASS"
   else
     warn "$check_3_6"
     warn "     * Wrong permissions for $directory"
+    logjson "3.6" "WARN"
   fi
 else
   info "$check_3_6"
   info "     * Directory not found"
+  logjson "3.6" "INFO"
 fi
 
 # 3.7
@@ -107,12 +125,15 @@ if [ -d "$directory" ]; then
   if [ $fail -eq 1 ]; then
     warn "$check_3_7"
     warn "     * Wrong ownership for $directory"
+    logjson "3.7" "WARN"
   else
     pass "$check_3_7"
+    logjson "3.7" "PASS"
   fi
 else
   info "$check_3_7"
   info "     * Directory not found"
+  logjson "3.7" "INFO"
 fi
 
 # 3.8
@@ -129,12 +150,15 @@ if [ -d "$directory" ]; then
   if [ $fail -eq 1 ]; then
     warn "$check_3_8"
     warn "     * Wrong permissions for $directory"
+    logjson "3.8" "WARN"
   else
     pass "$check_3_8"
+    logjson "3.8" "PASS"
   fi
 else
   info "$check_3_8"
   info "     * Directory not found"
+  logjson "3.8" "INFO"
 fi
 
 # 3.9
@@ -147,13 +171,16 @@ fi
 if [ -f "$tlscacert" ]; then
   if [ "$(stat -c %u%g "$tlscacert")" -eq 00 ]; then
     pass "$check_3_9"
+    logjson "3.9" "PASS"
   else
     warn "$check_3_9"
     warn "     * Wrong ownership for $tlscacert"
+    logjson "3.9" "WARN"
   fi
 else
   info "$check_3_9"
   info "     * No TLS CA certificate found"
+  logjson "3.9" "INFO"
 fi
 
 # 3.10
@@ -166,13 +193,16 @@ fi
 if [ -f "$tlscacert" ]; then
   if [ "$(stat -c %a $tlscacert)" -eq 444 -o "$(stat -c %a $tlscacert)" -eq 400 ]; then
     pass "$check_3_10"
+    logjson "3.10" "PASS"
   else
     warn "$check_3_10"
     warn "     * Wrong permissions for $tlscacert"
+    logjson "3.10" "WARN"
   fi
 else
   info "$check_3_10"
   info "     * No TLS CA certificate found"
+  logjson "3.10" "INFO"
 fi
 
 # 3.11
@@ -185,13 +215,16 @@ fi
 if [ -f "$tlscert" ]; then
   if [ "$(stat -c %u%g "$tlscert")" -eq 00 ]; then
     pass "$check_3_11"
+    logjson "3.11" "PASS"
   else
     warn "$check_3_11"
     warn "     * Wrong ownership for $tlscert"
+    logjson "3.11" "WARN"
   fi
 else
   info "$check_3_11"
   info "     * No TLS Server certificate found"
+  logjson "3.11" "INFO"
 fi
 
 # 3.12
@@ -204,13 +237,16 @@ fi
 if [ -f "$tlscert" ]; then
   if [ "$(stat -c %a $tlscert)" -eq 444 -o "$(stat -c %a $tlscert)" -eq 400 ]; then
     pass "$check_3_12"
+    logjson "3.12" "PASS"
   else
     warn "$check_3_12"
     warn "     * Wrong permissions for $tlscert"
+    logjson "3.12" "WARN"
   fi
 else
   info "$check_3_12"
   info "     * No TLS Server certificate found"
+  logjson "3.12" "INFO"
 fi
 
 # 3.13
@@ -223,13 +259,16 @@ fi
 if [ -f "$tlskey" ]; then
   if [ "$(stat -c %u%g "$tlskey")" -eq 00 ]; then
     pass "$check_3_13"
+    logjson "3.13" "PASS"
   else
     warn "$check_3_13"
     warn "     * Wrong ownership for $tlskey"
+    logjson "3.13" "WARN"
   fi
 else
   info "$check_3_13"
   info "     * No TLS Key found"
+  logjson "3.13" "INFO"
 fi
 
 # 3.14
@@ -242,13 +281,16 @@ fi
 if [ -f "$tlskey" ]; then
   if [ "$(stat -c %a $tlskey)" -eq 400 ]; then
     pass "$check_3_14"
+    logjson "3.14" "PASS"
   else
     warn "$check_3_14"
     warn "     * Wrong permissions for $tlskey"
+    logjson "3.14" "WARN"
   fi
 else
   info "$check_3_14"
   info "     * No TLS Key found"
+  logjson "3.14" "INFO"
 fi
 
 # 3.15
@@ -257,13 +299,16 @@ file="/var/run/docker.sock"
 if [ -S "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
     pass "$check_3_15"
+    logjson "3.15" "PASS"
   else
     warn "$check_3_15"
     warn "     * Wrong ownership for $file"
+    logjson "3.15" "WARN"
   fi
 else
   info "$check_3_15"
   info "     * File not found"
+  logjson "3.15" "INFO"
 fi
 
 # 3.16
@@ -272,13 +317,16 @@ file="/var/run/docker.sock"
 if [ -S "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 660 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_16"
+    logjson "3.16" "PASS"
   else
     warn "$check_3_16"
     warn "     * Wrong permissions for $file"
+    logjson "3.16" "WARN"
   fi
 else
   info "$check_3_16"
   info "     * File not found"
+  logjson "3.16" "INFO"
 fi
 
 # 3.17
@@ -287,13 +335,16 @@ file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
     pass "$check_3_17"
+    logjson "3.17" "PASS"
   else
     warn "$check_3_17"
     warn "     * Wrong ownership for $file"
+    logjson "3.17" "WARN"
   fi
 else
   info "$check_3_17"
   info "     * File not found"
+  logjson "3.17" "INFO"
 fi
 
 # 3.18
@@ -302,13 +353,16 @@ file="/etc/docker/daemon.json"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_18"
+    logjson "3.18" "PASS"
   else
     warn "$check_3_18"
     warn "     * Wrong permissions for $file"
+    logjson "3.18" "WARN"
   fi
 else
   info "$check_3_18"
   info "     * File not found"
+  logjson "3.18" "INFO"
 fi
 
 # 3.19
@@ -317,13 +371,16 @@ file="/etc/default/docker"
 if [ -f "$file" ]; then
   if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
     pass "$check_3_19"
+    logjson "3.19" "PASS"
   else
     warn "$check_3_19"
     warn "     * Wrong ownership for $file"
+    logjson "3.19" "WARN"
   fi
 else
   info "$check_3_19"
   info "     * File not found"
+  logjson "3.19" "INFO"
 fi
 
 # 3.20
@@ -332,11 +389,14 @@ file="/etc/default/docker"
 if [ -f "$file" ]; then
   if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
     pass "$check_3_20"
+    logjson "3.20" "PASS"
   else
     warn "$check_3_20"
     warn "     * Wrong permissions for $file"
+    logjson "3.20" "WARN"
   fi
 else
   info "$check_3_20"
   info "     * File not found"
+  logjson "3.20" "INFO"
 fi
