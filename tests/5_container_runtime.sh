@@ -22,15 +22,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_1"
         warn "     * No AppArmorProfile Found: $c"
+        logjson "5.1" "WARN: $c"
         fail=1
       else
         warn "     * No AppArmorProfile Found: $c"
+        logjson "5.1" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none without AppArmor
   if [ $fail -eq 0 ]; then
       pass "$check_5_1"
+      logjson "5.1" "PASS"
   fi
 
   # 5.2
@@ -45,15 +48,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_2"
         warn "     * No SecurityOptions Found: $c"
+        logjson "5.2" "WARN: $c"
         fail=1
       else
         warn "     * No SecurityOptions Found: $c"
+        logjson "5.2" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none without SELinux
   if [ $fail -eq 0 ]; then
       pass "$check_5_2"
+      logjson "5.2" "PASS"
   fi
 
   # 5.3
@@ -71,15 +77,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_3"
         warn "     * Capabilities added: $caps to $c"
+        logjson "5.3" "WARN: $c"
         fail=1
       else
         warn "     * Capabilities added: $caps to $c"
+        logjson "5.3" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with extra capabilities
   if [ $fail -eq 0 ]; then
       pass "$check_5_3"
+      logjson "5.3" "PASS"
   fi
 
   # 5.4
@@ -94,15 +103,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_4"
         warn "     * Container running in Privileged mode: $c"
+        logjson "5.4" "WARN: $c"
         fail=1
       else
         warn "     * Container running in Privileged mode: $c"
+        logjson "5.4" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found no privileged containers
   if [ $fail -eq 0 ]; then
       pass "$check_5_4"
+      logjson "5.4" "PASS"
   fi
 
   # 5.5
@@ -136,9 +148,11 @@ else
         if [ $fail -eq 0 ]; then
           warn "$check_5_5"
           warn "     * Sensitive directory $v mounted in: $c"
+          logjson "5.5" "WARN: $v in $c"
           fail=1
         else
           warn "     * Sensitive directory $v mounted in: $c"
+          logjson "5.5" "WARN: $v in $c"
         fi
       fi
     done
@@ -146,6 +160,7 @@ else
   # We went through all the containers and found none with sensitive mounts
   if [ $fail -eq 0 ]; then
       pass "$check_5_5"
+      logjson "5.5" "PASS"
   fi
 
   # 5.6
@@ -161,10 +176,12 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_6"
         warn "     * Container running sshd: $c"
+        logjson "5.6" "WARN: $c"
         fail=1
 	printcheck=1
       else
         warn "     * Container running sshd: $c"
+        logjson "5.6" "WARN: $c"
       fi
     fi
 
@@ -172,9 +189,11 @@ else
     if [ $? -eq 255 ]; then
         if [ $printcheck -eq 0 ]; then
           warn "$check_5_6"
+          logjson "5.6" "WARN"
 	  printcheck=1
         fi
       warn "     * Docker exec fails: $c"
+      logjson "5.6" "WARN: $c"
       fail=1
     fi
 
@@ -199,9 +218,11 @@ else
         if [ $fail -eq 0 ]; then
           warn "$check_5_7"
           warn "     * Privileged Port in use: $port in $c"
+          logjson "5.7" "WARN: $port in $c"
           fail=1
         else
           warn "     * Privileged Port in use: $port in $c"
+          logjson "5.7" "WARN: $port in $c"
         fi
       fi
     done
@@ -209,11 +230,13 @@ else
   # We went through all the containers and found no privileged ports
   if [ $fail -eq 0 ]; then
       pass "$check_5_7"
+      logjson "5.7" "PASS"
   fi
 
   # 5.8
   check_5_8="5.8  - Ensure only needed ports are open on the container"
   note "$check_5_8"
+  logjson "5.8" "NOTE"
 
   # 5.9
   check_5_9="5.9  - Ensure the host's network namespace is not shared"
@@ -227,15 +250,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_9"
         warn "     * Container running with networking mode 'host': $c"
+        logjson "5.9" "WARN: $c"
         fail=1
       else
         warn "     * Container running with networking mode 'host': $c"
+        logjson "5.9" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found no Network Mode host
   if [ $fail -eq 0 ]; then
       pass "$check_5_9"
+      logjson "5.9" "PASS"
   fi
 
   # 5.10
@@ -254,15 +280,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_10"
         warn "     * Container running without memory restrictions: $c"
+        logjson "5.10" "WARN: $c"
         fail=1
       else
         warn "     * Container running without memory restrictions: $c"
+        logjson "5.10" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found no lack of Memory restrictions
   if [ $fail -eq 0 ]; then
       pass "$check_5_10"
+      logjson "5.10" "PASS"
   fi
 
   # 5.11
@@ -281,15 +310,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_11"
         warn "     * Container running without CPU restrictions: $c"
+        logjson "5.11" "WARN: $c"
         fail=1
       else
         warn "     * Container running without CPU restrictions: $c"
+        logjson "5.11" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found no lack of CPUShare restrictions
   if [ $fail -eq 0 ]; then
       pass "$check_5_11"
+      logjson "5.11" "PASS"
   fi
 
   # 5.12
@@ -304,15 +336,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_12"
         warn "     * Container running with root FS mounted R/W: $c"
+        logjson "5.12" "WARN: $c"
         fail=1
       else
         warn "     * Container running with root FS mounted R/W: $c"
+        logjson "5.12" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found no R/W FS mounts
   if [ $fail -eq 0 ]; then
       pass "$check_5_12"
+      logjson "5.12" "PASS"
   fi
 
   # 5.13
@@ -326,9 +361,11 @@ else
         if [ $fail -eq 0 ]; then
           warn "$check_5_13"
           warn "     * Port being bound to wildcard IP: $ip in $c"
+          logjson "5.13" "WARN: $ip in $c"
           fail=1
         else
           warn "     * Port being bound to wildcard IP: $ip in $c"
+          logjson "5.13" "WARN: $ip in $c"
         fi
       fi
     done
@@ -336,6 +373,7 @@ else
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ $fail -eq 0 ]; then
       pass "$check_5_13"
+      logjson "5.13" "PASS"
   fi
 
   # 5.14
@@ -350,15 +388,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_14"
         warn "     * MaximumRetryCount is not set to 5: $c"
+        logjson "5.14" "WARN: $c"
         fail=1
       else
         warn "     * MaximumRetryCount is not set to 5: $c"
+        logjson "5.14" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and they all had MaximumRetryCount=5
   if [ $fail -eq 0 ]; then
       pass "$check_5_14"
+      logjson "5.14" "PASS"
   fi
 
   # 5.15
@@ -373,15 +414,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_15"
         warn "     * Host PID namespace being shared with: $c"
+        logjson "5.15" "WARN: $c"
         fail=1
       else
         warn "     * Host PID namespace being shared with: $c"
+        logjson "5.15" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with PidMode as host
   if [ $fail -eq 0 ]; then
       pass "$check_5_15"
+      logjson "5.15" "PASS"
   fi
 
   # 5.16
@@ -396,15 +440,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_16"
         warn "     * Host IPC namespace being shared with: $c"
+        logjson "5.16" "WARN: $c"
         fail=1
       else
         warn "     * Host IPC namespace being shared with: $c"
+        logjson "5.16" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with IPCMode as host
   if [ $fail -eq 0 ]; then
       pass "$check_5_16"
+      logjson "5.16" "PASS"
   fi
 
   # 5.17
@@ -419,15 +466,18 @@ else
       if [ $fail -eq 0 ]; then
         info "$check_5_17"
         info "     * Container has devices exposed directly: $c"
+        logjson "5.17" "INFO: $c"
         fail=1
       else
         info "     * Container has devices exposed directly: $c"
+        logjson "5.17" "INFO: $c"
       fi
     fi
   done
   # We went through all the containers and found none with devices
   if [ $fail -eq 0 ]; then
       pass "$check_5_17"
+      logjson "5.17" "PASS"
   fi
 
   # 5.18
@@ -442,15 +492,18 @@ else
       if [ $fail -eq 0 ]; then
         info "$check_5_18"
         info "     * Container no default ulimit override: $c"
+        logjson "5.18" "INFO: $c"
         fail=1
       else
         info "     * Container no default ulimit override: $c"
+        logjson "5.18" "INFO: $c"
       fi
     fi
   done
   # We went through all the containers and found none without Ulimits
   if [ $fail -eq 0 ]; then
       pass "$check_5_18"
+      logjson "5.18" "PASS"
   fi
 
   # 5.19
@@ -464,15 +517,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_19"
         warn "     * Mount propagation mode is shared: $c"
+        logjson "5.19" "WARN: $c"
         fail=1
       else
         warn "     * Mount propagation mode is shared: $c"
+        logjson "5.19" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with shared propagation mode
  if [ $fail -eq 0 ]; then
       pass "$check_5_19"
+      logjson "5.19" "PASS"
   fi
 
   # 5.20
@@ -487,15 +543,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_20"
         warn "     * Host UTS namespace being shared with: $c"
+        logjson "5.20" "WARN: $c"
         fail=1
       else
         warn "     * Host UTS namespace being shared with: $c"
+        logjson "5.20" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
       pass "$check_5_20"
+      logjson "5.20" "PASS"
   fi
 
   # 5.21
@@ -508,24 +567,29 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_21"
         warn "     * Default seccomp profile disabled: $c"
+        logjson "5.21" "WARN: $c"
         fail=1
       else
         warn "     * Default seccomp profile disabled: $c"
+        logjson "5.21" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with default secomp profile disabled
   if [ $fail -eq 0 ]; then
       pass "$check_5_21"
+      logjson "5.21" "PASS"
   fi
 
   # 5.22
   check_5_22="5.22 - Ensure docker exec commands are not used with privileged option"
   note "$check_5_22"
+  logjson "5.22" "NOTE"
 
   # 5.23
   check_5_23="5.23 - Ensure docker exec commands are not used with user option"
   note "$check_5_23"
+  logjson "5.23" "NOTE"
 
   # 5.24
   check_5_24="5.24 - Ensure cgroup usage is confirmed"
@@ -539,15 +603,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_24"
         warn "     * Confirm cgroup usage: $c"
+        logjson "5.24" "WARN: $c"
         fail=1
       else
         warn "     * Confirm cgroup usage: $c"
+        logjson "5.24" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
       pass "$check_5_24"
+      logjson "5.24" "PASS"
   fi
 
   # 5.25
@@ -560,15 +627,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_25"
         warn "     * Privileges not restricted: $c"
+        logjson "5.25" "WARN: $c"
         fail=1
       else
         warn "     * Privileges not restricted: $c"
+        logjson "5.25" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with capability to acquire additional privileges
   if [ $fail -eq 0 ]; then
       pass "$check_5_25"
+      logjson "5.25" "PASS"
   fi
 
   # 5.26
@@ -580,19 +650,23 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_26"
         warn "     * Health check not set: $c"
+        logjson "5.26" "WARN: $c"
         fail=1
       else
         warn "     * Health check not set: $c"
+        logjson "5.26" "WARN: $c"
       fi
     fi
   done
   if [ $fail -eq 0 ]; then
       pass "$check_5_26"
+      logjson "5.26" "PASS"
   fi
 
   # 5.27
   check_5_27="5.27 - Ensure docker commands always get the latest version of the image"
   info "$check_5_27"
+  logjson "5.27" "INFO"
 
   # 5.28
   check_5_28="5.28 - Ensure PIDs cgroup limit is used"
@@ -606,15 +680,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
         warn "     * PIDs limit not set: $c"
+        logjson "5.28" "WARN: $c"
         fail=1
       else
         warn "     * PIDs limit not set: $c"
+        logjson "5.28" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found all with PIDs limit
   if [ $fail -eq 0 ]; then
       pass "$check_5_28"
+      logjson "5.28" "PASS"
   fi
 
   # 5.29
@@ -629,11 +706,13 @@ else
       if [ -n "$docker0Containers" ]; then
         if [ $fail -eq 0 ]; then
           info "$check_5_29"
+          logjson "5.29" "INFO"
           fail=1
         fi
         for c in $docker0Containers; do
 	  cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
           info "     * Container in docker0 network: $cName"
+          logjson "5.29" "INFO: $c"
         done
       fi
     fi
@@ -641,6 +720,7 @@ else
   # We went through all the containers and found none in docker0 network
   if [ $fail -eq 0 ]; then
       pass "$check_5_29"
+      logjson "5.29" "PASS"
   fi
 
   # 5.30
@@ -653,15 +733,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_30"
         warn "     * Namespace shared: $c"
+        logjson "5.30" "WARN: $c"
         fail=1
       else
         warn "     * Namespace shared: $c"
+        logjson "5.30" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with host's user namespace shared
   if [ $fail -eq 0 ]; then
       pass "$check_5_30"
+      logjson "5.30" "PASS"
   fi
 
   # 5.31
@@ -674,14 +757,17 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_5_31"
         warn "     * Docker socket shared: $c"
+        logjson "5.31" "WARN: $c"
         fail=1
       else
         warn "     * Docker socket shared: $c"
+        logjson "5.31" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none with docker.sock shared
   if [ $fail -eq 0 ]; then
       pass "$check_5_31"
+      logjson "5.31" "PASS"
   fi
 fi
