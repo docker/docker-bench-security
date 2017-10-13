@@ -30,7 +30,7 @@ yell () {
 }
 
 beginjson () {
-  printf "{\n \"start\": %s," "$1" | tee "$logger.json" 2>/dev/null 1>&2
+  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s," "$1" "$2" | tee "$logger.json" 2>/dev/null 1>&2
 }
 
 endjson (){

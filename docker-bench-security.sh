@@ -72,7 +72,7 @@ if [ "x$ID" != "x0" ]; then
 fi
 
 logit "Initializing $(date)\n"
-beginjson "$(date +%s)"
+beginjson "1.3.4" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
