@@ -5,6 +5,7 @@ info "6 - Docker Security Operations"
 
 # 6.1
 check_6_1="6.1  - Avoid image sprawl"
+totalChecks=$((totalChecks + 1))
 images=$(docker images -q | sort -u | wc -l | awk '{print $1}')
 active_images=0
 
@@ -21,9 +22,11 @@ if [ "$active_images" -lt "$((images / 2))" ]; then
   info "     * Only $active_images out of $images are in use"
   logjson "6.1" "INFO: $active_images"
 fi
+currentScore=$((currentScore + 0))
 
 # 6.2
 check_6_2="6.2  - Avoid container sprawl"
+totalChecks=$((totalChecks + 1))
 total_containers=$(docker info 2>/dev/null | grep "Containers" | awk '{print $2}')
 running_containers=$(docker ps -q | wc -l | awk '{print $1}')
 diff="$((total_containers - running_containers))"
@@ -36,3 +39,4 @@ else
   info "     * There are currently a total of $total_containers containers, with $running_containers of them currently running"
   logjson "6.2" "INFO: $running_containers"
 fi
+currentScore=$((currentScore + 0))
