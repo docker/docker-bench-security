@@ -28,3 +28,15 @@ note () {
 yell () {
   printf "%b\n" "${bldylw}$1${txtrst}\n"
 }
+
+beginjson () {
+  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s," "$1" "$2" | tee "$logger.json" 2>/dev/null 1>&2
+}
+
+endjson (){
+  printf "\n  \"end\": %s \n}\n" "$1" | tee -a "$logger.json" 2>/dev/null 1>&2
+}
+
+logjson (){
+  printf "\n  \"%s\": \"%s\"," "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+}

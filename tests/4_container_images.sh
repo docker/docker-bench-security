@@ -10,6 +10,7 @@ check_4_1="4.1  - Ensure a user for the container has been created"
 if [ -z "$containers" ]; then
   info "$check_4_1"
   info "     * No containers running"
+  logjson "4.1" "INFO"
 else
   # We have some containers running, set failure flag to 0. Check for Users.
   fail=0
@@ -24,15 +25,18 @@ else
       if [ $fail -eq 0 ]; then
         warn "$check_4_1"
         warn "     * Running as root: $c"
+        logjson "4.1" "WARN: $c"
         fail=1
       else
         warn "     * Running as root: $c"
+        logjson "4.1" "WARN: $c"
       fi
     fi
   done
   # We went through all the containers and found none running as root
   if [ $fail -eq 0 ]; then
       pass "$check_4_1"
+      logjson "4.1" "PASS"
   fi
 fi
 # Make the loop separator go back to space
@@ -43,21 +47,26 @@ images=$(docker images -q)
 # 4.2
 check_4_2="4.2  - Ensure that containers use trusted base images"
 note "$check_4_2"
+logjson "4.2" "NOTE"
 
 # 4.3
 check_4_3="4.3  - Ensure unnecessary packages are not installed in the container"
 note "$check_4_3"
+logjson "4.3" "NOTE"
 
 # 4.4
 check_4_4="4.4  - Ensure images are scanned and rebuilt to include security patches"
 note "$check_4_4"
+logjson "4.4" "NOTE"
 
 # 4.5
 check_4_5="4.5  - Ensure Content trust for Docker is Enabled"
 if [ "x$DOCKER_CONTENT_TRUST" = "x1" ]; then
   pass "$check_4_5"
+  logjson "4.5" "PASS"
 else
   warn "$check_4_5"
+  logjson "4.5" "WARN"
 fi
 
 # 4.6
@@ -68,15 +77,18 @@ for img in $images; do
     if [ $fail -eq 0 ]; then
       fail=1
       warn "$check_4_6"
+      logjson "4.6" "WARN"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
     if ! [ "$imgName" = '[]' ]; then
       warn "     * No Healthcheck found: $imgName"
+      logjson "4.6" "WARN: $imgName"
     fi
   fi
 done
 if [ $fail -eq 0 ]; then
   pass "$check_4_6"
+  logjson "4.6" "PASS"
 fi
 
 # 4.7
@@ -87,6 +99,7 @@ for img in $images; do
     if [ $fail -eq 0 ]; then
       fail=1
       info "$check_4_7"
+      logjson "4.7" "INFO"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
     if ! [ "$imgName" = '[]' ]; then
@@ -96,11 +109,13 @@ for img in $images; do
 done
 if [ $fail -eq 0 ]; then
   pass "$check_4_7"
+  logjson "4.7" "PASS"
 fi
 
 # 4.8
 check_4_8="4.8  - Ensure setuid and setgid permissions are removed in the images"
 note "$check_4_8"
+logjson "4.8" "NOTE"
 
 # 4.9
 check_4_9="4.9  - Ensure COPY is used instead of ADD in Dockerfile"
@@ -111,21 +126,26 @@ for img in $images; do
     if [ $fail -eq 0 ]; then
       fail=1
       info "$check_4_9"
+      logjson "4.9" "INFO"
     fi
     imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
     if ! [ "$imgName" = '[]' ]; then
       info "     * ADD in image history: $imgName"
+      logjson "4.9" "INFO: $imgName"
     fi
   fi
 done
 if [ $fail -eq 0 ]; then
   pass "$check_4_9"
+  logjson "4.9" "PASS"
 fi
 
 # 4.10
 check_4_10="4.10 - Ensure secrets are not stored in Dockerfiles"
 note "$check_4_10"
+logjson "4.10" "NOTE"
 
 # 4.11
 check_4_11="4.11 - Ensure verified packages are only Installed"
 note "$check_4_11"
+logjson "4.11" "NOTE"

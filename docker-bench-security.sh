@@ -72,6 +72,7 @@ if [ "x$ID" != "x0" ]; then
 fi
 
 logit "Initializing $(date)\n"
+beginjson "1.3.4" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
@@ -92,6 +93,8 @@ main () {
   do
      . ./"$test"
   done
+
+  endjson "$(date +%s)"
 }
 
 main "$@"
