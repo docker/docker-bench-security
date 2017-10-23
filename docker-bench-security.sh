@@ -71,6 +71,12 @@ if [ "x$ID" != "x0" ]; then
     sleep 3
 fi
 
+# Total Score
+# Warn Scored -1, Pass Scored +1, Not Score -0
+
+totalChecks=0
+currentScore=0
+
 logit "Initializing $(date)\n"
 beginjson "1.3.4" "$(date +%s)"
 
@@ -93,6 +99,12 @@ main () {
   do
      . ./"$test"
   done
+
+  printf "\n"
+  info "Checks: $totalChecks"
+  info "Score: $currentScore"
+  integerjson "checks" "$totalChecks"
+  integerjson "score" "$currentScore"
 
   endjson "$(date +%s)"
 }
