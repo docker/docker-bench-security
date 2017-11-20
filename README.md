@@ -79,5 +79,5 @@ cd docker-bench-security
 sudo sh docker-bench-security.sh
 ```
 
-This script was build to be POSIX 2004 compliant, so it should be portable
+This script was built to be POSIX 2004 compliant, so it should be portable
 across any Unix platform.
