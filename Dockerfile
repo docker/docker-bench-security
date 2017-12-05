@@ -4,6 +4,9 @@ LABEL org.label-schema.name="docker-bench-security" \
       org.label-schema.url="https://dockerbench.com" \
       org.label-schema.vcs-url="https://github.com/docker/docker-bench-security.git"
 
+# Switch to the HTTPS endpoint for the apk repositories as per https://github.com/gliderlabs/docker-alpine/issues/184
+RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories
+
 RUN \
   apk upgrade --no-cache && \
   apk add --no-cache \
