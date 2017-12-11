@@ -5,9 +5,6 @@ LABEL \
   org.label-schema.url="https://dockerbench.com" \
   org.label-schema.vcs-url="https://github.com/docker/docker-bench-security.git"
 
-COPY ./*.sh /usr/local/bin/
-COPY ./tests/*.sh /usr/local/bin/tests/
-
 # Switch to the HTTPS endpoint for the apk repositories
 # https://github.com/gliderlabs/docker-alpine/issues/184
 RUN \
@@ -16,6 +13,9 @@ RUN \
     docker \
     dumb-init && \
   rm -rf /usr/bin/docker?*
+
+COPY ./*.sh /usr/local/bin/
+COPY ./tests/*.sh /usr/local/bin/tests/
 
 WORKDIR /usr/local/bin
 
