@@ -24,7 +24,7 @@ The easiest way to run your hosts against the Docker Bench for Security is by
 running our pre-built container:
 
 ```sh
-docker run -it --net host --pid host --cap-add audit_control \
+docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /var/lib:/var/lib \
     -v /var/run/docker.sock:/var/run/docker.sock \
@@ -79,5 +79,5 @@ cd docker-bench-security
 sudo sh docker-bench-security.sh
 ```
 
-This script was build to be POSIX 2004 compliant, so it should be portable
+This script was built to be POSIX 2004 compliant, so it should be portable
 across any Unix platform.

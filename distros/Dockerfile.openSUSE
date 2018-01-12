@@ -4,7 +4,7 @@ FROM opensuse
 
 MAINTAINER security@suse.com
 
-RUN zypper -n in docker net-tools audit
+RUN zypper -n in docker iproute2 audit
 
 RUN mkdir /docker-bench-security
 

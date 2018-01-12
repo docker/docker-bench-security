@@ -641,7 +641,8 @@ else
 
   fail=0
   for c in $containers; do
-    if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'seccomp:unconfined' 2>/dev/null 1>&2; then
+    if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | \
+      grep -E 'seccomp:unconfined|seccomp=unconfined' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_21"
