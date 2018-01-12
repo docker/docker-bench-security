@@ -12,6 +12,7 @@ else
 '
   # 5.1
   check_5_1="5.1  - Ensure AppArmor Profile is Enabled"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -34,10 +35,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_1"
       logjson "5.1" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.2
   check_5_2="5.2  - Ensure SELinux security options are set, if applicable"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -60,10 +65,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_2"
       logjson "5.2" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.3
   check_5_3="5.3  - Ensure Linux Kernel Capabilities are restricted within containers"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -89,10 +98,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_3"
       logjson "5.3" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.4
   check_5_4="5.4  - Ensure privileged containers are not used"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -115,10 +128,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_4"
       logjson "5.4" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.5
   check_5_5="5.5  - Ensure sensitive host system directories are not mounted on containers"
+  totalChecks=$((totalChecks + 1))
 
   # List of sensitive directories to test for. Script uses new-lines as a separator.
   # Note the lack of identation. It needs it for the substring comparison.
@@ -161,10 +178,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_5"
       logjson "5.5" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.6
   check_5_6="5.6  - Ensure ssh is not run within containers"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   printcheck=0
@@ -178,7 +199,7 @@ else
         warn "     * Container running sshd: $c"
         logjson "5.6" "WARN: $c"
         fail=1
-	printcheck=1
+        printcheck=1
       else
         warn "     * Container running sshd: $c"
         logjson "5.6" "WARN: $c"
@@ -190,7 +211,7 @@ else
         if [ $printcheck -eq 0 ]; then
           warn "$check_5_6"
           logjson "5.6" "WARN"
-	  printcheck=1
+          printcheck=1
         fi
       warn "     * Docker exec fails: $c"
       logjson "5.6" "WARN: $c"
@@ -201,10 +222,14 @@ else
   # We went through all the containers and found none with sshd
   if [ $fail -eq 0 ]; then
       pass "$check_5_6"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.7
   check_5_7="5.7  - Ensure privileged ports are not mapped within containers"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -231,15 +256,21 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_7"
       logjson "5.7" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.8
   check_5_8="5.8  - Ensure only needed ports are open on the container"
+  totalChecks=$((totalChecks + 1))
   note "$check_5_8"
   logjson "5.8" "NOTE"
+  currentScore=$((currentScore + 0))
 
   # 5.9
   check_5_9="5.9  - Ensure the host's network namespace is not shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -262,10 +293,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_9"
       logjson "5.9" "PASS"
+      currentScore=$((currentScore + 0))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.10
   check_5_10="5.10 - Ensure memory usage for container is limited"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -292,10 +327,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_10"
       logjson "5.10" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.11
   check_5_11="5.11 - Ensure CPU priority is set appropriately on the container"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -322,10 +361,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_11"
       logjson "5.11" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.12
   check_5_12="5.12 - Ensure the container's root filesystem is mounted as read only"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -348,10 +391,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_12"
       logjson "5.12" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.13
   check_5_13="5.13 -  Ensure incoming container traffic is binded to a specific host interface"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -374,10 +421,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_13"
       logjson "5.13" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.14
   check_5_14="5.14 - Ensure 'on-failure' container restart policy is set to '5'"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -400,10 +451,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_14"
       logjson "5.14" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.15
   check_5_15="5.15 - Ensure the host's process namespace is not shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -426,10 +481,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_15"
       logjson "5.15" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.16
   check_5_16="5.16 - Ensure the host's IPC namespace is not shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -452,10 +511,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_16"
       logjson "5.16" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.17
   check_5_17="5.17 - Ensure host devices are not directly exposed to containers"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -478,10 +541,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_17"
       logjson "5.17" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore + 0))
   fi
 
   # 5.18
   check_5_18="5.18 - Ensure the default ulimit is overwritten at runtime, only if needed"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -504,10 +571,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_18"
       logjson "5.18" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore + 0))
   fi
 
   # 5.19
   check_5_19="5.19 - Ensure mount propagation mode is not set to shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -526,13 +597,17 @@ else
     fi
   done
   # We went through all the containers and found none with shared propagation mode
- if [ $fail -eq 0 ]; then
+  if [ $fail -eq 0 ]; then
       pass "$check_5_19"
       logjson "5.19" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+    currentScore=$((currentScore - 1))
   fi
 
   # 5.20
   check_5_20="5.20 - Ensure the host's UTS namespace is not shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -555,10 +630,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_20"
       logjson "5.20" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.21
   check_5_21="5.21 - Ensure the default seccomp profile is not Disabled"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -580,20 +659,28 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_21"
       logjson "5.21" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.22
   check_5_22="5.22 - Ensure docker exec commands are not used with privileged option"
+  totalChecks=$((totalChecks + 1))
   note "$check_5_22"
   logjson "5.22" "NOTE"
+  currentScore=$((currentScore + 0))
 
   # 5.23
   check_5_23="5.23 - Ensure docker exec commands are not used with user option"
+  totalChecks=$((totalChecks + 1))
   note "$check_5_23"
   logjson "5.23" "NOTE"
+  currentScore=$((currentScore + 0))
 
   # 5.24
   check_5_24="5.24 - Ensure cgroup usage is confirmed"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -616,10 +703,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_24"
       logjson "5.24" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.25
   check_5_25="5.25 - Ensure the container is restricted from acquiring additional privileges"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -640,10 +731,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_25"
       logjson "5.25" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.26
   check_5_26="5.26 - Ensure container health is checked at runtime"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -662,15 +757,21 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_26"
       logjson "5.26" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.27
   check_5_27="5.27 - Ensure docker commands always get the latest version of the image"
+  totalChecks=$((totalChecks + 1))
   info "$check_5_27"
   logjson "5.27" "INFO"
+  currentScore=$((currentScore + 0))
 
   # 5.28
   check_5_28="5.28 - Ensure PIDs cgroup limit is used"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -693,10 +794,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_28"
       logjson "5.28" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.29
   check_5_29="5.29 - Ensure Docker's default bridge docker0 is not used"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   networks=$(docker network ls -q 2>/dev/null)
@@ -716,16 +821,21 @@ else
           logjson "5.29" "INFO: $c"
         done
       fi
+      currentScore=$((currentScore + 0))
     fi
   done
   # We went through all the containers and found none in docker0 network
   if [ $fail -eq 0 ]; then
       pass "$check_5_29"
       logjson "5.29" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.30
   check_5_30="5.30 - Ensure the host's user namespaces is not shared"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -746,10 +856,14 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_30"
       logjson "5.30" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 
   # 5.31
   check_5_31="5.31 - Ensure the Docker socket is not mounted inside any containers"
+  totalChecks=$((totalChecks + 1))
 
   fail=0
   for c in $containers; do
@@ -770,5 +884,8 @@ else
   if [ $fail -eq 0 ]; then
       pass "$check_5_31"
       logjson "5.31" "PASS"
+      currentScore=$((currentScore + 1))
+  else
+      currentScore=$((currentScore - 1))
   fi
 fi
