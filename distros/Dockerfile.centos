@@ -4,7 +4,7 @@ FROM centos
 
 MAINTAINER smccarty@redhat.com
 
-RUN yum install -y docker net-tools audit procps-ng; yum clean all
+RUN yum install -y docker iproute audit procps-ng; yum clean all
 
 RUN mkdir /docker-bench-security
 

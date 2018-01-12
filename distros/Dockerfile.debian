@@ -8,7 +8,7 @@ RUN \
     apt-get update && \
     apt-get -y upgrade && \
     apt-get -y install auditd ca-certificates docker.io \
-      gawk net-tools procps --no-install-recommends && \
+      gawk iproute2 procps --no-install-recommends && \
     apt-get -y clean && \
     apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/* \
