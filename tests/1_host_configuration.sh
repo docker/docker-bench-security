@@ -32,7 +32,7 @@ currentScore=$((currentScore - 0))
 # 1.3
 check_1_3="1.3  - Ensure Docker is up to date"
 totalChecks=$((totalChecks + 1))
-docker_version=$(docker version | grep -i -A1 '^server' | grep -i 'version:' \
+docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
   | awk '{print $NF; exit}' | tr -d '[:alpha:]-,')
 docker_current_version="$(date +%y.%m.0 -d @$(( $(date +%s) - 2592000)))"
 do_version_check "$docker_current_version" "$docker_version"
