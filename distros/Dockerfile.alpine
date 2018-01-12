@@ -10,6 +10,7 @@ LABEL \
 RUN \
   sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories && \
   apk add --no-cache \
+    iproute2 \
     docker \
     dumb-init && \
   rm -rf /usr/bin/docker?*
