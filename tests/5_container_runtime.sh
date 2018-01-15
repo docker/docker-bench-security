@@ -888,4 +888,29 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+
+  # 5.20
+  check_5_20="5.20 - Only disable the OOM Killer on containers where you have also set the '-m/--memory' option"
+
+  fail=0
+  for c in $containers; do
+    oom=$(docker inspect --format 'OomKillDisable={{ .HostConfig.OomKillDisable}}' "$c")
+    mem=$(docker inspect --format 'Memory={{ .HostConfig.Memory}}' "$c")
+
+    if [ "$oom" = "OomKillDisable=true" -a "$mem" = "Memory=0" ]; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn "$check_5_20"
+        warn "     * OOM Killer has been disabled without setting the memory: $c"
+        fail=1
+      else
+        warn "     * OOM Killer has been disabled without setting the memory: $c"
+      fi
+    fi
+  done
+  # We went through all the containers and found none with OOM killer has been disabled but not setting the memory limit.
+  if [ $fail -eq 0 ]; then
+      pass "$check_5_20"
+  fi
+
 fi
