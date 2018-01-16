@@ -9,8 +9,9 @@
 # ------------------------------------------------------------------------------
 
 # Load dependencies
-. ./output_lib.sh
+. ./functions_lib.sh
 . ./helper_lib.sh
+. ./output_lib.sh
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filenamel
@@ -35,18 +36,20 @@ usage () {
   usage: ${myname} [options]
 
   -h           optional  Print this help message
-  -l PATH      optional  Log output in PATH
+  -l FILE      optional  Log output in FILE
+  -c CHECK     optional  Run specific check
 EOF
 }
 
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl: args
+while getopts hl:c: args
 do
   case $args in
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
+  c) check="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
 done
@@ -95,10 +98,22 @@ main () {
   # List all running containers except docker-bench (use names to improve readability in logs)
   containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
 
+  if [ -z "$containers" ]; then
+    running_containers=0
+  else
+    running_containers=1
+  fi
+
   for test in tests/*.sh
   do
      . ./"$test"
   done
+
+  if [ -z "$check" ]; then
+    cis
+  else
+    "$check"
+  fi
 
   printf "\n"
   info "Checks: $totalChecks"
