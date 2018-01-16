@@ -43,7 +43,24 @@ Distribution specific Dockerfiles that fixes this issue are available in the
 
 The [distribution specific Dockerfiles](https://github.com/docker/docker-bench-security/tree/master/distros)
 may also help if the distribution you're using haven't yet shipped Docker
-version 1.10.0 or later.
+version 1.13.0 or later.
+
+### Docker Bench for Security options
+
+```sh
+  -h           optional  Print this help message
+  -l FILE      optional  Log output in FILE
+  -c CHECK     optional  Run specific check
+```
+
+By default the Docker Bench for Security script will run all available tests and
+produce logs in the current directory named `docker-bench-security.sh.log.json`
+and `docker-bench-security.sh.log`.
+The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6`
+and community contributed checks are named `check_c_<number>`.
+A complete list of checks are present in [functions_lib.sh](functions_lib.sh).
+
+`sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c check_2_2`
 
 ## Building Docker Bench for Security
 
