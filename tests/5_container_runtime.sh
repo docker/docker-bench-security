@@ -1,16 +1,29 @@
 #!/bin/sh
 
+check_5() {
 logit "\n"
-info "5 - Container Runtime"
+info "5  - Container Runtime"
+}
 
-# If containers is empty, there are no running containers
-if [ -z "$containers" ]; then
-  info "     * No containers running, skipping Section 5"
-else
-  # Make the loop separator be a new-line in POSIX compliant fashion
-  set -f; IFS=$'
-'
-  # 5.1
+check_running_containers() {
+  # If containers is empty, there are no running containers
+  if [ -z "$containers" ]; then
+    info "     * No containers running, skipping Section 5"
+    running_containers=0
+  else
+    running_containers=1
+    # Make the loop separator be a new-line in POSIX compliant fashion
+    set -f; IFS=$'
+  '
+  fi
+}
+
+# 5.1
+check_5_1() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_1="5.1  - Ensure AppArmor Profile is Enabled"
   totalChecks=$((totalChecks + 1))
 
@@ -39,8 +52,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.2
+# 5.2
+check_5_2() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_2="5.2  - Ensure SELinux security options are set, if applicable"
   totalChecks=$((totalChecks + 1))
 
@@ -69,8 +88,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.3
+# 5.3
+check_5_3() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_3="5.3  - Ensure Linux Kernel Capabilities are restricted within containers"
   totalChecks=$((totalChecks + 1))
 
@@ -102,8 +127,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.4
+# 5.4
+check_5_4() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_4="5.4  - Ensure privileged containers are not used"
   totalChecks=$((totalChecks + 1))
 
@@ -132,8 +163,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.5
+# 5.5
+check_5_5() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_5="5.5  - Ensure sensitive host system directories are not mounted on containers"
   totalChecks=$((totalChecks + 1))
 
@@ -182,8 +219,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.6
+# 5.6
+check_5_6() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_6="5.6  - Ensure ssh is not run within containers"
   totalChecks=$((totalChecks + 1))
 
@@ -226,8 +269,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.7
+# 5.7
+check_5_7() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_7="5.7  - Ensure privileged ports are not mapped within containers"
   totalChecks=$((totalChecks + 1))
 
@@ -260,15 +309,27 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.8
+# 5.8
+check_5_8() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_8="5.8  - Ensure only needed ports are open on the container"
   totalChecks=$((totalChecks + 1))
   note "$check_5_8"
   logjson "5.8" "NOTE"
   currentScore=$((currentScore + 0))
+}
 
-  # 5.9
+# 5.9
+check_5_9() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_9="5.9  - Ensure the host's network namespace is not shared"
   totalChecks=$((totalChecks + 1))
 
@@ -297,8 +358,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.10
+# 5.10
+check_5_10() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_10="5.10 - Ensure memory usage for container is limited"
   totalChecks=$((totalChecks + 1))
 
@@ -331,8 +398,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.11
+# 5.11
+check_5_11() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_11="5.11 - Ensure CPU priority is set appropriately on the container"
   totalChecks=$((totalChecks + 1))
 
@@ -365,8 +438,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.12
+# 5.12
+check_5_12() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_12="5.12 - Ensure the container's root filesystem is mounted as read only"
   totalChecks=$((totalChecks + 1))
 
@@ -395,8 +474,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.13
+# 5.13
+check_5_13() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_13="5.13 -  Ensure incoming container traffic is binded to a specific host interface"
   totalChecks=$((totalChecks + 1))
 
@@ -425,8 +510,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.14
+# 5.14
+check_5_14() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_14="5.14 - Ensure 'on-failure' container restart policy is set to '5'"
   totalChecks=$((totalChecks + 1))
 
@@ -455,8 +546,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.15
+# 5.15
+check_5_15() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_15="5.15 - Ensure the host's process namespace is not shared"
   totalChecks=$((totalChecks + 1))
 
@@ -485,8 +582,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.16
+# 5.16
+check_5_16() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_16="5.16 - Ensure the host's IPC namespace is not shared"
   totalChecks=$((totalChecks + 1))
 
@@ -515,8 +618,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.17
+# 5.17
+check_5_17() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_17="5.17 - Ensure host devices are not directly exposed to containers"
   totalChecks=$((totalChecks + 1))
 
@@ -545,8 +654,14 @@ else
   else
       currentScore=$((currentScore + 0))
   fi
+}
 
-  # 5.18
+# 5.18
+check_5_18() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_18="5.18 - Ensure the default ulimit is overwritten at runtime, only if needed"
   totalChecks=$((totalChecks + 1))
 
@@ -575,8 +690,14 @@ else
   else
       currentScore=$((currentScore + 0))
   fi
+}
 
-  # 5.19
+# 5.19
+check_5_19() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_19="5.19 - Ensure mount propagation mode is not set to shared"
   totalChecks=$((totalChecks + 1))
 
@@ -604,8 +725,14 @@ else
   else
     currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.20
+# 5.20
+check_5_20() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_20="5.20 - Ensure the host's UTS namespace is not shared"
   totalChecks=$((totalChecks + 1))
 
@@ -634,8 +761,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.21
+# 5.21
+check_5_21() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_21="5.21 - Ensure the default seccomp profile is not Disabled"
   totalChecks=$((totalChecks + 1))
 
@@ -663,22 +796,40 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.22
+# 5.22
+check_5_22() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_22="5.22 - Ensure docker exec commands are not used with privileged option"
   totalChecks=$((totalChecks + 1))
   note "$check_5_22"
   logjson "5.22" "NOTE"
   currentScore=$((currentScore + 0))
+}
 
-  # 5.23
+# 5.23
+check_5_23() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_23="5.23 - Ensure docker exec commands are not used with user option"
   totalChecks=$((totalChecks + 1))
   note "$check_5_23"
   logjson "5.23" "NOTE"
   currentScore=$((currentScore + 0))
+}
 
-  # 5.24
+# 5.24
+check_5_24() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_24="5.24 - Ensure cgroup usage is confirmed"
   totalChecks=$((totalChecks + 1))
 
@@ -707,8 +858,13 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.25
+# 5.25
+check_5_25() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
   check_5_25="5.25 - Ensure the container is restricted from acquiring additional privileges"
   totalChecks=$((totalChecks + 1))
 
@@ -735,8 +891,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.26
+# 5.26
+check_5_26() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_26="5.26 - Ensure container health is checked at runtime"
   totalChecks=$((totalChecks + 1))
 
@@ -761,15 +923,27 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.27
+# 5.27
+check_5_27() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_27="5.27 - Ensure docker commands always get the latest version of the image"
   totalChecks=$((totalChecks + 1))
   info "$check_5_27"
   logjson "5.27" "INFO"
   currentScore=$((currentScore + 0))
+}
 
-  # 5.28
+# 5.28
+check_5_28() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_28="5.28 - Ensure PIDs cgroup limit is used"
   totalChecks=$((totalChecks + 1))
 
@@ -798,8 +972,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.29
+# 5.29
+check_5_29() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_29="5.29 - Ensure Docker's default bridge docker0 is not used"
   totalChecks=$((totalChecks + 1))
 
@@ -832,8 +1012,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.30
+# 5.30
+check_5_30() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_30="5.30 - Ensure the host's user namespaces is not shared"
   totalChecks=$((totalChecks + 1))
 
@@ -860,8 +1046,14 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
+}
 
-  # 5.31
+# 5.31
+check_5_31() {
+  if [ "$running_containers" -ne 1 ]; then
+    return
+  fi
+
   check_5_31="5.31 - Ensure the Docker socket is not mounted inside any containers"
   totalChecks=$((totalChecks + 1))
 
@@ -888,4 +1080,5 @@ else
   else
       currentScore=$((currentScore - 1))
   fi
-fi
+}
+
