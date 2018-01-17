@@ -134,8 +134,8 @@ docker_swarm_configuration() {
 }
 
 community_checks() {
-  # check_c_1
-  true;
+  check_c
+  check_c_1
 }
 
 # CIS
