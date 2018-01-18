@@ -112,7 +112,12 @@ main () {
   if [ -z "$check" ]; then
     cis
   else
-    "$check"
+    if command -v "$check" 2>/dev/null 1>&2; then
+      "$check"
+    else
+      echo "Check \"$check\" doesn't seem to exist."
+      exit 1
+    fi
   fi
 
   printf "\n"
