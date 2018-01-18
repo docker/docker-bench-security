@@ -50,17 +50,21 @@ version 1.13.0 or later.
 ```sh
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
-  -c CHECK     optional  Run specific check
+  -c CHECK     optional  Run specific check or group of checks
 ```
 
-By default the Docker Bench for Security script will run all available tests and
-produce logs in the current directory named `docker-bench-security.sh.log.json`
+By default the Docker Bench for Security script will run all available CIS tests
+and produce logs in the current directory named `docker-bench-security.sh.log.json`
 and `docker-bench-security.sh.log`.
 The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6`
 and community contributed checks are named `check_c_<number>`.
 A complete list of checks are present in [functions_lib.sh](functions_lib.sh).
 
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c check_2_2`
+
+Note that when submitting checks, provide information why it is a
+reasonable test to add and please include some kind of official documentation
+verifying that information.
 
 ## Building Docker Bench for Security
 
