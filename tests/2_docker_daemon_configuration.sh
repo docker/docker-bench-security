@@ -379,11 +379,11 @@ check_2_17() {
 check_2_18() {
   check_2_18="2.18 - Ensure containers are restricted from acquiring new privileges"
   totalChecks=$((totalChecks + 1))
-  if get_docker_effective_command_line_args '--no-new-privileges' >/dev/null 2>&1; then
+  if get_docker_effective_command_line_args '--no-new-privileges' | grep "no-new-privileges" >/dev/null 2>&1; then
     pass "$check_2_18"
     logjson "2.18" "PASS"
     currentScore=$((currentScore + 1))
-  elif get_docker_configuration_file_args 'no-new-privileges' >/dev/null 2>&1; then
+  elif get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
     pass "$check_2_18"
     logjson "2.18" "PASS"
     currentScore=$((currentScore + 1))
