@@ -53,7 +53,7 @@ check_1_3() {
     info "     * Using $docker_version which is current"
     info "     * Check with your operating system vendor for support and security maintenance for Docker"
     logjson "1.3" "PASS"
-    currentScore=$((currentScore - 0))
+    currentScore=$((currentScore + 1))
   fi
 }
 
