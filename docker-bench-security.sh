@@ -88,10 +88,10 @@ beginjson "1.3.4" "$(date +%s)"
 # Load all the tests from tests/ and run them
 main () {
   # List all running containers
-  if [ -z $exclude ]; then
+  if [ -z "$exclude" ]; then
     containers=$(docker ps | sed '1d' | awk '{print $NF}')
   else
-    pattern=$(echo $exclude | sed 's/,/|/g')
+    pattern=$(echo "$exclude" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | grep -Ev '$pattern' | awk '{print $NF}')
   fi
   # If there is a container with label docker_bench_security, memorize it:
@@ -103,10 +103,10 @@ main () {
     fi
   done
   # List all running containers except docker-bench (use names to improve readability in logs)
-  if [ -z $exclude ]; then
+  if [ -z "$exclude" ]; then
     containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
   else
-    pattern=$(echo $exclude | sed 's/,/|/g')
+    pattern=$(echo "$exclude" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | grep -Ev "$pattern" | awk '{print $NF}' | grep -v "$benchcont")
   fi
 
@@ -124,7 +124,7 @@ main () {
   if [ -z "$check" ]; then
     cis
   else
-    for i in $(echo $check | sed "s/,/ /g")
+    for i in $(echo "$check" | sed "s/,/ /g")
     do
       if command -v "$i" 2>/dev/null 1>&2; then
         "$i"

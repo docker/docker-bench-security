@@ -988,7 +988,8 @@ check_5_29() {
   for net in $networks; do
     if docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1; then
       docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" | \
-       sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
+        sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
+
       if [ -n "$docker0Containers" ]; then
         if [ $fail -eq 0 ]; then
           info "$check_5_29"
@@ -996,7 +997,12 @@ check_5_29() {
           fail=1
         fi
         for c in $docker0Containers; do
-	  cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+          if [ -z "$exclude" ]; then
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+          else
+            pattern=$(echo "$exclude" | sed 's/,/|/g')
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev '$pattern' )
+          fi
           info "     * Container in docker0 network: $cName"
           logjson "5.29" "INFO: $c"
         done
@@ -1081,4 +1087,3 @@ check_5_31() {
       currentScore=$((currentScore - 1))
   fi
 }
-
