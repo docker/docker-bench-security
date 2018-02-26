@@ -50,7 +50,8 @@ version 1.13.0 or later.
 ```sh
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
-  -c CHECK     optional  Run specific check or group of checks
+  -c CHECK     optional  Comma delimited list of specific check(s)
+  -x EXCLUDE   optional  Comma delimited list of patterns within a container to exclude from check
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests

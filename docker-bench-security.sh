@@ -37,19 +37,21 @@ usage () {
 
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
-  -c CHECK     optional  Run specific check
+  -c CHECK     optional  Comma delimited list of specific check(s)
+  -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
 EOF
 }
 
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl:c: args
+while getopts hl:c:x: args
 do
   case $args in
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
   c) check="$OPTARG" ;;
+  x) exclude="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
 done
@@ -86,7 +88,12 @@ beginjson "1.3.4" "$(date +%s)"
 # Load all the tests from tests/ and run them
 main () {
   # List all running containers
-  containers=$(docker ps | sed '1d' | awk '{print $NF}')
+  if [ -z "$exclude" ]; then
+    containers=$(docker ps | sed '1d' | awk '{print $NF}')
+  else
+    pattern=$(echo "$exclude" | sed 's/,/|/g')
+    containers=$(docker ps | sed '1d' | grep -Ev "$pattern" | awk '{print $NF}')
+  fi
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $containers; do
@@ -96,7 +103,12 @@ main () {
     fi
   done
   # List all running containers except docker-bench (use names to improve readability in logs)
-  containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
+  if [ -z "$exclude" ]; then
+    containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
+  else
+    pattern=$(echo "$exclude" | sed 's/,/|/g')
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -Ev "$pattern" | grep -v "$benchcont")
+  fi
 
   if [ -z "$containers" ]; then
     running_containers=0
@@ -112,12 +124,15 @@ main () {
   if [ -z "$check" ]; then
     cis
   else
-    if command -v "$check" 2>/dev/null 1>&2; then
-      "$check"
-    else
-      echo "Check \"$check\" doesn't seem to exist."
-      exit 1
-    fi
+    for i in $(echo "$check" | sed "s/,/ /g")
+    do
+      if command -v "$i" 2>/dev/null 1>&2; then
+        "$i"
+      else
+        echo "Check \"$i\" doesn't seem to exist."
+        continue
+      fi
+    done
   fi
 
   printf "\n"
