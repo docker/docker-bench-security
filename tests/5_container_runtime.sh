@@ -990,7 +990,14 @@ check_5_29() {
       docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" | \
         sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
 
-      if [ -n "$docker0Containers" ]; then
+      for c in $docker0Containers; do
+        cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+        if [ -n "$exclude" ]; then
+          pattern=$(echo "$exclude" | sed 's/,/|/g')
+          if echo "$cName" | grep -q "$pattern"; then
+            continue
+          fi
+        fi
         if [ $fail -eq 0 ]; then
           info "$check_5_29"
           logjson "5.29" "INFO"
@@ -1001,10 +1008,12 @@ check_5_29() {
             cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
           else
             pattern=$(echo "$exclude" | sed 's/,/|/g')
-            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev '$pattern' )
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
           fi
-          info "     * Container in docker0 network: $cName"
-          logjson "5.29" "INFO: $c"
+          if ! [ -z "$cName" ]; then
+            info "     * Container in docker0 network: $cName"
+            logjson "5.29" "INFO: $c"
+          fi
         done
       fi
       currentScore=$((currentScore + 0))

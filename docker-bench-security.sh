@@ -38,7 +38,7 @@ usage () {
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
-  -x EXCLUDE   optional  Comma delimited list of patterns within a container to exclude from check
+  -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
 EOF
 }
 
@@ -92,7 +92,7 @@ main () {
     containers=$(docker ps | sed '1d' | awk '{print $NF}')
   else
     pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | grep -Ev '$pattern' | awk '{print $NF}')
+    containers=$(docker ps | sed '1d' | grep -Ev "$pattern" | awk '{print $NF}')
   fi
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
@@ -107,7 +107,7 @@ main () {
     containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
   else
     pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | grep -Ev "$pattern" | awk '{print $NF}' | grep -v "$benchcont")
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -Ev "$pattern" | grep -v "$benchcont")
   fi
 
   if [ -z "$containers" ]; then
