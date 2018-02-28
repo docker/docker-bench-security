@@ -92,7 +92,7 @@ main () {
     containers=$(docker ps | sed '1d' | awk '{print $NF}')
   else
     pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | grep -Ev "$pattern" | awk '{print $NF}')
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -Ev "$pattern" )
   fi
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
