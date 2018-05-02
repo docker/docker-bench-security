@@ -23,4 +23,4 @@ HEALTHCHECK CMD exit 0
 WORKDIR /usr/local/bin
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "docker-bench-security.sh" ]
-
+CMD [""]
