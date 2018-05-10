@@ -38,6 +38,7 @@ usage () {
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
+  -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
 EOF
 }
@@ -45,12 +46,13 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl:c:x: args
+while getopts hl:c:e:x: args
 do
   case $args in
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
   c) check="$OPTARG" ;;
+  e) checkexclude="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
@@ -121,11 +123,15 @@ main () {
      . ./"$test"
   done
 
-  if [ -z "$check" ]; then
+  if [ -z "$check" ] && [ ! "$checkexclude" ] ; then
     cis
+  elif [ -z "$check" ] && [ "$checkexclude" ]; then
+    checkexcluded="$(echo $checkexclude | sed 's/,/|/g')"
+    for c in $(grep 'check_[0-9]_' functions_lib.sh | grep -vE "$checkexcluded"); do
+      "$c"
+    done
   else
-    for i in $(echo "$check" | sed "s/,/ /g")
-    do
+    for i in $(echo "$check" | sed "s/,/ /g"); do
       if command -v "$i" 2>/dev/null 1>&2; then
         "$i"
       else
