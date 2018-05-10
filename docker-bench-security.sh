@@ -1,12 +1,13 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.4
+# Docker Bench for Security
 #
 # Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
 # ------------------------------------------------------------------------------
+
+version='1.3.4'
 
 # Load dependencies
 . ./functions_lib.sh
@@ -62,14 +63,7 @@ if [ -z "$logger" ]; then
   logger="${myname}.log"
 fi
 
-yell "# ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.4
-#
-# Docker, Inc. (c) 2015-
-#
-# Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
-# ------------------------------------------------------------------------------"
+yell_info
 
 # Warn if not root
 ID=$(id -u)
@@ -85,7 +79,7 @@ totalChecks=0
 currentScore=0
 
 logit "Initializing $(date)\n"
-beginjson "1.3.4" "$(date +%s)"
+beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {

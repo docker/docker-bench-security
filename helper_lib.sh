@@ -110,3 +110,14 @@ get_systemd_service_file(){
       echo "/usr/lib/systemd/system/$SERVICE"
     fi
 }
+
+yell_info() {
+  yell "# ------------------------------------------------------------------------------
+  # Docker Bench for Security v$version
+  #
+  # Docker, Inc. (c) 2015-
+  #
+  # Checks for dozens of common best-practices around deploying Docker containers in production.
+  # Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
+  # ------------------------------------------------------------------------------"
+}
