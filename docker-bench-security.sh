@@ -1,12 +1,13 @@
 #!/bin/sh
 # ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.4
+# Docker Bench for Security
 #
 # Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
 # ------------------------------------------------------------------------------
+
+version='1.3.4'
 
 # Load dependencies
 . ./functions_lib.sh
@@ -14,8 +15,12 @@
 . ./output_lib.sh
 
 # Setup the paths
-this_path=$(abspath "$0")       ## Path of this file including filenamel
+this_path=$(abspath "$0")       ## Path of this file including filename
 myname=$(basename "${this_path}")     ## file name of this script.
+
+readonly version
+readonly this_path
+readonly myname
 
 export PATH=/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/
 
@@ -62,20 +67,13 @@ if [ -z "$logger" ]; then
   logger="${myname}.log"
 fi
 
-yell "# ------------------------------------------------------------------------------
-# Docker Bench for Security v1.3.4
-#
-# Docker, Inc. (c) 2015-
-#
-# Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
-# ------------------------------------------------------------------------------"
+yell_info
 
 # Warn if not root
 ID=$(id -u)
 if [ "x$ID" != "x0" ]; then
-    warn "Some tests might require root to run"
-    sleep 3
+  warn "Some tests might require root to run"
+  sleep 3
 fi
 
 # Total Score
@@ -85,7 +83,7 @@ totalChecks=0
 currentScore=0
 
 logit "Initializing $(date)\n"
-beginjson "1.3.4" "$(date +%s)"
+beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
@@ -118,15 +116,14 @@ main () {
     running_containers=1
   fi
 
-  for test in tests/*.sh
-  do
-     . ./"$test"
+  for test in tests/*.sh; do
+    . ./"$test"
   done
 
-  if [ -z "$check" ] && [ ! "$checkexclude" ] ; then
+  if [ -z "$check" ] && [ ! "$checkexclude" ]; then
     cis
   elif [ -z "$check" ] && [ "$checkexclude" ]; then
-    checkexcluded="$(echo $checkexclude | sed 's/,/|/g')"
+    checkexcluded="$(echo "$checkexclude" | sed 's/,/|/g')"
     for c in $(grep 'check_[0-9]_' functions_lib.sh | grep -vE "$checkexcluded"); do
       "$c"
     done
