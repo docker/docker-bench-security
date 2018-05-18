@@ -32,7 +32,7 @@ check_6_1() {
 check_6_2() {
   check_6_2="6.2  - Avoid container sprawl"
   totalChecks=$((totalChecks + 1))
-  total_containers=$(docker info 2>/dev/null | grep "Containers" | awk '{print $2}')
+  total_containers=$(docker info 2>/dev/null | grep "^Containers" | awk '{print $2}')
   running_containers=$(docker ps -q | wc -l | awk '{print $1}')
   diff="$((total_containers - running_containers))"
   if [ "$diff" -gt 25 ]; then
