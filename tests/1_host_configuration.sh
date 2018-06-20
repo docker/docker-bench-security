@@ -65,9 +65,11 @@ check_1_4() {
   info "$check_1_4"
   for u in $docker_users; do
     info "     * $u"
-    logjson "1.4" "INFO: $u"
   done
-  currentScore=$((currentScore + 0))
+  if [ ! -z "$docker_users" ]; then
+    logjson "1.4" "INFO: $docker_users"
+  fi
+  currentScore=$((currentScore - 0))
 }
 
 # 1.5

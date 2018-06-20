@@ -21,6 +21,7 @@ check_4_1() {
   else
     # We have some containers running, set failure flag to 0. Check for Users.
     fail=0
+    failData=""
     # Make the loop separator be a new-line in POSIX compliant fashion
     set -f; IFS=$'
   '
@@ -32,11 +33,11 @@ check_4_1() {
         if [ $fail -eq 0 ]; then
           warn "$check_4_1"
           warn "     * Running as root: $c"
-          logjson "4.1" "WARN: $c"
+          failData="$failData $c"
           fail=1
         else
           warn "     * Running as root: $c"
-          logjson "4.1" "WARN: $c"
+          failData="$failData $c"
         fi
       fi
     done
@@ -46,6 +47,7 @@ check_4_1() {
         logjson "4.1" "PASS"
         currentScore=$((currentScore + 1))
     else
+        logjson "4.1" "WARN:$failData"
         currentScore=$((currentScore - 1))
     fi
   fi
@@ -100,17 +102,17 @@ check_4_6() {
   check_4_6="4.6  - Ensure HEALTHCHECK instructions have been added to the container image"
   totalChecks=$((totalChecks + 1))
   fail=0
+  failData=""
   for img in $images; do
     if docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1; then
       if [ $fail -eq 0 ]; then
         fail=1
         warn "$check_4_6"
-        logjson "4.6" "WARN"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         warn "     * No Healthcheck found: $imgName"
-        logjson "4.6" "WARN: $imgName"
+        failData="$failData $imgName"
       fi
     fi
   done
@@ -119,6 +121,7 @@ check_4_6() {
     logjson "4.6" "PASS"
     currentScore=$((currentScore + 1))
   else
+    logjson "4.6" "WARN:$failData"
     currentScore=$((currentScore - 1))
   fi
 }
@@ -128,16 +131,17 @@ check_4_7() {
   check_4_7="4.7  - Ensure update instructions are not use alone in the Dockerfile"
   totalChecks=$((totalChecks + 1))
   fail=0
+  failData=""
   for img in $images; do
     if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
       if [ $fail -eq 0 ]; then
         fail=1
         info "$check_4_7"
-        logjson "4.7" "INFO"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         info "     * Update instruction found: $imgName"
+        failData="$failData $imgName"
       fi
     fi
   done
@@ -146,6 +150,7 @@ check_4_7() {
     logjson "4.7" "PASS"
     currentScore=$((currentScore + 0))
   else
+    logjson "4.7" "INFO:$failData"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -164,18 +169,18 @@ check_4_9() {
   check_4_9="4.9  - Ensure COPY is used instead of ADD in Dockerfile"
   totalChecks=$((totalChecks + 1))
   fail=0
+  failData=""
   for img in $images; do
     docker history "$img" 2> /dev/null | grep 'ADD' >/dev/null 2>&1
     if [ $? -eq 0 ]; then
       if [ $fail -eq 0 ]; then
         fail=1
         info "$check_4_9"
-        logjson "4.9" "INFO"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         info "     * ADD in image history: $imgName"
-        logjson "4.9" "INFO: $imgName"
+        failData="$failData $imgName"
       fi
       currentScore=$((currentScore + 0))
     fi
@@ -184,6 +189,8 @@ check_4_9() {
     pass "$check_4_9"
     logjson "4.9" "PASS"
     currentScore=$((currentScore + 1))
+  else
+    logjson "4.9" "INFO:$failData"
   fi
 }
 
