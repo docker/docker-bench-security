@@ -284,20 +284,28 @@ check_2_12() {
 
 # 2.13
 check_2_13() {
-  check_2_13="2.13 - Ensure operations on legacy registry (v1) are Disabled"
+  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
+    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.')
   totalChecks=$((totalChecks + 1))
-  if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
-    pass "$check_2_13"
-    logjson "2.13" "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
-    pass "$check_2_13"
-    logjson "2.13" "PASS"
-    currentScore=$((currentScore + 1))
+  if [ "$docker_version" -lt 1712 ]; then
+    check_2_13="2.13 - Ensure operations on legacy registry (v1) are Disabled"
+    if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
+      pass "$check_2_13"
+      logjson "2.13" "PASS"
+      currentScore=$((currentScore + 1))
+    elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
+      pass "$check_2_13"
+      logjson "2.13" "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_2_13"
+      logjson "2.13" "WARN"
+      currentScore=$((currentScore - 1))
+    fi
   else
-    warn "$check_2_13"
-    logjson "2.13" "WARN"
-    currentScore=$((currentScore - 1))
+    check_2_13="2.13 - Ensure operations on legacy registry (v1) are Disabled (Deprecated)"
+    info "$check_2_13"
+    logjson "2.13" "info"
   fi
 }
 
