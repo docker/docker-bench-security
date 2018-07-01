@@ -144,7 +144,7 @@ check_4_7() {
   if [ $fail -eq 0 ]; then
     pass "$check_4_7"
     logjson "4.7" "PASS"
-    currentScore=$((currentScore + 1))
+    currentScore=$((currentScore + 0))
   else
     currentScore=$((currentScore + 0))
   fi
