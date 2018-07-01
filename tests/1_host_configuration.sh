@@ -31,7 +31,7 @@ check_1_2() {
   totalChecks=$((totalChecks + 1))
   note "$check_1_2"
   logjson "1.2" "INFO"
-  currentScore=$((currentScore - 0))
+  currentScore=$((currentScore + 0))
 }
 
 # 1.3
@@ -47,13 +47,13 @@ check_1_3() {
     info "     * Using $docker_version, verify is it up to date as deemed necessary"
     info "     * Your operating system vendor may provide support and security maintenance for Docker"
     logjson "1.3" "INFO"
-    currentScore=$((currentScore - 0))
+    currentScore=$((currentScore + 0))
   else
     pass "$check_1_3"
     info "     * Using $docker_version which is current"
     info "     * Check with your operating system vendor for support and security maintenance for Docker"
     logjson "1.3" "PASS"
-    currentScore=$((currentScore - 0))
+    currentScore=$((currentScore + 0))
   fi
 }
 
@@ -67,7 +67,7 @@ check_1_4() {
     info "     * $u"
     logjson "1.4" "$u"
   done
-  currentScore=$((currentScore - 0))
+  currentScore=$((currentScore + 0))
 }
 
 # 1.5

@@ -165,7 +165,7 @@ check_2_6() {
     info "$check_2_6"
     info "     * Docker daemon not listening on TCP"
     logjson "2.6" "INFO"
-    currentScore=$((currentScore +0))
+    currentScore=$((currentScore + 0))
   fi
 }
 

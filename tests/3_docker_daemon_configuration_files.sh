@@ -471,7 +471,7 @@ check_3_18() {
     info "$check_3_18"
     info "     * File not found"
     logjson "3.18" "INFO"
-    currentScore=$((currentScore - 0))
+    currentScore=$((currentScore + 0))
   fi
 }
 
