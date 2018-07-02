@@ -68,6 +68,7 @@ check_7_3() {
 check_7_4(){
   check_7_4="7.4  - Ensure data exchanged between containers are encrypted on different nodes on the overlay network"
   totalChecks=$((totalChecks + 1))
+  failData=""
   if docker network ls --filter driver=overlay --quiet | \
     xargs docker network inspect --format '{{.Name}} {{ .Options }}' 2>/dev/null | \
       grep -v 'encrypted:' 2>/dev/null 1>&2; then
@@ -77,9 +78,12 @@ check_7_4(){
       if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
         grep -v 'encrypted:' 2>/dev/null 1>&2; then
         warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
-        logjson "7.4" "WARN: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
+        failData="$failData $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
       fi
     done
+    if [ ! -z "$failData" ]; then
+      logjson "7.4" "WARN:$failData"
+    fi
   else
     pass "$check_7_4"
     logjson "7.4" "PASS"

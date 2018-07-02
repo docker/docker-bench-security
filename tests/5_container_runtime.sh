@@ -28,6 +28,7 @@ check_5_1() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     policy=$(docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' "$c")
 
@@ -36,11 +37,11 @@ check_5_1() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_1"
         warn "     * No AppArmorProfile Found: $c"
-        logjson "5.1" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * No AppArmorProfile Found: $c"
-        logjson "5.1" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -50,6 +51,7 @@ check_5_1() {
       logjson "5.1" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.1" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -64,6 +66,7 @@ check_5_2() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     policy=$(docker inspect --format 'SecurityOpt={{ .HostConfig.SecurityOpt }}' "$c")
 
@@ -72,11 +75,11 @@ check_5_2() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_2"
         warn "     * No SecurityOptions Found: $c"
-        logjson "5.2" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * No SecurityOptions Found: $c"
-        logjson "5.2" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -86,6 +89,7 @@ check_5_2() {
       logjson "5.2" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.2" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -100,6 +104,7 @@ check_5_3() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
     caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
@@ -111,11 +116,11 @@ check_5_3() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_3"
         warn "     * Capabilities added: $caps to $c"
-        logjson "5.3" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Capabilities added: $caps to $c"
-        logjson "5.3" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -125,6 +130,7 @@ check_5_3() {
       logjson "5.3" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.3" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -139,6 +145,7 @@ check_5_4() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     privileged=$(docker inspect --format '{{ .HostConfig.Privileged }}' "$c")
 
@@ -147,11 +154,11 @@ check_5_4() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_4"
         warn "     * Container running in Privileged mode: $c"
-        logjson "5.4" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Container running in Privileged mode: $c"
-        logjson "5.4" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -161,6 +168,7 @@ check_5_4() {
       logjson "5.4" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.4" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -185,6 +193,7 @@ check_5_5() {
 /sys
 /usr'
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format '{{ .VolumesRW }}' "$c" 2>/dev/null 1>&2; then
       volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
@@ -202,11 +211,11 @@ check_5_5() {
         if [ $fail -eq 0 ]; then
           warn "$check_5_5"
           warn "     * Sensitive directory $v mounted in: $c"
-          logjson "5.5" "WARN: $v in $c"
+          failData="$failData $c:$v"
           fail=1
         else
           warn "     * Sensitive directory $v mounted in: $c"
-          logjson "5.5" "WARN: $v in $c"
+          failData="$failData $c:$v"
         fi
       fi
     done
@@ -217,6 +226,7 @@ check_5_5() {
       logjson "5.5" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.5" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -231,6 +241,7 @@ check_5_6() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   printcheck=0
   for c in $containers; do
 
@@ -240,12 +251,12 @@ check_5_6() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_6"
         warn "     * Container running sshd: $c"
-        logjson "5.6" "WARN: $c"
         fail=1
         printcheck=1
+        failData="$failData $c"
       else
         warn "     * Container running sshd: $c"
-        logjson "5.6" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
 
@@ -253,11 +264,10 @@ check_5_6() {
     if [ $? -eq 255 ]; then
         if [ $printcheck -eq 0 ]; then
           warn "$check_5_6"
-          logjson "5.6" "WARN"
           printcheck=1
         fi
       warn "     * Docker exec fails: $c"
-      logjson "5.6" "WARN: $c"
+      failData="$failData $c"
       fail=1
     fi
 
@@ -267,6 +277,7 @@ check_5_6() {
       pass "$check_5_6"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.6" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -281,6 +292,7 @@ check_5_7() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     # Port format is private port -> ip: public port
     ports=$(docker port "$c" | awk '{print $0}' | cut -d ':' -f2)
@@ -292,11 +304,11 @@ check_5_7() {
         if [ $fail -eq 0 ]; then
           warn "$check_5_7"
           warn "     * Privileged Port in use: $port in $c"
-          logjson "5.7" "WARN: $port in $c"
+          failData="$failData $c:$port"
           fail=1
         else
           warn "     * Privileged Port in use: $port in $c"
-          logjson "5.7" "WARN: $port in $c"
+          failData="$failData $c:$port"
         fi
       fi
     done
@@ -307,6 +319,7 @@ check_5_7() {
       logjson "5.7" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.7" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -334,6 +347,7 @@ check_5_9() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     mode=$(docker inspect --format 'NetworkMode={{ .HostConfig.NetworkMode }}' "$c")
 
@@ -342,11 +356,11 @@ check_5_9() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_9"
         warn "     * Container running with networking mode 'host': $c"
-        logjson "5.9" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
+        failData="$failData $c"
         warn "     * Container running with networking mode 'host': $c"
-        logjson "5.9" "WARN: $c"
       fi
     fi
   done
@@ -356,6 +370,7 @@ check_5_9() {
       logjson "5.9" "PASS"
       currentScore=$((currentScore + 0))
   else
+      logjson "5.9" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -370,6 +385,7 @@ check_5_10() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2; then
       memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
@@ -382,11 +398,11 @@ check_5_10() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_10"
         warn "     * Container running without memory restrictions: $c"
-        logjson "5.10" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Container running without memory restrictions: $c"
-        logjson "5.10" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -396,6 +412,7 @@ check_5_10() {
       logjson "5.10" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.10" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -410,6 +427,7 @@ check_5_11() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
       shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
@@ -422,11 +440,11 @@ check_5_11() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_11"
         warn "     * Container running without CPU restrictions: $c"
-        logjson "5.11" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Container running without CPU restrictions: $c"
-        logjson "5.11" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -436,6 +454,7 @@ check_5_11() {
       logjson "5.11" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.11" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -450,6 +469,7 @@ check_5_12() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
    read_status=$(docker inspect --format '{{ .HostConfig.ReadonlyRootfs }}' "$c")
 
@@ -458,11 +478,11 @@ check_5_12() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_12"
         warn "     * Container running with root FS mounted R/W: $c"
-        logjson "5.12" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Container running with root FS mounted R/W: $c"
-        logjson "5.12" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -472,6 +492,7 @@ check_5_12() {
       logjson "5.12" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.12" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -486,6 +507,7 @@ check_5_13() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     for ip in $(docker port "$c" | awk '{print $3}' | cut -d ':' -f1); do
       if [ "$ip" = "0.0.0.0" ]; then
@@ -493,11 +515,11 @@ check_5_13() {
         if [ $fail -eq 0 ]; then
           warn "$check_5_13"
           warn "     * Port being bound to wildcard IP: $ip in $c"
-          logjson "5.13" "WARN: $ip in $c"
+          failData="$failData $c:$ip"
           fail=1
         else
           warn "     * Port being bound to wildcard IP: $ip in $c"
-          logjson "5.13" "WARN: $ip in $c"
+          failData="$failData $c:$ip"
         fi
       fi
     done
@@ -508,6 +530,7 @@ check_5_13() {
       logjson "5.13" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.13" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -522,6 +545,7 @@ check_5_14() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     policy=$(docker inspect --format MaximumRetryCount='{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
 
@@ -530,11 +554,11 @@ check_5_14() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_14"
         warn "     * MaximumRetryCount is not set to 5: $c"
-        logjson "5.14" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * MaximumRetryCount is not set to 5: $c"
-        logjson "5.14" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -544,6 +568,7 @@ check_5_14() {
       logjson "5.14" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.14" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -558,6 +583,7 @@ check_5_15() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     mode=$(docker inspect --format 'PidMode={{.HostConfig.PidMode }}' "$c")
 
@@ -566,11 +592,11 @@ check_5_15() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_15"
         warn "     * Host PID namespace being shared with: $c"
-        logjson "5.15" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Host PID namespace being shared with: $c"
-        logjson "5.15" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -580,6 +606,7 @@ check_5_15() {
       logjson "5.15" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.15" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -594,6 +621,7 @@ check_5_16() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     mode=$(docker inspect --format 'IpcMode={{.HostConfig.IpcMode }}' "$c")
 
@@ -602,11 +630,11 @@ check_5_16() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_16"
         warn "     * Host IPC namespace being shared with: $c"
-        logjson "5.16" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Host IPC namespace being shared with: $c"
-        logjson "5.16" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -616,6 +644,7 @@ check_5_16() {
       logjson "5.16" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.16" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -630,6 +659,7 @@ check_5_17() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     devices=$(docker inspect --format 'Devices={{ .HostConfig.Devices }}' "$c")
 
@@ -638,11 +668,11 @@ check_5_17() {
       if [ $fail -eq 0 ]; then
         info "$check_5_17"
         info "     * Container has devices exposed directly: $c"
-        logjson "5.17" "INFO: $c"
+        failData="$failData $c"
         fail=1
       else
         info "     * Container has devices exposed directly: $c"
-        logjson "5.17" "INFO: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -652,6 +682,7 @@ check_5_17() {
       logjson "5.17" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.17" "INFO:$failData"
       currentScore=$((currentScore + 0))
   fi
 }
@@ -666,6 +697,7 @@ check_5_18() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     ulimits=$(docker inspect --format 'Ulimits={{ .HostConfig.Ulimits }}' "$c")
 
@@ -674,11 +706,11 @@ check_5_18() {
       if [ $fail -eq 0 ]; then
         info "$check_5_18"
         info "     * Container no default ulimit override: $c"
-        logjson "5.18" "INFO: $c"
+        failData="$failData $c"
         fail=1
       else
         info "     * Container no default ulimit override: $c"
-        logjson "5.18" "INFO: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -688,6 +720,7 @@ check_5_18() {
       logjson "5.18" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.18" "INFO:$failData"
       currentScore=$((currentScore + 0))
   fi
 }
@@ -702,6 +735,7 @@ check_5_19() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format 'Propagation={{range $mnt := .Mounts}} {{json $mnt.Propagation}} {{end}}' "$c" | \
      grep shared 2>/dev/null 1>&2; then
@@ -709,11 +743,11 @@ check_5_19() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_19"
         warn "     * Mount propagation mode is shared: $c"
-        logjson "5.19" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Mount propagation mode is shared: $c"
-        logjson "5.19" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -723,6 +757,7 @@ check_5_19() {
       logjson "5.19" "PASS"
       currentScore=$((currentScore + 1))
   else
+    logjson "5.19" "WARN:$failData"
     currentScore=$((currentScore - 1))
   fi
 }
@@ -737,6 +772,7 @@ check_5_20() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     mode=$(docker inspect --format 'UTSMode={{.HostConfig.UTSMode }}' "$c")
 
@@ -745,11 +781,11 @@ check_5_20() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_20"
         warn "     * Host UTS namespace being shared with: $c"
-        logjson "5.20" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Host UTS namespace being shared with: $c"
-        logjson "5.20" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -759,6 +795,7 @@ check_5_20() {
       logjson "5.20" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.20" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -773,6 +810,7 @@ check_5_21() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | \
       grep -E 'seccomp:unconfined|seccomp=unconfined' 2>/dev/null 1>&2; then
@@ -780,11 +818,11 @@ check_5_21() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_21"
         warn "     * Default seccomp profile disabled: $c"
-        logjson "5.21" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Default seccomp profile disabled: $c"
-        logjson "5.21" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -794,6 +832,7 @@ check_5_21() {
       logjson "5.21" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.21" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -834,6 +873,7 @@ check_5_24() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     mode=$(docker inspect --format 'CgroupParent={{.HostConfig.CgroupParent }}x' "$c")
 
@@ -842,11 +882,11 @@ check_5_24() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_24"
         warn "     * Confirm cgroup usage: $c"
-        logjson "5.24" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Confirm cgroup usage: $c"
-        logjson "5.24" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -856,6 +896,7 @@ check_5_24() {
       logjson "5.24" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.24" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -869,17 +910,18 @@ check_5_25() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_25"
         warn "     * Privileges not restricted: $c"
-        logjson "5.25" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Privileges not restricted: $c"
-        logjson "5.25" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -889,6 +931,7 @@ check_5_25() {
       logjson "5.25" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.25" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -903,16 +946,17 @@ check_5_26() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if ! docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2; then
       if [ $fail -eq 0 ]; then
         warn "$check_5_26"
         warn "     * Health check not set: $c"
-        logjson "5.26" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Health check not set: $c"
-        logjson "5.26" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -921,6 +965,7 @@ check_5_26() {
       logjson "5.26" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.26" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -948,6 +993,7 @@ check_5_28() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     pidslimit=$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")
 
@@ -956,11 +1002,11 @@ check_5_28() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
         warn "     * PIDs limit not set: $c"
-        logjson "5.28" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * PIDs limit not set: $c"
-        logjson "5.28" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -970,6 +1016,7 @@ check_5_28() {
       logjson "5.28" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.28" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -984,6 +1031,7 @@ check_5_29() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   networks=$(docker network ls -q 2>/dev/null)
   for net in $networks; do
     if docker network inspect --format '{{ .Options }}' "$net" 2>/dev/null | grep "com.docker.network.bridge.name:docker0" >/dev/null 2>&1; then
@@ -993,7 +1041,6 @@ check_5_29() {
         if [ -n "$docker0Containers" ]; then
           if [ $fail -eq 0 ]; then
             info "$check_5_29"
-            logjson "5.29" "INFO"
             fail=1
           fi
           for c in $docker0Containers; do
@@ -1005,7 +1052,7 @@ check_5_29() {
             fi
             if ! [ -z "$cName" ]; then
               info "     * Container in docker0 network: $cName"
-              logjson "5.29" "INFO: $c"
+              failData="$failData $c:$cName"
             fi
           done
         fi
@@ -1018,6 +1065,7 @@ check_5_29() {
       logjson "5.29" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.29" "INFO:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -1032,17 +1080,18 @@ check_5_30() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
+  failData=""
   for c in $containers; do
     if docker inspect --format '{{ .HostConfig.UsernsMode }}' "$c" 2>/dev/null | grep -i 'host' >/dev/null 2>&1; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_30"
         warn "     * Namespace shared: $c"
-        logjson "5.30" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Namespace shared: $c"
-        logjson "5.30" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -1052,6 +1101,7 @@ check_5_30() {
       logjson "5.30" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.30" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
@@ -1072,11 +1122,11 @@ check_5_31() {
       if [ $fail -eq 0 ]; then
         warn "$check_5_31"
         warn "     * Docker socket shared: $c"
-        logjson "5.31" "WARN: $c"
+        failData="$failData $c"
         fail=1
       else
         warn "     * Docker socket shared: $c"
-        logjson "5.31" "WARN: $c"
+        failData="$failData $c"
       fi
     fi
   done
@@ -1086,6 +1136,7 @@ check_5_31() {
       logjson "5.31" "PASS"
       currentScore=$((currentScore + 1))
   else
+      logjson "5.31" "WARN:$failData"
       currentScore=$((currentScore - 1))
   fi
 }
