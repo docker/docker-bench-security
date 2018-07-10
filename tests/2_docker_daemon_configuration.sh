@@ -122,39 +122,19 @@ check_2_5() {
 check_2_6() {
   check_2_6="2.6  - Ensure TLS authentication for Docker daemon is configured"
   totalChecks=$((totalChecks + 1))
-  if grep -i 'tcp://' "$CONFIG_FILE" 2>/dev/null 1>&2; then
-    if [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
-      [ $(get_docker_configuration_file_args '"tlsverify' | grep 'true') ] ; then
-      if get_docker_configuration_file_args 'tlskey' | grep -v '""' >/dev/null 2>&1; then
-        if get_docker_configuration_file_args 'tlsverify' | grep 'true' >/dev/null 2>&1; then
-          pass "$check_2_6"
-          logjson "2.6" "PASS"
-          currentScore=$((currentScore + 1))
-        else
-          warn "$check_2_6"
-          warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
-          logjson "2.6" "WARN"
-          currentScore=$((currentScore - 1))
-        fi
-      fi
-    else
+  if [ grep -i 'tcp://' "$CONFIG_FILE" 2>/dev/null 1>&2 ] || \
+    [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') >/dev/null 2>&1 ]; then
+    if [ $(get_docker_configuration_file_args '"tlsverify":' | grep 'true') ] || \
+        [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify') >/dev/null 2>&1 ]; then
+      pass "$check_2_6"
+      logjson "2.6" "PASS"
+      currentScore=$((currentScore + 1))
+    elif [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
+        [ $(get_docker_cumulative_command_line_args '--tls' | grep 'tls$') >/dev/null 2>&1 ]; then
       warn "$check_2_6"
-      warn "     * Docker daemon currently listening on TCP without TLS"
+      warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
       logjson "2.6" "WARN"
       currentScore=$((currentScore - 1))
-    fi
-  elif get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' >/dev/null 2>&1; then
-    if get_docker_cumulative_command_line_args '--tlskey' | grep 'tlskey=' >/dev/null 2>&1; then
-      if get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify' >/dev/null 2>&1; then
-        pass "$check_2_6"
-        logjson "2.6" "PASS"
-        currentScore=$((currentScore + 1))
-      else
-        warn "$check_2_6"
-        warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
-        logjson "2.6" "WARN"
-        currentScore=$((currentScore - 1))
-      fi
     else
       warn "$check_2_6"
       warn "     * Docker daemon currently listening on TCP without TLS"
