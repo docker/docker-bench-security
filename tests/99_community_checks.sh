@@ -1,7 +1,11 @@
 #!/bin/sh
 check_c() {
   logit "\n"
-  info "99 - Community contributed checks"
+  id_99="99"
+  desc_99="Community contributed checks"
+  check_99="$id_99 - $desc_99"
+  info "$check_99"
+  startsectionjson "$id_99" "$desc_99"
 }
 
 # check_c_1
@@ -10,9 +14,13 @@ check_c_1() {
   totalChecks=$((totalChecks + 1))
   if docker info --format='{{ .Architecture }}' | grep 'x86_64' 2>/dev/null 1>&2; then
     pass "$check_c_1"
-    logjson "c.1" "PASS"
+    resulttestjson "PASS"
   else
     warn "$check_c_1"
-    logjson "c.1" "WARN"
+    resulttestjson "WARN"
   fi
+}
+
+check_c_end() {
+  endsectionjson
 }
