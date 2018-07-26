@@ -65,7 +65,7 @@ check_1_4() {
   info "$check_1_4"
   for u in $docker_users; do
     info "     * $u"
-    logjson "1.4" "$u"
+    logjson "1.4" "INFO: $u"
   done
   currentScore=$((currentScore + 0))
 }
