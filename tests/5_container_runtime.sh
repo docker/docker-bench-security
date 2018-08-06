@@ -1018,7 +1018,7 @@ check_5_29() {
       logjson "5.29" "PASS"
       currentScore=$((currentScore + 1))
   else
-      currentScore=$((currentScore - 1))
+      currentScore=$((currentScore + 0))
   fi
 }
 
