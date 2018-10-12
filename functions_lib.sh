@@ -15,6 +15,7 @@ host_configuration() {
   check_1_11
   check_1_12
   check_1_13
+  check_1_end
 }
 
 docker_daemon_configuration() {
@@ -37,6 +38,7 @@ docker_daemon_configuration() {
   check_2_16
   check_2_17
   check_2_18
+  check_2_end
 }
 
 docker_daemon_files() {
@@ -61,6 +63,7 @@ docker_daemon_files() {
   check_3_18
   check_3_19
   check_3_20
+  check_3_end
 }
 
 container_images() {
@@ -76,6 +79,7 @@ container_images() {
   check_4_9
   check_4_10
   check_4_11
+  check_4_end
 }
 
 container_runtime() {
@@ -112,12 +116,14 @@ container_runtime() {
   check_5_29
   check_5_30
   check_5_31
+  check_5_end
 }
 
 docker_security_operations() {
   check_6
   check_6_1
   check_6_2
+  check_6_end
 }
 
 docker_swarm_configuration() {
@@ -131,11 +137,13 @@ docker_swarm_configuration() {
   check_7_8
   check_7_9
   check_7_10
+  check_7_end
 }
 
 community_checks() {
   check_c
   check_c_1
+  check_c_end
 }
 
 # CIS

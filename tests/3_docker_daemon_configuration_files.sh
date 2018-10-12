@@ -2,156 +2,188 @@
 
 check_3() {
   logit "\n"
-  info "3 - Docker daemon configuration files"
+  id_3="3"
+  desc_3="Docker daemon configuration files"
+  check_3="$id_3 - $desc_3"
+  info "$check_3"
+  startsectionjson "$id_3" "$desc_3"
 }
 
 # 3.1
 check_3_1() {
-  check_3_1="3.1  - Ensure that docker.service file ownership is set to root:root"
+  id_3_1="3.1"
+  desc_3_1="Ensure that docker.service file ownership is set to root:root"
+  check_3_1="$id_3_1  - $desc_3_1"
+  starttestjson "$id_3_1" "$desc_3_1"
+
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass "$check_3_1"
-      logjson "3.1" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_1"
       warn "     * Wrong ownership for $file"
-      logjson "3.1" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_1"
     info "     * File not found"
-    logjson "3.1" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.2
 check_3_2() {
-  check_3_2="3.2  - Ensure that docker.service file permissions are set to 644 or more restrictive"
+  id_3_2="3.2"
+  desc_3_2="Ensure that docker.service file permissions are set to 644 or more restrictive"
+  check_3_2="$id_3_2  - $desc_3_2"
+  starttestjson "$id_3_2" "$desc_3_2"
+
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_2"
-      logjson "3.2" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_2"
       warn "     * Wrong permissions for $file"
-      logjson "3.2" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_2"
     info "     * File not found"
-    logjson "3.2" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.3
 check_3_3() {
-  check_3_3="3.3  - Ensure that docker.socket file ownership is set to root:root"
+  id_3_3="3.3"
+  desc_3_3="Ensure that docker.socket file ownership is set to root:root"
+  check_3_3="$id_3_3  - $desc_3_3"
+  starttestjson "$id_3_3" "$desc_3_3"
+
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass "$check_3_3"
-      logjson "3.3" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_3"
       warn "     * Wrong ownership for $file"
-      logjson "3.3" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_3"
     info "     * File not found"
-    logjson "3.3" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.4
 check_3_4() {
-  check_3_4="3.4  - Ensure that docker.socket file permissions are set to 644 or more restrictive"
+  id_3_4="3.4"
+  desc_3_4="Ensure that docker.socket file permissions are set to 644 or more restrictive"
+  check_3_4="$id_3_4  - $desc_3_4"
+  starttestjson "$id_3_4" "$desc_3_4"
+
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_4"
-      logjson "3.4" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_4"
       warn "     * Wrong permissions for $file"
-      logjson "3.4" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_4"
     info "     * File not found"
-    logjson "3.4" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.5
 check_3_5() {
-  check_3_5="3.5  - Ensure that /etc/docker directory ownership is set to root:root"
+  id_3_5="3.5"
+  desc_3_5="Ensure that /etc/docker directory ownership is set to root:root"
+  check_3_5="$id_3_5  - $desc_3_5"
+  starttestjson "$id_3_5" "$desc_3_5"
+
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker"
   if [ -d "$directory" ]; then
     if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
       pass "$check_3_5"
-      logjson "3.5" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_5"
       warn "     * Wrong ownership for $directory"
-      logjson "3.5" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $directory"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_5"
     info "     * Directory not found"
-    logjson "3.5" "INFO"
+    resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.6
 check_3_6() {
-  check_3_6="3.6  - Ensure that /etc/docker directory permissions are set to 755 or more restrictive"
+  id_3_6="3.6"
+  desc_3_6="Ensure that /etc/docker directory permissions are set to 755 or more restrictive"
+  check_3_6="$id_3_6  - $desc_3_6"
+  starttestjson "$id_3_6" "$desc_3_6"
+
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker"
   if [ -d "$directory" ]; then
     if [ "$(stat -c %a $directory)" -eq 755 -o "$(stat -c %a $directory)" -eq 700 ]; then
       pass "$check_3_6"
-      logjson "3.6" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_6"
       warn "     * Wrong permissions for $directory"
-      logjson "3.6" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $directory"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_6"
     info "     * Directory not found"
-    logjson "3.6" "INFO"
+    resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.7
 check_3_7() {
-  check_3_7="3.7  - Ensure that registry certificate file ownership is set to root:root"
+  id_3_7="3.7"
+  desc_3_7="Ensure that registry certificate file ownership is set to root:root"
+  check_3_7="$id_3_7  - $desc_3_7"
+  starttestjson "$id_3_7" "$desc_3_7"
+
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker/certs.d/"
   if [ -d "$directory" ]; then
@@ -165,24 +197,28 @@ check_3_7() {
     if [ $fail -eq 1 ]; then
       warn "$check_3_7"
       warn "     * Wrong ownership for $directory"
-      logjson "3.7" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $directory"
       currentScore=$((currentScore - 1))
     else
       pass "$check_3_7"
-      logjson "3.7" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     fi
   else
     info "$check_3_7"
     info "     * Directory not found"
-    logjson "3.7" "INFO"
+    resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.8
 check_3_8() {
-  check_3_8="3.8  - Ensure that registry certificate file permissions are set to 444 or more restrictive"
+  id_3_8="3.8"
+  desc_3_8="Ensure that registry certificate file permissions are set to 444 or more restrictive"
+  check_3_8="$id_3_8  - $desc_3_8"
+  starttestjson "$id_3_8" "$desc_3_8"
+
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker/certs.d/"
   if [ -d "$directory" ]; then
@@ -196,24 +232,28 @@ check_3_8() {
     if [ $fail -eq 1 ]; then
       warn "$check_3_8"
       warn "     * Wrong permissions for $directory"
-      logjson "3.8" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $directory"
       currentScore=$((currentScore - 1))
     else
       pass "$check_3_8"
-      logjson "3.8" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     fi
   else
     info "$check_3_8"
     info "     * Directory not found"
-    logjson "3.8" "INFO"
+    resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.9
 check_3_9() {
-  check_3_9="3.9  - Ensure that TLS CA certificate file ownership is set to root:root"
+  id_3_9="3.9"
+  desc_3_9="Ensure that TLS CA certificate file ownership is set to root:root"
+  check_3_9="$id_3_9  - $desc_3_9"
+  starttestjson "$id_3_9" "$desc_3_9"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
@@ -223,25 +263,29 @@ check_3_9() {
   if [ -f "$tlscacert" ]; then
     if [ "$(stat -c %u%g "$tlscacert")" -eq 00 ]; then
       pass "$check_3_9"
-      logjson "3.9" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_9"
       warn "     * Wrong ownership for $tlscacert"
-      logjson "3.9" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $tlscacert"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_9"
     info "     * No TLS CA certificate found"
-    logjson "3.9" "INFO"
+    resulttestjson "INFO" "No TLS CA certificate found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.10
 check_3_10() {
-  check_3_10="3.10 - Ensure that TLS CA certificate file permissions are set to 444 or more restrictive"
+  id_3_10="3.10"
+  desc_3_10="Ensure that TLS CA certificate file permissions are set to 444 or more restrictive"
+  check_3_10="$id_3_10  - $desc_3_10"
+  starttestjson "$id_3_10" "$desc_3_10"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
@@ -251,25 +295,29 @@ check_3_10() {
   if [ -f "$tlscacert" ]; then
     if [ "$(stat -c %a $tlscacert)" -eq 444 -o "$(stat -c %a $tlscacert)" -eq 400 ]; then
       pass "$check_3_10"
-      logjson "3.10" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_10"
       warn "     * Wrong permissions for $tlscacert"
-      logjson "3.10" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $tlscacert"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_10"
     info "     * No TLS CA certificate found"
-    logjson "3.10" "INFO"
+    resulttestjson "INFO" "No TLS CA certificate found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.11
 check_3_11() {
-  check_3_11="3.11 - Ensure that Docker server certificate file ownership is set to root:root"
+  id_3_11="3.11"
+  desc_3_11="Ensure that Docker server certificate file ownership is set to root:root"
+  check_3_11="$id_3_11  - $desc_3_11"
+  starttestjson "$id_3_11" "$desc_3_11"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
@@ -279,25 +327,29 @@ check_3_11() {
   if [ -f "$tlscert" ]; then
     if [ "$(stat -c %u%g "$tlscert")" -eq 00 ]; then
       pass "$check_3_11"
-      logjson "3.11" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_11"
       warn "     * Wrong ownership for $tlscert"
-      logjson "3.11" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $tlscert"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_11"
     info "     * No TLS Server certificate found"
-    logjson "3.11" "INFO"
+    resulttestjson "INFO" "No TLS Server certificate found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.12
 check_3_12() {
-  check_3_12="3.12 - Ensure that Docker server certificate file permissions are set to 444 or more restrictive"
+  id_3_12="3.12"
+  desc_3_12="Ensure that Docker server certificate file permissions are set to 444 or more restrictive"
+  check_3_12="$id_3_12  - $desc_3_12"
+  starttestjson "$id_3_12" "$desc_3_12"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
@@ -307,25 +359,29 @@ check_3_12() {
   if [ -f "$tlscert" ]; then
     if [ "$(stat -c %a $tlscert)" -eq 444 -o "$(stat -c %a $tlscert)" -eq 400 ]; then
       pass "$check_3_12"
-      logjson "3.12" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_12"
       warn "     * Wrong permissions for $tlscert"
-      logjson "3.12" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $tlscert"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_12"
     info "     * No TLS Server certificate found"
-    logjson "3.12" "INFO"
+    resulttestjson "INFO" "No TLS Server certificate found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.13
 check_3_13() {
-  check_3_13="3.13 - Ensure that Docker server certificate key file ownership is set to root:root"
+  id_3_13="3.13"
+  desc_3_13="Ensure that Docker server certificate key file ownership is set to root:root"
+  check_3_13="$id_3_13  - $desc_3_13"
+  starttestjson "$id_3_13" "$desc_3_13"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
@@ -335,25 +391,29 @@ check_3_13() {
   if [ -f "$tlskey" ]; then
     if [ "$(stat -c %u%g "$tlskey")" -eq 00 ]; then
       pass "$check_3_13"
-      logjson "3.13" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_13"
       warn "     * Wrong ownership for $tlskey"
-      logjson "3.13" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $tlskey"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_13"
     info "     * No TLS Key found"
-    logjson "3.13" "INFO"
+    resulttestjson "INFO" "No TLS Key found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.14
 check_3_14() {
-  check_3_14="3.14 - Ensure that Docker server certificate key file permissions are set to 400"
+  id_3_14="3.14"
+  desc_3_14="Ensure that Docker server certificate key file permissions are set to 400"
+  check_3_14="$id_3_14  - $desc_3_14"
+  starttestjson "$id_3_14" "$desc_3_14"
+
   totalChecks=$((totalChecks + 1))
   if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
@@ -363,162 +423,190 @@ check_3_14() {
   if [ -f "$tlskey" ]; then
     if [ "$(stat -c %a $tlskey)" -eq 400 ]; then
       pass "$check_3_14"
-      logjson "3.14" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_14"
       warn "     * Wrong permissions for $tlskey"
-      logjson "3.14" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $tlskey"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_14"
     info "     * No TLS Key found"
-    logjson "3.14" "INFO"
+    resulttestjson "INFO" "No TLS Key found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.15
 check_3_15() {
-  check_3_15="3.15 - Ensure that Docker socket file ownership is set to root:docker"
+  id_3_15="3.15"
+  desc_3_15="Ensure that Docker socket file ownership is set to root:docker"
+  check_3_15="$id_3_15  - $desc_3_15"
+  starttestjson "$id_3_15" "$desc_3_15"
+
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
     if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
       pass "$check_3_15"
-      logjson "3.15" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_15"
       warn "     * Wrong ownership for $file"
-      logjson "3.15" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_15"
     info "     * File not found"
-    logjson "3.15" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.16
 check_3_16() {
-  check_3_16="3.16 - Ensure that Docker socket file permissions are set to 660 or more restrictive"
+  id_3_16="3.16"
+  desc_3_16="Ensure that Docker socket file permissions are set to 660 or more restrictive"
+  check_3_16="$id_3_16  - $desc_3_16"
+  starttestjson "$id_3_16" "$desc_3_16"
+
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 660 -o "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_16"
-      logjson "3.16" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_16"
       warn "     * Wrong permissions for $file"
-      logjson "3.16" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_16"
     info "     * File not found"
-    logjson "3.16" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.17
 check_3_17() {
-  check_3_17="3.17 - Ensure that daemon.json file ownership is set to root:root"
+  id_3_17="3.17"
+  desc_3_17="Ensure that daemon.json file ownership is set to root:root"
+  check_3_17="$id_3_17  - $desc_3_17"
+  starttestjson "$id_3_17" "$desc_3_17"
+
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass "$check_3_17"
-      logjson "3.17" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_17"
       warn "     * Wrong ownership for $file"
-      logjson "3.17" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_17"
     info "     * File not found"
-    logjson "3.17" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.18
 check_3_18() {
-  check_3_18="3.18 - Ensure that daemon.json file permissions are set to 644 or more restrictive"
+  id_3_18="3.18"
+  desc_3_18="Ensure that daemon.json file permissions are set to 644 or more restrictive"
+  check_3_18="$id_3_18  - $desc_3_18"
+  starttestjson "$id_3_18" "$desc_3_18"
+
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 640 -o "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_18"
-      logjson "3.18" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_18"
       warn "     * Wrong permissions for $file"
-      logjson "3.18" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_18"
     info "     * File not found"
-    logjson "3.18" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.19
 check_3_19() {
-  check_3_19="3.19 - Ensure that /etc/default/docker file ownership is set to root:root"
+  id_3_19="3.19"
+  desc_3_19="Ensure that /etc/default/docker file ownership is set to root:root"
+  check_3_19="$id_3_19  - $desc_3_19"
+  starttestjson "$id_3_19" "$desc_3_19"
+
   totalChecks=$((totalChecks + 1))
   file="/etc/default/docker"
   if [ -f "$file" ]; then
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass "$check_3_19"
-      logjson "3.19" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_19"
       warn "     * Wrong ownership for $file"
-      logjson "3.19" "WARN"
+      resulttestjson "WARN" "Wrong ownership for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_19"
     info "     * File not found"
-    logjson "3.19" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
 }
 
 # 3.20
 check_3_20() {
-  check_3_20="3.20 - Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  id_3_20="3.20"
+  desc_3_20="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  check_3_20="$id_3_20  - $desc_3_20"
+  starttestjson "$id_3_20" "$desc_3_20"
+
   totalChecks=$((totalChecks + 1))
   file="/etc/default/docker"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_20"
-      logjson "3.20" "PASS"
+      resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_20"
       warn "     * Wrong permissions for $file"
-      logjson "3.20" "WARN"
+      resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
     info "$check_3_20"
     info "     * File not found"
-    logjson "3.20" "INFO"
+    resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
+}
+
+check_3_end() {
+  endsectionjson
 }

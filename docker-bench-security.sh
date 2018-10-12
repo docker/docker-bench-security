@@ -141,10 +141,8 @@ main () {
   printf "\n"
   info "Checks: $totalChecks"
   info "Score: $currentScore"
-  integerjson "checks" "$totalChecks"
-  integerjson "score" "$currentScore"
 
-  endjson "$(date +%s)"
+  endjson "$totalChecks" "$currentScore" "$(date +%s)"
 }
 
 main "$@"
