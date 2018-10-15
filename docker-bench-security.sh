@@ -44,6 +44,7 @@ usage () {
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
+  -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
 EOF
 }
@@ -51,13 +52,14 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl:c:e:x: args
+while getopts hl:c:e:i:x: args
 do
   case $args in
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
   c) check="$OPTARG" ;;
   e) checkexclude="$OPTARG" ;;
+  i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
@@ -87,13 +89,6 @@ beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
-  # List all running containers
-  if [ -z "$exclude" ]; then
-    containers=$(docker ps | sed '1d' | awk '{print $NF}')
-  else
-    pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -Ev "$pattern" )
-  fi
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $containers; do
@@ -102,12 +97,15 @@ main () {
       benchcont="$c"
     fi
   done
-  # List all running containers except docker-bench (use names to improve readability in logs)
-  if [ -z "$exclude" ]; then
-    containers=$(docker ps | sed '1d' |  awk '{print $NF}' | grep -v "$benchcont")
-  else
+
+  if [ -n "$include" ]; then
+    pattern=$(echo "$include" | sed 's/,/|/g')
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -E "$pattern")
+  elif [ -n "$exclude" ]; then
     pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -Ev "$pattern" | grep -v "$benchcont")
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -Ev "$pattern")
+  else
+    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont")
   fi
 
   if [ -z "$containers" ]; then
