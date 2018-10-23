@@ -63,6 +63,10 @@ and community contributed checks are named `check_c_<number>`.
 A complete list of checks are present in [functions_lib.sh](functions_lib.sh).
 
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c check_2_2`
+will only run check `2.2 Ensure the logging level is set to 'info'`.
+
+`sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -e check_2_2`
+will run all available checks except `2.2 Ensure the logging level is set to 'info'`.
 
 Note that when submitting checks, provide information why it is a
 reasonable test to add and please include some kind of official documentation
