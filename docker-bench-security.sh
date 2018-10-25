@@ -9,6 +9,10 @@
 
 version='1.3.4'
 
+# Load dependencies
+. ./functions_lib.sh
+. ./helper_lib.sh
+
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
 myname=$(basename "${this_path}")     ## file name of this script.
@@ -66,9 +70,7 @@ if [ -z "$logger" ]; then
   logger="${myname}.log"
 fi
 
-# Load dependencies
-. ./functions_lib.sh
-. ./helper_lib.sh
+# Load output formating
 . ./output_lib.sh
 
 yell_info
