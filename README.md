@@ -48,10 +48,12 @@ version 1.13.0 or later.
 ### Docker Bench for Security options
 
 ```sh
+  -b           optional  Do not print colors
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
+  -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
 ```
 

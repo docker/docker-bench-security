@@ -9,11 +9,6 @@
 
 version='1.3.4'
 
-# Load dependencies
-. ./functions_lib.sh
-. ./helper_lib.sh
-. ./output_lib.sh
-
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
 myname=$(basename "${this_path}")     ## file name of this script.
@@ -40,6 +35,7 @@ usage () {
   cat <<EOF
   usage: ${myname} [options]
 
+  -b           optional  Do not print colors
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
@@ -52,9 +48,10 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts hl:c:e:i:x: args
+while getopts bhl:c:e:i:x: args
 do
   case $args in
+  b) nocolor="nocolor";;
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
   c) check="$OPTARG" ;;
@@ -68,6 +65,11 @@ done
 if [ -z "$logger" ]; then
   logger="${myname}.log"
 fi
+
+# Load dependencies
+. ./functions_lib.sh
+. ./helper_lib.sh
+. ./output_lib.sh
 
 yell_info
 
