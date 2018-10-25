@@ -121,8 +121,8 @@ main () {
   if [ -z "$check" ] && [ ! "$checkexclude" ]; then
     cis
   elif [ -z "$check" ] && [ "$checkexclude" ]; then
-    checkexcluded="$(echo "$checkexclude" | sed 's/,/|/g')"
-    for c in $(grep 'check_[0-9]_' functions_lib.sh | grep -vE "$checkexcluded"); do
+    checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
+    for c in $(grep 'check_[0-9]_' functions_lib.sh | grep -vE "\'$checkexcluded\'"); do
       "$c"
     done
   else
