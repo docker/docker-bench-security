@@ -18,11 +18,7 @@ check_1_1() {
 
   totalChecks=$((totalChecks + 1))
 
-  if grep /var/lib/docker /etc/fstab >/dev/null 2>&1; then
-    pass "$check_1_1"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif mountpoint -q  -- /var/lib/docker >/dev/null 2>&1; then
+  if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
     pass "$check_1_1"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
