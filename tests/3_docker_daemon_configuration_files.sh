@@ -47,7 +47,7 @@ check_3_2() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_2"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -103,7 +103,7 @@ check_3_4() {
   totalChecks=$((totalChecks + 1))
   file="$(get_systemd_service_file docker.socket)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_4"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -159,7 +159,7 @@ check_3_6() {
   totalChecks=$((totalChecks + 1))
   directory="/etc/docker"
   if [ -d "$directory" ]; then
-    if [ "$(stat -c %a $directory)" -eq 755 -o "$(stat -c %a $directory)" -eq 700 ]; then
+    if [ "$(stat -c %a $directory)" -eq 755 ] || [ "$(stat -c %a $directory)" -eq 700 ]; then
       pass "$check_3_6"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -225,7 +225,7 @@ check_3_8() {
     fail=0
     perms=$(find "$directory" -type f -name '*.crt')
     for p in $perms; do
-      if [ "$(stat -c %a $p)" -ne 444 -a "$(stat -c %a $p)" -ne 400 ]; then
+      if [ "$(stat -c %a $p)" -ne 444 ] && [ "$(stat -c %a $p)" -ne 400 ]; then
         fail=1
       fi
     done
@@ -293,7 +293,7 @@ check_3_10() {
     tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscacert" ]; then
-    if [ "$(stat -c %a $tlscacert)" -eq 444 -o "$(stat -c %a $tlscacert)" -eq 400 ]; then
+    if [ "$(stat -c %a $tlscacert)" -eq 444 ] || [ "$(stat -c %a $tlscacert)" -eq 400 ]; then
       pass "$check_3_10"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -357,7 +357,7 @@ check_3_12() {
     tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscert" ]; then
-    if [ "$(stat -c %a $tlscert)" -eq 444 -o "$(stat -c %a $tlscert)" -eq 400 ]; then
+    if [ "$(stat -c %a $tlscert)" -eq 444 ] || [ "$(stat -c %a $tlscert)" -eq 400 ]; then
       pass "$check_3_12"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -477,7 +477,7 @@ check_3_16() {
   totalChecks=$((totalChecks + 1))
   file="/var/run/docker.sock"
   if [ -S "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 660 -o "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -eq 660 ] || [  "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_16"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -533,7 +533,7 @@ check_3_18() {
   totalChecks=$((totalChecks + 1))
   file="/etc/docker/daemon.json"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 640 -o "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [  "$(stat -c %a $file)" -eq 640 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_18"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -589,7 +589,7 @@ check_3_20() {
   totalChecks=$((totalChecks + 1))
   file="/etc/default/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 -o "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_20"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))

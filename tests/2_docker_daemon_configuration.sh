@@ -4,7 +4,7 @@ check_2() {
   logit "\n"
   id_2="2"
   desc_2="Docker daemon configuration"
-  check_2="id_2 - $desc_2"
+  check_2="$id_2 - $desc_2"
   info "$check_2"
   startsectionjson "$id_2" "$desc_2"
 }
