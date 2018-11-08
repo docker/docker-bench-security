@@ -126,7 +126,7 @@ main () {
     cis
   elif [ -z "$check" ] && [ "$checkexclude" ]; then
     checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
-    grep 'check_[0-9]' functions_lib.sh | grep -vE "\'$checkexcluded\'" | while read -r c; do
+    grep 'check_[0-9]' functions_lib.sh | grep -vE "$checkexcluded" | while read -r c; do
       "$c"
     done
   else
