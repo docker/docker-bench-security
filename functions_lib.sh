@@ -131,6 +131,7 @@ docker_swarm_configuration() {
   check_7_1
   check_7_2
   check_7_3
+  check_7_4
   check_7_5
   check_7_6
   check_7_7
