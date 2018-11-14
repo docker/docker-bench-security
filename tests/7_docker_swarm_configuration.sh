@@ -81,29 +81,35 @@ check_7_3() {
 }
 
 # 7.4
-check_7_4(){
+check_7_4() {
   id_7_4="7.4"
   desc_7_4="Ensure data exchanged between containers are encrypted on different nodes on the overlay network"
   check_7_4="$id_7_4  - $desc_7_4"
   starttestjson "$id_7_4" "$desc_7_4"
 
   totalChecks=$((totalChecks + 1))
-  if docker network ls --filter driver=overlay --quiet | \
-    xargs docker network inspect --format '{{.Name}} {{ .Options }}' 2>/dev/null | \
+  fail=0
+  unencrypted_networks=""
+  for encnet in $(docker network ls --filter driver=overlay --quiet); do
+    if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
       grep -v 'encrypted:' 2>/dev/null 1>&2; then
-    warn "$check_7_4"
-    currentScore=$((currentScore - 1))
-    for encnet in $(docker network ls --filter driver=overlay --quiet); do
-      if docker network inspect --format '{{.Name}} {{ .Options }}' "$encnet" | \
-        grep -v 'encrypted:' 2>/dev/null 1>&2; then
-        warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
-        resulttestjson "WARN" "Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn "$check_7_4"
+        fail=1
       fi
-    done
+      warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
+      unencrypted_networks="$unencrypted_networks $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
+    fi
+  done
+  # We went through all the networks and found none that are unencrypted
+  if [ $fail -eq 0 ]; then
+      pass "$check_7_4"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
   else
-    pass "$check_7_4"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+      resulttestjson "WARN" "Unencrypted overlay networks:" "$unencrypted_networks"
+      currentScore=$((currentScore - 1))
   fi
 }
 
