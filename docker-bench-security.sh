@@ -95,7 +95,7 @@ beginjson "$version" "$(date +%s)"
 main () {
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
-  for c in $containers; do
+  for c in $(docker ps | sed '1d' | awk '{print $NF}'); do
     if docker inspect --format '{{ .Config.Labels }}' "$c" | \
      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchcont="$c"
