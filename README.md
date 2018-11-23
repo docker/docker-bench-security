@@ -82,7 +82,7 @@ following steps:
 ```sh
 git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
-docker build -t docker-bench-security .
+docker build --no-cache -t docker-bench-security .
 docker run -it --net host --pid host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /var/lib:/var/lib \
