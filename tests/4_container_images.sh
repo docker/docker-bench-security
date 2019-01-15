@@ -1,6 +1,19 @@
 #!/bin/sh
 
-images=$(docker images -q)
+if [ -n "$imgList" ]; then
+    pattern=$(echo "$imgList" | sed 's/,/ /g')
+    for img in $pattern; do
+      echo "Looking for image $img"
+      sha256=$(docker image ls "$img" -q)
+      if [ -z "$sha256" ]; then
+        echo "Image $img not found. Exiting."
+        exit 1
+      fi
+      images="$images $sha256 "
+    done 
+else
+  images=$(docker images -q)  
+fi
 
 check_4() {
   logit "\n"

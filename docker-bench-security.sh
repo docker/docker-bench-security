@@ -46,13 +46,14 @@ usage () {
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
+  -t TARGET    optional  Comma delimited list of images name to check.
 EOF
 }
 
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts bhl:c:e:i:x: args
+while getopts bhl:c:e:i:x:t: args
 do
   case $args in
   b) nocolor="nocolor";;
@@ -62,6 +63,7 @@ do
   e) checkexclude="$OPTARG" ;;
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
+  t) imgList="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
 done
