@@ -55,6 +55,7 @@ version 1.13.0 or later.
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
+  -t TARGET    optional  Comma delimited list of images name to check
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests
