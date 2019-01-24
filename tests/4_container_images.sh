@@ -243,7 +243,7 @@ check_4_9() {
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    resulttestjson "WARN" "Images using ADD" "$add_images"
+    resulttestjson "INFO" "Images using ADD" "$add_images"
   fi
 }
 
