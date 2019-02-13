@@ -267,12 +267,16 @@ check_1_9() {
 # 1.10
 check_1_10() {
   id_1_10="1.10"
-  desc_1_10="Ensure auditing is configured for Docker files and directories - /etc/default/docker"
+  desc_1_10="Ensure auditing is configured for Docker files and directories - /etc/default/docker - /etc/sysconfig/docker"
   check_1_10="$id_1_10  - $desc_1_10"
   starttestjson "$id_1_10" "$desc_1_10"
 
   totalChecks=$((totalChecks + 1))
-  file="/etc/default/docker"
+  if [ -d /etc/sysconfig ]; then
+    file="/etc/sysconfig/docker"
+  else
+    file="/etc/default/docker"
+  fi
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
       if auditctl -l | grep $file >/dev/null 2>&1; then
@@ -378,12 +382,16 @@ check_1_12() {
 # 1.13
 check_1_13() {
   id_1_13="1.13"
-  desc_1_13="Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc"
+  desc_1_13="Ensure auditing is configured for Docker files and directories - /usr/bin/docker-runc - /usr/libexec/docker/docker-runc-current"
   check_1_13="$id_1_13  - $desc_1_13"
   starttestjson "$id_1_13" "$desc_1_13"
 
   totalChecks=$((totalChecks + 1))
-  file="/usr/bin/docker-runc"
+  if [ -d /usr/libexec/docker ]; then
+    file="/usr/libexec/docker/docker-runc-current"
+  else
+    file="/usr/bin/docker-runc"
+  fi
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
       if auditctl -l | grep $file >/dev/null 2>&1; then
