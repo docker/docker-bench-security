@@ -18,14 +18,26 @@ check_1_1() {
 
   totalChecks=$((totalChecks + 1))
 
-  if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
-    pass "$check_1_1"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+  if [[ "$(docker info -f '{{ .SecurityOptions }}')" =~ .*userns.* ]]; then
+    if mountpoint -q -- "$(dirname "$(docker info -f '{{ .DockerRootDir }}')")" >/dev/null 2>&1; then
+      pass "$check_1_1"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_1_1"
+      resulttestjson "WARN"
+      currentScore=$((currentScore - 1))
+    fi
   else
-    warn "$check_1_1"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
+      pass "$check_1_1"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_1_1"
+      resulttestjson "WARN"
+      currentScore=$((currentScore - 1))
+    fi
   fi
 }
 
