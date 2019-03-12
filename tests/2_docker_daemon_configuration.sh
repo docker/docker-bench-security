@@ -232,7 +232,7 @@ check_2_9() {
   starttestjson "$id_2_9" "$desc_2_9"
 
   totalChecks=$((totalChecks + 1))
-  if get_docker_configuration_file_args 'cgroup-parent' | grep -v '""'; then
+  if get_docker_configuration_file_args 'cgroup-parent' | grep -v ''; then
     warn "$check_2_9"
     info "     * Confirm cgroup usage"
     resulttestjson "WARN" "Confirm cgroup usage"
