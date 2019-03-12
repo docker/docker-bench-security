@@ -18,27 +18,34 @@ check_1_1() {
 
   totalChecks=$((totalChecks + 1))
 
-  if [[ "$(docker info -f '{{ .SecurityOptions }}')" =~ .*userns.* ]]; then
-    if mountpoint -q -- "$(dirname "$(docker info -f '{{ .DockerRootDir }}')")" >/dev/null 2>&1; then
-      pass "$check_1_1"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+  DOCKER_HOME="$(docker info -f '{{ .DockerRootDir }}')"
+  DOCKER_MNT="$(findmnt -fnT $DOCKER_HOME|awk '{print $1}')"
+  MNT_UUID="$(findmnt -o UUID -fnT $DOCKER_HOME)"
+  DEPTH="$(echo $DOCKER_MNT | grep -o / | wc -l)"
+  UUID_ARRAY=()
+
+  for ((i=$DEPTH-1;i>0;i--)); do
+    EXPANSION="$(printf %${i}s | sed 's/ /\/\*/g')"
+    UUID_ARRAY[$i]="$(findmnt -o UUID -fnT ${DOCKER_MNT%$EXPANSION})"
+  done
+
+  for i in "${UUID_ARRAY[@]}"; do
+    if [ "$MNT_UUID" == "$i" ]; then
+      WARN=1
+      break 2
     else
+      continue
+    fi
+  done
+  if [[ $WARN == 1 ]]; then
       warn "$check_1_1"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
-    fi
-  else
-    if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
+    else
       pass "$check_1_1"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
-    else
-      warn "$check_1_1"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
     fi
-  fi
 }
 
 # 1.2
