@@ -241,7 +241,7 @@ check_4_9() {
   if [ $fail -eq 0 ]; then
     pass "$check_4_9"
     resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    currentScore=$((currentScore + 0))
   else
     resulttestjson "INFO" "Images using ADD" "$add_images"
   fi
