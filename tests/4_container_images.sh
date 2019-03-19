@@ -224,8 +224,8 @@ check_4_9() {
   fail=0
   add_images=""
   for img in $images; do
-    if docker history --format "{{ .CreatedBy }}" --no-trunc "$img" | sed '$d' |\
-      grep -q 'ADD'; then
+    if docker history --format "{{ .CreatedBy }}" --no-trunc "$img" | \
+      sed '$d' | grep -q 'ADD.*in /\s$'; then
       if [ $fail -eq 0 ]; then
         fail=1
         info "$check_4_9"
