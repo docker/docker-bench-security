@@ -317,7 +317,7 @@ check_2_12() {
 # 2.13
 check_2_13() {
   docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
-    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.')
+    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
   totalChecks=$((totalChecks + 1))
 
   id_2_13="2.13"
