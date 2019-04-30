@@ -1,13 +1,14 @@
 version: '3'
-
+    # use image if you have a dedicated build step:
+    #     #   docker build --rm -t docker-bench-security .
+    #         # image: docker-bench-security
+    #
+    #             # use build path to Dockerfile if docker-compose should build the image
 services:
       
   docker-bench-security:
     #image: docker-bench-security
     build: .
-    #container_name: web
-    #ports:
-    #  - "8899:8000"
     volumes:
       - /var/lib:/var/lib
       - /var/run/docker.sock:/var/run/docker.sock
