@@ -1,7 +1,9 @@
 The following people, listed in alphabetical order, have contributed to docker-bench-security:
 
+* alberto <alberto@tutum.co>
 * Andreas Stieger <astieger@suse.com>
 * Anthony Roger <aroger@softwaymedical.fr>
+* binary <binary@webdev.fritz.box>
 * Boris Gorbylev <ekho@ekho.name>
 * Cheng-Li Jerry Ma <chengli.ma@gmail.com>
 * Csaba Palfi <csaba@palfi.me>
@@ -19,10 +21,14 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * Joe Williams <joe.williams@github.com>
 * Julien Garcia Gonzalez <julien@giantswarm.io>
 * Jürgen Hermann <jh@web.de>
+* kakakakakku <y.yoshida22@gmail.com>
 * Karol Babioch <kbabioch@suse.de>
 * Kevin Lim <kevin.lim@sap.com>
+* kevinll <imhael@gmail.com>
 * Liron Levin <liron@twistlock.com>
+* liron-l <levinlir@gmail.com>
 * LorensK <LorensK@users.noreply.github.com>
+* lusitania <lusitania@users.noreply.github.com>
 * Maik Ellerbrock <opensource@frapsoft.com>
 * Mark Stemm <mark.stemm@gmail.com>
 * Matt Fellows <matt.fellows@onegeek.com.au>
@@ -39,17 +45,11 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * Ravi Kumar Vadapalli <vadapalli.ravikumar@gmail.com>
 * Scott McCarty <scott.mccarty@gmail.com>
 * Sebastiaan van Stijn <github@gone.nl>
+* telepresencebot2 <telepresencebot2@users.noreply.github.com>
 * Thomas Sjögren <konstruktoid@users.noreply.github.com>
 * Tom Partington <tom.partington@cevo.com.au>
 * Werner Buck <wernerbuck@gmail.com>
-* Zvi "Viz" Effron <zeffron@riotgames.com>
-* alberto <alberto@tutum.co>
-* binary <binary@webdev.fritz.box>
-* kakakakakku <y.yoshida22@gmail.com>
-* kevinll <imhael@gmail.com>
-* liron-l <levinlir@gmail.com>
-* lusitania <lusitania@users.noreply.github.com>
-* telepresencebot2 <telepresencebot2@users.noreply.github.com>
 * will Farrell <willfarrell@users.noreply.github.com>
+* Zvi "Viz" Effron <zeffron@riotgames.com>
 
-This list was generated Sun May  5 20:24:47 UTC 2019.
+This list was generated Sun May  5 20:30:13 UTC 2019.
