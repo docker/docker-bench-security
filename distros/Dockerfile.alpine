@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.9
 
 LABEL \
   org.label-schema.name="docker-bench-security" \
@@ -23,4 +23,4 @@ HEALTHCHECK CMD exit 0
 WORKDIR /usr/local/bin
 
 ENTRYPOINT [ "/usr/bin/dumb-init", "docker-bench-security.sh" ]
-
+CMD [""]
