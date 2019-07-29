@@ -103,15 +103,27 @@ main () {
       benchcont="$c"
     fi
   done
+  
+  # get the image id of the docker_bench_security_image, memorize it:
+  benchimagecont="nil"
+  for c in $(docker images | sed '1d' | awk '{print $3}'); do
+    if docker inspect --format '{{ .Config.Labels }}' "$c" | \
+     grep -e 'docker.bench.security' >/dev/null 2>&1; then
+      benchimagecont="$c"
+    fi
+  done
 
   if [ -n "$include" ]; then
     pattern=$(echo "$include" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -E "$pattern")
+    images=$(docker images | grep -E "$pattern" | sed '1d' | awk '{print $3}' | grep -v "$benchimagecont")
   elif [ -n "$exclude" ]; then
     pattern=$(echo "$exclude" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -Ev "$pattern")
+    images=$(docker images | grep -Ev "$pattern" | sed '1d' | awk '{print $3}' | grep -v "$benchimagecont")
   else
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont")
+    images=$(docker images -q | grep -v "$benchcont")
   fi
 
   if [ -z "$containers" ]; then
