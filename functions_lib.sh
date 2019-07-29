@@ -67,6 +67,7 @@ docker_daemon_files() {
 }
 
 container_images() {
+  check_images
   check_4
   check_4_1
   check_4_2
