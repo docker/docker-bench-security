@@ -1,19 +1,21 @@
 #!/bin/sh
 
+check_images() {
 if [ -n "$imgList" ]; then
     pattern=$(echo "$imgList" | sed 's/,/ /g')
     for img in $pattern; do
       echo "Looking for image $img"
-      sha256=$(docker image ls "$img" -q)
+      sha256=$(docker images | grep $img | awk '{print $3}')
       if [ -z "$sha256" ]; then
         echo "Image $img not found. Exiting."
         exit 1
       fi
-      images="$images $sha256 "
-    done 
-else
-  images=$(docker images -q)  
+      images="$sha256"
+      echo "images ------------------------------------ " $images
+      echo "sha356" $sha256
+    done
 fi
+}
 
 check_4() {
   logit "\n"
