@@ -97,10 +97,15 @@ beginjson "$version" "$(date +%s)"
 main () {
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
+  # Also exclude the bench container image from analysis, because it's a privileged
   for c in $(docker ps | sed '1d' | awk '{print $NF}'); do
     if docker inspect --format '{{ .Config.Labels }}' "$c" | \
      grep -e 'docker.bench.security' >/dev/null 2>&1; then
       benchcont="$c"
+      benchcontimg="nil"
+      temp=$(docker inspect --format '{{.Config.Image}}' $benchcont)
+      benchcontimg=$(docker image ls -q $temp)
+      info "Excluding container $benchcont and image $temp : $benchcontimg"
     fi
   done
 

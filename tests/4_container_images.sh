@@ -12,7 +12,7 @@ if [ -n "$imgList" ]; then
       images="$images $sha256 "
     done 
 else
-  images=$(docker images -q)  
+  images=$(docker images -q | grep -v $benchcontimg)
 fi
 
 check_4() {
