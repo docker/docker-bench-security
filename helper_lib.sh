@@ -105,6 +105,8 @@ get_systemd_service_file() {
     echo "/etc/systemd/system/$SERVICE"
   elif systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
     systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
+  elif [ -f "/lib/systemd/system/$SERVICE" ]; then
+    echo "/lib/systemd/system/$SERVICE"
   else
     echo "/usr/lib/systemd/system/$SERVICE"
   fi

@@ -147,8 +147,8 @@ check_1_6() {
     fi
   else
     info "$check_1_6"
-    info "     * Directory not found"
-    resulttestjson "INFO" "Directory not found"
+    info "     * Directory $directory not found"
+    resulttestjson "INFO" "Directory $directory not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -184,8 +184,8 @@ check_1_7() {
     fi
   else
     info "$check_1_7"
-    info "     * Directory not found"
-    resulttestjson "INFO" "Directory not found"
+    info "     * Directory $directory not found"
+    resulttestjson "INFO" "Directory $directory not found"
     currentScore=$((currentScore + 0))
 fi
 }
@@ -221,8 +221,8 @@ check_1_8() {
     fi
   else
     info "$check_1_8"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -258,8 +258,8 @@ check_1_9() {
     fi
   else
     info "$check_1_9"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -295,8 +295,8 @@ check_1_10() {
     fi
   else
     info "$check_1_10"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -332,8 +332,8 @@ check_1_11() {
     fi
   else
     info "$check_1_11"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -369,8 +369,8 @@ check_1_12() {
     fi
   else
     info "$check_1_12"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
@@ -406,8 +406,8 @@ check_1_13() {
     fi
   else
     info "$check_1_13"
-    info "     * File not found"
-    resulttestjson "INFO" "File not found"
+    info "     * File $file not found"
+    resulttestjson "INFO" "File $file not found"
     currentScore=$((currentScore + 0))
   fi
 }
