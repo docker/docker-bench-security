@@ -11,7 +11,7 @@ check_1() {
 
 check_1_1() {
   logit ""
-  id_1_1="1_1"
+  id_1_1="1.1"
   desc_1_1="General Configuration"
   check_1_1="$id_1_1 - $desc_1_1"
   info "$check_1_1"
@@ -45,14 +45,14 @@ check_1_1_2() {
   do_version_check "$docker_current_version" "$docker_version"
   if [ $? -eq 11 ]; then
     info "$check_1_1_2"
-    info "     * Using $docker_version, verify is it up to date as deemed necessary"
-    info "     * Your operating system vendor may provide support and security maintenance for Docker"
+    info "       * Using $docker_version, verify is it up to date as deemed necessary"
+    info "       * Your operating system vendor may provide support and security maintenance for Docker"
     resulttestjson "INFO" "Using $docker_version"
     currentScore=$((currentScore + 0))
   else
     pass "$check_1_1_2"
-    info "     * Using $docker_version which is current"
-    info "     * Check with your operating system vendor for support and security maintenance for Docker"
+    info "       * Using $docker_version which is current"
+    info "       * Check with your operating system vendor for support and security maintenance for Docker"
     resulttestjson "PASS" "Using $docker_version"
     currentScore=$((currentScore + 0))
   fi
@@ -60,7 +60,7 @@ check_1_1_2() {
 
 check_1_2() {
   logit ""
-  id_1_2="1_2"
+  id_1_2="1.2"
   desc_1_2="Linux Hosts Specific Configuration"
   check_1_2="$id_1_2 - $desc_1_2"
   info "$check_1_2"
@@ -98,7 +98,7 @@ check_1_2_2() {
   docker_users=$(getent group docker)
   info "$check_1_2_2"
   for u in $docker_users; do
-    info "     * $u"
+    info "       * $u"
   done
   resulttestjson "INFO" "users" "$docker_users"
   currentScore=$((currentScore + 0))
@@ -165,7 +165,7 @@ check_1_2_4() {
     fi
   else
     info "$check_1_2_4"
-    info "     * Directory not found"
+    info "       * Directory not found"
     resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
@@ -202,7 +202,7 @@ check_1_2_5() {
     fi
   else
     info "$check_1_2_5"
-    info "     * Directory not found"
+    info "       * Directory not found"
     resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
 fi
@@ -239,7 +239,7 @@ check_1_2_6() {
     fi
   else
     info "$check_1_2_6"
-    info "     * File not found"
+    info "       * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -276,7 +276,7 @@ check_1_2_7() {
     fi
   else
     info "$check_1_2_7"
-    info "     * File not found"
+    info "       * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -313,7 +313,7 @@ check_1_2_8() {
     fi
   else
     info "$check_1_2_8"
-    info "     * File not found"
+    info "       * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -350,7 +350,7 @@ check_1_2_9() {
     fi
   else
     info "$check_1_2_9"
-    info "     * File not found"
+    info "       * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -387,7 +387,7 @@ check_1_2_10() {
     fi
   else
     info "$check_1_2_10"
-    info "     * File not found"
+    info "        * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -424,7 +424,7 @@ check_1_2_11() {
     fi
   else
     info "$check_1_2_11"
-    info "     * File not found"
+    info "        * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -461,7 +461,7 @@ check_1_2_12() {
     fi
   else
     info "$check_1_2_12"
-    info "     * File not found"
+    info "        * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
