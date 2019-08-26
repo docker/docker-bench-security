@@ -3,18 +3,21 @@
 host_configuration() {
   check_1
   check_1_1
+  check_1_1_1
+  check_1_1_2
   check_1_2
-  check_1_3
-  check_1_4
-  check_1_5
-  check_1_6
-  check_1_7
-  check_1_8
-  check_1_9
-  check_1_10
-  check_1_11
-  check_1_12
-  check_1_13
+  check_1_2_1
+  check_1_2_2
+  check_1_2_3
+  check_1_2_4
+  check_1_2_5
+  check_1_2_6
+  check_1_2_7
+  check_1_2_8
+  check_1_2_9
+  check_1_2_10
+  check_1_2_11
+  check_1_2_12
   check_1_end
 }
 
