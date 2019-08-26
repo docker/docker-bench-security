@@ -319,7 +319,42 @@ check_1_2_8() {
   fi
 }
 
-# 1.2.9 Ensure auditing is configured for Docker files and directories -/etc/sysconfig/docker (Scored)
+# 1.2.9
+check_1_2_9() {
+  id_1_2_9="1.2.9"
+  desc_1_2_9="Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker"
+  check_1_2_9="$id_1_2_9  - $desc_1_2_9"
+  starttestjson "$id_1_2_9" "$desc_1_2_9"
+
+  totalChecks=$((totalChecks + 1))
+  file="/etc/sysconfig/docker"
+  if [ -f "$file" ]; then
+    if command -v auditctl >/dev/null 2>&1; then
+      if auditctl -l | grep $file >/dev/null 2>&1; then
+        pass "$check_1_2_9"
+        resulttestjson "PASS"
+        currentScore=$((currentScore + 1))
+      else
+        warn "$check_1_2_9"
+        resulttestjson "WARN"
+        currentScore=$((currentScore - 1))
+      fi
+    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass "$check_1_2_9"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_1_2_9"
+      resulttestjson "WARN"
+      currentScore=$((currentScore - 1))
+    fi
+  else
+    info "$check_1_2_9"
+    info "     * File not found"
+    resulttestjson "INFO" "File not found"
+    currentScore=$((currentScore + 0))
+  fi
+}
 
 # 1.2.10
 check_1_2_10() {
