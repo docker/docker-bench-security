@@ -316,21 +316,22 @@ check_2_12() {
 
 # 2.13
 check_2_13() {
-  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
-    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
-  totalChecks=$((totalChecks + 1))
-
   id_2_13="2.13"
-  desc_2_13="Ensure operations on legacy registry (v1) are Disabled"
+  desc_2_13="Ensure live restore is Enabled"
   check_2_13="$id_2_13  - $desc_2_13"
   starttestjson "$id_2_13" "$desc_2_13"
 
-  if [ "$docker_version" -lt 1712 ]; then
-    if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
-      pass "$check_2_13"
+  totalChecks=$((totalChecks + 1))
+  if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
+    pass "$check_2_13"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
+  else
+    if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
+      pass "$check_2_13 (Incompatible with swarm mode)"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
-    elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
+    elif get_docker_effective_command_line_args '--live-restore' | grep "live-restore" >/dev/null 2>&1; then
       pass "$check_2_13"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
@@ -339,122 +340,88 @@ check_2_13() {
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
-  else
-    desc_2_13="$desc_2_13 (Deprecated)"
-    check_2_13="$id_2_13  - $desc_2_13"
-    info "$check_2_13"
-    resulttestjson "INFO"
   fi
 }
 
 # 2.14
 check_2_14() {
   id_2_14="2.14"
-  desc_2_14="Ensure live restore is Enabled"
+  desc_2_14="Ensure Userland Proxy is Disabled"
   check_2_14="$id_2_14  - $desc_2_14"
   starttestjson "$id_2_14" "$desc_2_14"
 
   totalChecks=$((totalChecks + 1))
-  if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
+  if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
+    pass "$check_2_14"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
+  elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
     pass "$check_2_14"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
-      pass "$check_2_14 (Incompatible with swarm mode)"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    elif get_docker_effective_command_line_args '--live-restore' | grep "live-restore" >/dev/null 2>&1; then
-      pass "$check_2_14"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_14"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
-    fi
+    warn "$check_2_14"
+    resulttestjson "WARN"
+    currentScore=$((currentScore - 1))
   fi
 }
 
 # 2.15
 check_2_15() {
   id_2_15="2.15"
-  desc_2_15="Ensure Userland Proxy is Disabled"
+  desc_2_15="Ensure that a daemon-wide custom seccomp profile is applied if appropriate"
   check_2_15="$id_2_15  - $desc_2_15"
   starttestjson "$id_2_15" "$desc_2_15"
 
   totalChecks=$((totalChecks + 1))
-  if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
-    pass "$check_2_15"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
+  if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
     pass "$check_2_15"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    warn "$check_2_15"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    info "$check_2_15"
+    resulttestjson "INFO"
+    currentScore=$((currentScore + 0))
   fi
 }
 
 # 2.16
 check_2_16() {
   id_2_16="2.16"
-  desc_2_16="Ensure daemon-wide custom seccomp profile is applied, if needed"
+  desc_2_16="Ensure that experimental features are not implemented in production"
   check_2_16="$id_2_16  - $desc_2_16"
   starttestjson "$id_2_16" "$desc_2_16"
 
   totalChecks=$((totalChecks + 1))
-  if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
+  if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
     pass "$check_2_16"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    info "$check_2_16"
-    resulttestjson "INFO"
-    currentScore=$((currentScore + 0))
+    warn "$check_2_16"
+    resulttestjson "WARN"
+    currentScore=$((currentScore - 1))
   fi
 }
 
 # 2.17
 check_2_17() {
   id_2_17="2.17"
-  desc_2_17="Ensure experimental features are avoided in production"
+  desc_2_17="Ensure containers are restricted from acquiring new privileges"
   check_2_17="$id_2_17  - $desc_2_17"
   starttestjson "$id_2_17" "$desc_2_17"
 
   totalChecks=$((totalChecks + 1))
-  if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
+  if get_docker_effective_command_line_args '--no-new-privileges' | grep "no-new-privileges" >/dev/null 2>&1; then
+    pass "$check_2_17"
+    resulttestjson "PASS"
+    currentScore=$((currentScore + 1))
+  elif get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
     pass "$check_2_17"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
     warn "$check_2_17"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  fi
-}
-
-# 2.18
-check_2_18() {
-  id_2_18="2.18"
-  desc_2_18="Ensure containers are restricted from acquiring new privileges"
-  check_2_18="$id_2_18  - $desc_2_18"
-  starttestjson "$id_2_18" "$desc_2_18"
-
-  totalChecks=$((totalChecks + 1))
-  if get_docker_effective_command_line_args '--no-new-privileges' | grep "no-new-privileges" >/dev/null 2>&1; then
-    pass "$check_2_18"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
-    pass "$check_2_18"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_18"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi
