@@ -40,7 +40,7 @@ check_3_1() {
 # 3.2
 check_3_2() {
   id_3_2="3.2"
-  desc_3_2="Ensure that docker.service file permissions are set to 644 or more restrictive"
+  desc_3_2="Ensure that docker.service file permissions are appropriately set"
   check_3_2="$id_3_2  - $desc_3_2"
   starttestjson "$id_3_2" "$desc_3_2"
 
@@ -582,25 +582,81 @@ check_3_19() {
 # 3.20
 check_3_20() {
   id_3_20="3.20"
-  desc_3_20="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  desc_3_20="Ensure that the /etc/sysconfig/docker file ownership is set to root:root"
   check_3_20="$id_3_20  - $desc_3_20"
   starttestjson "$id_3_20" "$desc_3_20"
 
   totalChecks=$((totalChecks + 1))
-  file="/etc/default/docker"
+  file="/etc/sysconfig/docker"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass "$check_3_20"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
       warn "$check_3_20"
+      warn "     * Wrong ownership for $file"
+      resulttestjson "WARN" "Wrong ownership for $file"
+      currentScore=$((currentScore - 1))
+    fi
+  else
+    info "$check_3_20"
+    info "     * File not found"
+    resulttestjson "INFO" "File not found"
+    currentScore=$((currentScore + 0))
+  fi
+}
+
+# 3.21
+check_3_21() {
+  id_3_21="3.21"
+  desc_3_21="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  check_3_21="$id_3_21  - $desc_3_21"
+  starttestjson "$id_3_21" "$desc_3_21"
+
+  totalChecks=$((totalChecks + 1))
+  file="/etc/default/docker"
+  if [ -f "$file" ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+      pass "$check_3_21"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_3_21"
       warn "     * Wrong permissions for $file"
       resulttestjson "WARN" "Wrong permissions for $file"
       currentScore=$((currentScore - 1))
     fi
   else
-    info "$check_3_20"
+    info "$check_3_21"
+    info "     * File not found"
+    resulttestjson "INFO" "File not found"
+    currentScore=$((currentScore + 0))
+  fi
+}
+
+# 3.22
+check_3_22() {
+  id_3_22="3.22"
+  desc_3_22="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  check_3_22="$id_3_22  - $desc_3_22"
+  starttestjson "$id_3_22" "$desc_3_22"
+
+  totalChecks=$((totalChecks + 1))
+  file="/etc/default/docker"
+  if [ -f "$file" ]; then
+    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+      pass "$check_3_22"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_3_22"
+      warn "     * Wrong permissions for $file"
+      resulttestjson "WARN" "Wrong permissions for $file"
+      currentScore=$((currentScore - 1))
+    fi
+  else
+    info "$check_3_22"
     info "     * File not found"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))

@@ -65,6 +65,8 @@ docker_daemon_files() {
   check_3_18
   check_3_19
   check_3_20
+  check_3_21
+  check_3_22
   check_3_end
 }
 
