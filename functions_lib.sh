@@ -40,7 +40,6 @@ docker_daemon_configuration() {
   check_2_15
   check_2_16
   check_2_17
-  check_2_18
   check_2_end
 }
 
@@ -147,6 +146,7 @@ docker_swarm_configuration() {
 community_checks() {
   check_c
   check_c_1
+  check_c_2
   check_c_end
 }
 
