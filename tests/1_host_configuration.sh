@@ -58,6 +58,10 @@ check_1_1_2() {
   fi
 }
 
+check_1_1_end() {
+  endsectionjson
+}
+
 check_1_2() {
   logit ""
   id_1_2="1.2"
@@ -465,6 +469,10 @@ check_1_2_12() {
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
+}
+
+check_1_2_end() {
+  endsectionjson
 }
 
 check_1_end() {
