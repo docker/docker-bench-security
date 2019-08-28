@@ -117,6 +117,6 @@ yell "# ------------------------------------------------------------------------
 # Docker, Inc. (c) 2015-
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# Inspired by the CIS Docker Community Edition Benchmark v1.1.0.
+# Inspired by the CIS Docker Benchmark v1.2.0.
 # ------------------------------------------------------------------------------"
 }
