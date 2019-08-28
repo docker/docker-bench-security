@@ -47,7 +47,9 @@ tests/
 ├── 4_container_images.sh
 ├── 5_container_runtime.sh
 ├── 6_docker_security_operations.sh
-└── 7_docker_swarm_configuration.sh
+├── 7_docker_swarm_configuration.sh
+├── 8_docker_enterprise_configuration.sh
+└── 99_community_checks.sh
 ```
 
 To modify the Docker Bench for Security you should first clone the repository,
@@ -55,7 +57,7 @@ make your changes, check your code with `shellcheck`, `checkbashisms` or similar
 tools, and then sign off on your commits. After that feel free to send us a
 pull request with the changes.
 
-While this tool was inspired by the [CIS Docker 1.11.0 benchmark](https://benchmarks.cisecurity.org/downloads/show-single/index.cfm?file=docker16.110)
+While this tool was inspired by the [CIS Docker 1.11.0 benchmark](https://www.cisecurity.org/benchmark/docker/)
 and its successors, feel free to add new tests. We will try to turn
 [dockerbench.com](https://dockerbench.com) into a list of good community
 benchmarks for both security and performance, and we would love community

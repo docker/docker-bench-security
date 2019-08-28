@@ -79,7 +79,7 @@ check_4_1() {
 # 4.2
 check_4_2() {
   id_4_2="4.2"
-  desc_4_2="Ensure that containers use trusted base images"
+  desc_4_2="Ensure that containers use only trusted base images"
   check_4_2="$id_4_2  - $desc_4_2"
   starttestjson "$id_4_2" "$desc_4_2"
 
@@ -92,7 +92,7 @@ check_4_2() {
 # 4.3
 check_4_3() {
   id_4_3="4.3"
-  desc_4_3="Ensure unnecessary packages are not installed in the container"
+  desc_4_3="Ensure that unnecessary packages are not installed in the container"
   check_4_3="$id_4_3  - $desc_4_3"
   starttestjson "$id_4_3" "$desc_4_3"
 
@@ -137,7 +137,7 @@ check_4_5() {
 # 4.6
 check_4_6() {
   id_4_6="4.6"
-  desc_4_6="Ensure HEALTHCHECK instructions have been added to the container image"
+  desc_4_6="Ensure that HEALTHCHECK instructions have been added to container images"
   check_4_6="$id_4_6  - $desc_4_6"
   starttestjson "$id_4_6" "$desc_4_6"
 
@@ -203,7 +203,7 @@ check_4_7() {
 # 4.8
 check_4_8() {
   id_4_8="4.8"
-  desc_4_8="Ensure setuid and setgid permissions are removed in the images"
+  desc_4_8="Ensure setuid and setgid permissions are removed"
   check_4_8="$id_4_8  - $desc_4_8"
   starttestjson "$id_4_8" "$desc_4_8"
 
@@ -216,7 +216,7 @@ check_4_8() {
 # 4.9
 check_4_9() {
   id_4_9="4.9"
-  desc_4_9="Ensure COPY is used instead of ADD in Dockerfile"
+  desc_4_9="Ensure that COPY is used instead of ADD in Dockerfiles"
   check_4_9="$id_4_9  - $desc_4_9"
   starttestjson "$id_4_9" "$desc_4_9"
 
@@ -263,7 +263,7 @@ check_4_10() {
 # 4.11
 check_4_11() {
   id_4_11="4.11"
-  desc_4_11="Ensure verified packages are only Installed"
+  desc_4_11="Ensure only verified packages are installed"
   check_4_11="$id_4_11  - $desc_4_11"
   starttestjson "$id_4_11" "$desc_4_11"
 
