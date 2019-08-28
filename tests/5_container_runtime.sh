@@ -1112,9 +1112,9 @@ check_5_28() {
   fail=0
   nopids_limit_containers=""
   for c in $containers; do
-    pidslimit=$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")
+    pidslimit="$(docker inspect --format '{{.HostConfig.PidsLimit }}' "$c")"
 
-    if [ "$pidslimit" -le 0 ]; then
+    if [ "$pidslimit" = "0" ] || [  "$pidslimit" = "<nil>" ] || [  "$pidslimit" = "-1" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn "$check_5_28"
