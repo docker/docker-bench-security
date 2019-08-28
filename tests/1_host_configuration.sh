@@ -478,4 +478,3 @@ check_1_2_end() {
 check_1_end() {
   endsectionjson
 }
-

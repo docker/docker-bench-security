@@ -12,7 +12,7 @@ check_5() {
 check_running_containers() {
   # If containers is empty, there are no running containers
   if [ -z "$containers" ]; then
-    info "     * No containers running, skipping Section 5"
+    info "  * No containers running, skipping Section 5"
     running_containers=0
   else
     running_containers=1
