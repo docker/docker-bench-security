@@ -1,14 +1,5 @@
 #!/bin/sh
 
-check_product_license() {
-  if docker info -f '{{ .ProductLicense }}' | grep -qi 'Community Engine'; then
-    info "     * Community Engine license, skipping section 8."
-    enterprise_license=0
-  else
-    enterprise_license=1
-  fi
-}
-
 check_8() {
   logit "\n"
   id_8="8"
@@ -18,7 +9,20 @@ check_8() {
   startsectionjson "$id_8" "$desc_8"
 }
 
+check_product_license() {
+  if docker version | grep -qi '^Client.*Community$'; then
+    info "  * Community Engine license, skipping section 8"
+    enterprise_license=0
+  else
+    enterprise_license=1
+  fi
+}
+
 check_8_1() {
+  if [ "$enterprise_license" -ne 1 ]; then
+    return
+  fi
+
   logit "\n"
   id_8_1="8.1"
   desc_8_1="Universal Control Plane Configuration"
@@ -151,6 +155,10 @@ check_8_1_end() {
 }
 
 check_8_2() {
+  if [ "$enterprise_license" -ne 1 ]; then
+    return
+  fi
+
   logit "\n"
   id_8_2="8.2"
   desc_8_2="Docker Trusted Registry Configuration"

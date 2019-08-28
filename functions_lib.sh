@@ -149,9 +149,18 @@ docker_swarm_configuration() {
 
 docker_enterprise_configuration() {
   check_8
+  check_product_license
   check_8_1
+  check_8_1_1
+  check_8_1_2
+  check_8_1_3
+  check_8_1_4
+  check_8_1_5
+  check_8_1_6
+  check_8_1_7
   check_8_1_end
   check_8_2
+  check_8_2_1
   check_8_2_end
   check_8_end
 }
