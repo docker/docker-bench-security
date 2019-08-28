@@ -5,7 +5,6 @@ host_configuration() {
   check_1_1
   check_1_1_1
   check_1_1_2
-  check_1_1_end
   check_1_2
   check_1_2_1
   check_1_2_2
@@ -19,7 +18,6 @@ host_configuration() {
   check_1_2_10
   check_1_2_11
   check_1_2_12
-  check_1_2_end
   check_1_end
 }
 
@@ -158,10 +156,8 @@ docker_enterprise_configuration() {
   check_8_1_5
   check_8_1_6
   check_8_1_7
-  check_8_1_end
   check_8_2
   check_8_2_1
-  check_8_2_end
   check_8_end
 }
 

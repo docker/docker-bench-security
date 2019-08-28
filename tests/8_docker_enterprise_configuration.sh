@@ -28,7 +28,6 @@ check_8_1() {
   desc_8_1="Universal Control Plane Configuration"
   check_8_1="$id_8_1 - $desc_8_1"
   info "$check_8_1"
-  startsectionjson "$id_8_1" "$desc_8_1"
 }
 
 # 8.1.1
@@ -150,10 +149,6 @@ check_8_1_7() {
   currentScore=$((currentScore + 0))
 }
 
-check_8_1_end() {
-  endsectionjson
-}
-
 check_8_2() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -164,7 +159,6 @@ check_8_2() {
   desc_8_2="Docker Trusted Registry Configuration"
   check_8_2="$id_8_2 - $desc_8_2"
   info "$check_8_2"
-  startsectionjson "$id_8_2" "$desc_8_2"
 }
 
 check_8_2_1() {
@@ -181,10 +175,6 @@ check_8_2_1() {
   note "$check_8_2_1"
   resulttestjson "INFO"
   currentScore=$((currentScore + 0))
-}
-
-check_8_2_end() {
-  endsectionjson
 }
 
 check_8_end() {

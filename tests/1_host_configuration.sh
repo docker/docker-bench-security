@@ -15,7 +15,6 @@ check_1_1() {
   desc_1_1="General Configuration"
   check_1_1="$id_1_1 - $desc_1_1"
   info "$check_1_1"
-  startsectionjson "$id_1_1" "$desc_1_1"
 }
 
 # 1.1.1
@@ -58,17 +57,12 @@ check_1_1_2() {
   fi
 }
 
-check_1_1_end() {
-  endsectionjson
-}
-
 check_1_2() {
   logit ""
   id_1_2="1.2"
   desc_1_2="Linux Hosts Specific Configuration"
   check_1_2="$id_1_2 - $desc_1_2"
   info "$check_1_2"
-  startsectionjson "$id_1_2" "$desc_1_2"
 }
 
 # 1.2.1
@@ -469,10 +463,6 @@ check_1_2_12() {
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
-}
-
-check_1_2_end() {
-  endsectionjson
 }
 
 check_1_end() {
