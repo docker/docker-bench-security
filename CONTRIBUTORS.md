@@ -14,6 +14,7 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * Ernst de Haan <ernst@ernstdehaan.com>
 * HuKeping <hukeping@huawei.com>
 * Ivan Angelov <iangelov@users.noreply.github.com>
+* J0WI <J0WI@users.noreply.github.com>
 * Jessica Frazelle <princess@docker.com>
 * Joachim Lusiardi <jlusiardi@users.noreply.github.com>
 * Joachim Lusiardi <joachim@lusiardi.de>
@@ -52,4 +53,4 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * will Farrell <willfarrell@users.noreply.github.com>
 * Zvi "Viz" Effron <zeffron@riotgames.com>
 
-This list was generated Sun May  5 20:30:13 UTC 2019.
+This list was generated Wed Aug 28 10:19:31 UTC 2019.
