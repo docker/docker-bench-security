@@ -44,9 +44,8 @@ usage () {
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
-  -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
-  -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
-  -t TARGET    optional  Comma delimited list of images name to check
+  -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
+  -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
 EOF
 }
 
@@ -63,7 +62,6 @@ do
   e) checkexclude="$OPTARG" ;;
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
-  t) imgList="$OPTARG" ;;
   *) usage; exit 1 ;;
   esac
 done
@@ -103,15 +101,27 @@ main () {
       benchcont="$c"
     fi
   done
+ 
+  # get the image id of the docker_bench_security_image, memorize it:
+  benchimagecont="nil"
+  for c in $(docker images | sed '1d' | awk '{print $3}'); do
+    if docker inspect --format '{{ .Config.Labels }}' "$c" | \
+     grep -e 'docker.bench.security' >/dev/null 2>&1; then
+      benchimagecont="$c"
+    fi
+  done
 
   if [ -n "$include" ]; then
     pattern=$(echo "$include" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -E "$pattern")
+    images=$(docker images | grep -E "$pattern" | sed '1d' | awk '{print $3}' | grep -v "$benchimagecont")
   elif [ -n "$exclude" ]; then
     pattern=$(echo "$exclude" | sed 's/,/|/g')
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -Ev "$pattern")
+    images=$(docker images | grep -Ev "$pattern" | sed '1d' | awk '{print $3}' | grep -v "$benchimagecont")
   else
     containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont")
+    images=$(docker images -q | grep -v "$benchcont")
   fi
 
   if [ -z "$containers" ]; then
