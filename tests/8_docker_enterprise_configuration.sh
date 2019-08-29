@@ -10,7 +10,7 @@ check_8() {
 }
 
 check_product_license() {
-  if docker version | grep -qi '^Client.*Community$'; then
+  if docker version | grep -Eqi '^Server.*Community$|Version.*-ce$'; then
     info "  * Community Engine license, skipping section 8"
     enterprise_license=0
   else
@@ -23,7 +23,6 @@ check_8_1() {
     return
   fi
 
-  logit "\n"
   id_8_1="8.1"
   desc_8_1="Universal Control Plane Configuration"
   check_8_1="$id_8_1 - $desc_8_1"
