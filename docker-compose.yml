@@ -15,7 +15,7 @@ docker-bench-security:
     stdin_open: true
     tty: true
     volumes:
-        - /var/lib:/var/lib
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /usr/lib/systemd:/usr/lib/systemd
-        - /etc:/etc
+        - /var/lib:/var/lib:ro
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+        - /usr/lib/systemd:/usr/lib/systemd:ro
+        - /etc:/etc:ro
