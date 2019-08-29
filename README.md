@@ -24,12 +24,12 @@ running our pre-built container:
 ```sh
 docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
-    -v /etc:/etc \
-    -v /usr/bin/docker-containerd:/usr/bin/docker-containerd \
-    -v /usr/bin/docker-runc:/usr/bin/docker-runc \
-    -v /usr/lib/systemd:/usr/lib/systemd \
-    -v /var/lib:/var/lib \
-    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /etc:/etc:ro \
+    -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
+    -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+    -v /usr/lib/systemd:/usr/lib/systemd:ro \
+    -v /var/lib:/var/lib:ro \
+    -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --label docker_bench_security \
     docker/docker-bench-security
 ```
@@ -87,10 +87,10 @@ cd docker-bench-security
 docker build --no-cache -t docker-bench-security .
 docker run -it --net host --pid host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
-    -v /var/lib:/var/lib \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v /usr/lib/systemd:/usr/lib/systemd \
-    -v /etc:/etc --label docker_bench_security \
+    -v /var/lib:/var/lib:ro \
+    -v /var/run/docker.sock:/var/run/docker.sock:ro \
+    -v /usr/lib/systemd:/usr/lib/systemd:ro \
+    -v /etc:/etc:ro --label docker_bench_security \
     docker-bench-security
 ```
 
