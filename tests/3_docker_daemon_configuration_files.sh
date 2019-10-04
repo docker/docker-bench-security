@@ -610,12 +610,12 @@ check_3_20() {
 # 3.21
 check_3_21() {
   id_3_21="3.21"
-  desc_3_21="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  desc_3_21="Ensure that /etc/sysconfig/docker file permissions are set to 644 or more restrictive"
   check_3_21="$id_3_21  - $desc_3_21"
   starttestjson "$id_3_21" "$desc_3_21"
 
   totalChecks=$((totalChecks + 1))
-  file="/etc/default/docker"
+  file="/etc/sysconfig/docker"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_21"
