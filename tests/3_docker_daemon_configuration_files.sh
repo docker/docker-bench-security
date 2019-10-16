@@ -255,7 +255,7 @@ check_3_9() {
   starttestjson "$id_3_9" "$desc_3_9"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlscacert')" ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
   else
     tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
@@ -287,7 +287,7 @@ check_3_10() {
   starttestjson "$id_3_10" "$desc_3_10"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlscacert') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlscacert')" ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
   else
     tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
@@ -319,7 +319,7 @@ check_3_11() {
   starttestjson "$id_3_11" "$desc_3_11"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlscert')" ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
   else
     tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
@@ -351,7 +351,7 @@ check_3_12() {
   starttestjson "$id_3_12" "$desc_3_12"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlscert') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlscert')" ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
   else
     tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
@@ -383,7 +383,7 @@ check_3_13() {
   starttestjson "$id_3_13" "$desc_3_13"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlskey')" ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
   else
     tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
@@ -415,7 +415,7 @@ check_3_14() {
   starttestjson "$id_3_14" "$desc_3_14"
 
   totalChecks=$((totalChecks + 1))
-  if ! [ -z $(get_docker_configuration_file_args 'tlskey') ]; then
+  if [ -n "$(get_docker_configuration_file_args 'tlskey')" ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
   else
     tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
