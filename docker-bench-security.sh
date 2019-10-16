@@ -101,7 +101,7 @@ main () {
       benchcont="$c"
     fi
   done
- 
+
   # get the image id of the docker_bench_security_image, memorize it:
   benchimagecont="nil"
   for c in $(docker images | sed '1d' | awk '{print $3}'); do

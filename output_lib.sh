@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if ! [ -z "$nocolor" ] && [ "$nocolor" = "nocolor" ]; then
+if [ -n "$nocolor" ] && [ "$nocolor" = "nocolor" ]; then
   bldred=''
   bldgrn=''
   bldblu=''

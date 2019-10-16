@@ -332,7 +332,7 @@ check_5_7() {
 
     # iterate through port range (line delimited)
     for port in $ports; do
-    if [ ! -z "$port" ] && [ "$port" -lt 1024 ]; then
+    if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
           warn "$check_5_7"
@@ -1171,7 +1171,7 @@ check_5_29() {
               pattern=$(echo "$exclude" | sed 's/,/|/g')
               cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
             fi
-            if ! [ -z "$cName" ]; then
+            if [ -n "$cName" ]; then
               info "     * Container in docker0 network: $cName"
               docker_network_containers="$docker_network_containers $c:$cName"
             fi

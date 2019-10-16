@@ -110,7 +110,7 @@ check_1_2_3() {
   starttestjson "$id_1_2_3" "$desc_1_2_3"
 
   totalChecks=$((totalChecks + 1))
-  file="/usr/bin/dockerd" 
+  file="/usr/bin/dockerd"
   if command -v auditctl >/dev/null 2>&1; then
     if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass "$check_1_2_3"
