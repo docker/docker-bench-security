@@ -3,6 +3,7 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * alberto <alberto@tutum.co>
 * Andreas Stieger <astieger@suse.com>
 * Anthony Roger <aroger@softwaymedical.fr>
+* Aurélien Gasser <aurelien.gasser@gmail.com>
 * binary <binary@webdev.fritz.box>
 * Boris Gorbylev <ekho@ekho.name>
 * Cheng-Li Jerry Ma <chengli.ma@gmail.com>
@@ -15,6 +16,7 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * HuKeping <hukeping@huawei.com>
 * Ivan Angelov <iangelov@users.noreply.github.com>
 * J0WI <J0WI@users.noreply.github.com>
+* jammasterj89 <jammasterj89@gmail.com>
 * Jessica Frazelle <princess@docker.com>
 * Joachim Lusiardi <jlusiardi@users.noreply.github.com>
 * Joachim Lusiardi <joachim@lusiardi.de>
@@ -53,4 +55,4 @@ The following people, listed in alphabetical order, have contributed to docker-b
 * will Farrell <willfarrell@users.noreply.github.com>
 * Zvi "Viz" Effron <zeffron@riotgames.com>
 
-This list was generated Wed Aug 28 10:19:31 UTC 2019.
+This list was generated Tue Nov  5 09:45:35 UTC 2019.
