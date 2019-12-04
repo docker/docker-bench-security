@@ -144,7 +144,15 @@ main () {
   else
     for i in $(echo "$check" | sed "s/,/ /g"); do
       if command -v "$i" 2>/dev/null 1>&2; then
-        "$i"
+        if [ "$checkexclude" ]; then
+          checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
+          included_checks=$(sed -ne "/$i() {/,/}/{/check/p}" functions_lib.sh | grep -vE "$checkexcluded")
+          for check in $included_checks; do
+            "$check"
+          done
+        else
+          "$i"
+        fi
       else
         echo "Check \"$i\" doesn't seem to exist."
         continue
