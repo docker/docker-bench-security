@@ -71,6 +71,9 @@ will only run check `2.2 Ensure the logging level is set to 'info'`.
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -e check_2_2`
 will run all available checks except `2.2 Ensure the logging level is set to 'info'`.
 
+`sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c container_images -e check_4_5`
+will run just the container_images checks except `4.5 Ensure Content trust for Docker is Enabled`
+
 Note that when submitting checks, provide information why it is a
 reasonable test to add and please include some kind of official documentation
 verifying that information.
