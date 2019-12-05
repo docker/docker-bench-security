@@ -146,8 +146,7 @@ main () {
       if command -v "$i" 2>/dev/null 1>&2; then
         if [ "$checkexclude" ]; then
           checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
-          included_checks=$(sed -ne "/$i() {/,/}/{/{/d; /}/d; p}" functions_lib.sh | grep -vE "$checkexcluded")
-          for check in $included_checks; do
+          for check in $(sed -ne "/$i() {/,/}/{/{/d; /}/d; p}" functions_lib.sh | grep -vE "$checkexcluded"); do
             "$check"
           done
         else
