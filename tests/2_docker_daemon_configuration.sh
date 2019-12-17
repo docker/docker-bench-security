@@ -150,7 +150,7 @@ check_2_6() {
   starttestjson "$id_2_6" "$desc_2_6"
 
   totalChecks=$((totalChecks + 1))
-  if [ grep -i 'tcp://' "$CONFIG_FILE" 2>/dev/null 1>&2 ] || \
+  if grep -qi 'tcp://' "$CONFIG_FILE" || \
     [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') >/dev/null 2>&1 ]; then
     if [ $(get_docker_configuration_file_args '"tlsverify":' | grep 'true') ] || \
         [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify') >/dev/null 2>&1 ]; then
