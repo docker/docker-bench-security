@@ -82,8 +82,7 @@ get_docker_effective_command_line_args() {
   get_docker_cumulative_command_line_args "$OPTION" | tail -n1
 }
 
-get_docker_configuration_file_args() {
-  OPTION="$1"
+get_docker_configuration_file() {
   FILE="$(get_docker_effective_command_line_args '--config-file' | \
     sed 's/.*=//g')"
 
@@ -94,6 +93,12 @@ get_docker_configuration_file_args() {
   else
     CONFIG_FILE='/dev/null'
   fi
+}
+
+get_docker_configuration_file_args() {
+  OPTION="$1"
+
+  get_docker_configuration_file
 
   grep "$OPTION" "$CONFIG_FILE" | sed 's/.*://g' | tr -d '" ',
 }

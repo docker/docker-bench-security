@@ -93,6 +93,9 @@ beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
+  # Get configuration location
+  get_docker_configuration_file
+
   # If there is a container with label docker_bench_security, memorize it:
   benchcont="nil"
   for c in $(docker ps | sed '1d' | awk '{print $NF}'); do
