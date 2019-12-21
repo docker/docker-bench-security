@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 LABEL \
   org.label-schema.name="docker-bench-security" \
@@ -7,13 +7,12 @@ LABEL \
 
 # Switch to the HTTPS endpoint for the apk repositories
 # https://github.com/gliderlabs/docker-alpine/issues/184
-RUN \
-  sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories && \
+RUN set -eux; \
+  sed -i 's!http://dl-cdn.alpinelinux.org/!https://alpine.global.ssl.fastly.net/!g' /etc/apk/repositories && \
   apk add --no-cache \
     iproute2 \
-    docker \
-    dumb-init && \
-  rm -rf /usr/bin/docker?*
+    docker-cli \
+    dumb-init
 
 COPY ./*.sh /usr/local/bin/
 COPY ./tests/*.sh /usr/local/bin/tests/

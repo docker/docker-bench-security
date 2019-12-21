@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 LABEL \
   org.label-schema.name="docker-bench-security" \
