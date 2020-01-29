@@ -21,7 +21,7 @@ readonly version
 readonly this_path
 readonly myname
 
-# export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
+export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
 req_progs='awk docker grep ss stat'
