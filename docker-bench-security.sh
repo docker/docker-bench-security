@@ -105,7 +105,7 @@ main () {
     fi
   done
 
-  # get the image id of the docker_bench_security_image, memorize it:
+  # Get the image id of the docker_bench_security_image, memorize it:
   benchimagecont="nil"
   for c in $(docker images | sed '1d' | awk '{print $3}'); do
     if docker inspect --format '{{ .Config.Labels }}' "$c" | \
@@ -138,22 +138,44 @@ main () {
   done
 
   if [ -z "$check" ] && [ ! "$checkexclude" ]; then
+    # No options just run
     cis
-  elif [ -z "$check" ] && [ "$checkexclude" ]; then
-    checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
-    for c in $(grep -E 'check_[0-9]|check_[a-z]' functions_lib.sh | grep -vE "$checkexcluded"); do
-      "$c"
-    done
-  else
-    for i in $(echo "$check" | sed "s/,/ /g"); do
-      if command -v "$i" 2>/dev/null 1>&2; then
-        "$i"
-      else
-        echo "Check \"$i\" doesn't seem to exist."
-        continue
-      fi
-    done
+  elif [ -z "$check" ]; then
+    # No check defined but excludes defined set to calls in cis() function
+    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)
   fi
+
+  for c in $(echo "$check" | sed "s/,/ /g"); do
+    if ! command -v "$c" 2>/dev/null 1>&2; then
+      echo "Check \"$c\" doesn't seem to exist."
+      continue
+    fi
+    if [ -z "$checkexclude" ]; then
+      # No excludes just run the checks specified
+      "$c"
+    else
+      # Exludes specified and check exists
+      checkexcluded="$(echo ",$checkexclude" | sed -e 's/^/\^/g' -e 's/,/\$|/g' -e 's/$/\$/g')"
+
+      if echo "$c" | grep -E "$checkexcluded" 2>/dev/null 1>&2; then
+        # Excluded
+        continue
+      elif echo "$c" | grep -vE 'check_[0-9]|check_[a-z]' 2>/dev/null 1>&2; then
+        # Function not a check, fill loop_checks with all check from function
+        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)"
+      else
+        # Just one check
+        loop_checks="$c"
+      fi
+
+      for lc in $loop_checks; do
+        if echo "$lc" | grep -vE "$checkexcluded" 2>/dev/null 1>&2; then
+          # Not excluded
+          "$lc"
+        fi
+      done
+    fi
+  done
 
   printf "\n"
   info "Checks: $totalChecks"
