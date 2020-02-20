@@ -1,0 +1,6 @@
+# action.yml
+name: "docker bench security"
+description: "docker bench security"
+runs:
+  using: "docker"
+  image: "Dockerfile"
