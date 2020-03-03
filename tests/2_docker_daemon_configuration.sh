@@ -131,7 +131,7 @@ check_2_5() {
   starttestjson "$id_2_5" "$desc_2_5"
 
   totalChecks=$((totalChecks + 1))
-  if docker info 2>/dev/null | grep -e "^Storage Driver:\s*aufs\s*$" >/dev/null 2>&1; then
+  if docker info 2>/dev/null | grep -e "^\sStorage Driver:\s*aufs\s*$" >/dev/null 2>&1; then
     warn "$check_2_5"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
