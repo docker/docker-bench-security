@@ -227,7 +227,7 @@ check_5_5() {
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
       sensitive=0
-       if echo "$volumes" | grep -e "{.*\s$v\s.*true\s.*}" 2>/tmp/null 1>&2; then
+      if echo "$volumes" | grep -e "{.*\s$v\s.*true\s.*}" 2>/tmp/null 1>&2; thengit 
         sensitive=1
       fi
       if [ $sensitive -eq 1 ]; then
