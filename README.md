@@ -15,8 +15,7 @@ this benchmark.
 We packaged docker bench as a small container for your convenience. Note that
 this container is being run with a *lot* of privilege -- sharing the host's
 filesystem, pid and network namespaces, due to portions of the benchmark
-applying to the running host. Don't forget to adjust the shared volumes
-according to your operating system, for example it might not use systemd.
+applying to the running host.
 
 The easiest way to run your hosts against the Docker Bench for Security is by
 running our pre-built container:
@@ -28,6 +27,21 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
     -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
     -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
     -v /usr/lib/systemd:/usr/lib/systemd:ro \
+    -v /var/lib:/var/lib:ro \
+    -v /var/run/docker.sock:/var/run/docker.sock:ro \
+    --label docker_bench_security \
+    docker/docker-bench-security
+```
+
+Don't forget to adjust the shared volumes according to your operating system,
+for example `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above
+Docker binaries.
+
+```sh
+docker run -it --net host --pid host --userns host --cap-add audit_control \
+    -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
+    -v /etc:/etc \
+    -v usr/local/bin/
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --label docker_bench_security \
