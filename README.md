@@ -33,15 +33,30 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
     docker/docker-bench-security
 ```
 
-Don't forget to adjust the shared volumes according to your operating system,
-for example `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above
-Docker binaries.
+Don't forget to adjust the shared volumes according to your operating system. Some examples are:
+1. `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above Docker binaries.
 
 ```sh
 docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc \
     -v usr/local/bin/
+    -v /var/lib:/var/lib:ro \
+    -v /var/run/docker.sock:/var/run/docker.sock:ro \
+    --label docker_bench_security \
+    docker/docker-bench-security
+```
+
+2. On Ubuntu the `docker.service` and `docker.secret` files are located in `/lib/systemd/system` folder by default.
+
+```sh
+docker run -it --net host --pid host --userns host --cap-add audit_control \
+    -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
+    -v /etc:/etc:ro \
+    -v /lib/systemd/system:/lib/systemd/system:ro \
+    -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
+    -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+    -v /usr/lib/systemd:/usr/lib/systemd:ro \
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --label docker_bench_security \
