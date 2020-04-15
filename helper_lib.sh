@@ -103,11 +103,13 @@ get_docker_configuration_file_args() {
   grep "$OPTION" "$CONFIG_FILE" | sed 's/.*://g' | tr -d '" ',
 }
 
-get_systemd_service_file() {
+get_service_file() {
   SERVICE="$1"
 
   if [ -f "/etc/systemd/system/$SERVICE" ]; then
     echo "/etc/systemd/system/$SERVICE"
+  elif [ -f "/lib/systemd/system/$SERVICE" ]; then
+    echo "/lib/systemd/system/$SERVICE"
   elif systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
     systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
   else

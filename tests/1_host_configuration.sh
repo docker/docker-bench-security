@@ -214,7 +214,7 @@ check_1_2_6() {
   starttestjson "$id_1_2_6" "$desc_1_2_6"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.service)"
+  file="$(get_service_file docker.service)"
   if [ -f "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
       if auditctl -l | grep "$file" >/dev/null 2>&1; then
@@ -251,7 +251,7 @@ check_1_2_7() {
   starttestjson "$id_1_2_7" "$desc_1_2_7"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.socket)"
+  file="$(get_service_file docker.socket)"
   if [ -e "$file" ]; then
     if command -v auditctl >/dev/null 2>&1; then
       if auditctl -l | grep "$file" >/dev/null 2>&1; then

@@ -17,7 +17,7 @@ check_3_1() {
   starttestjson "$id_3_1" "$desc_3_1"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.service)"
+  file="$(get_service_file docker.service)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass "$check_3_1"
@@ -45,7 +45,7 @@ check_3_2() {
   starttestjson "$id_3_2" "$desc_3_2"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.service)"
+  file="$(get_service_file docker.service)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_2"
@@ -73,7 +73,7 @@ check_3_3() {
   starttestjson "$id_3_3" "$desc_3_3"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.socket)"
+  file="$(get_service_file docker.socket)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass "$check_3_3"
@@ -101,7 +101,7 @@ check_3_4() {
   starttestjson "$id_3_4" "$desc_3_4"
 
   totalChecks=$((totalChecks + 1))
-  file="$(get_systemd_service_file docker.socket)"
+  file="$(get_service_file docker.socket)"
   if [ -f "$file" ]; then
     if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
       pass "$check_3_4"
