@@ -1,6 +1,6 @@
 # Docker Bench for Security
 
-![Docker Bench for Security running](https://raw.githubusercontent.com/docker/docker-bench-security/master/benchmark_log.png "Docker Bench for Security running")
+![Docker Bench for Security running](https://raw.githubusercontent.com/docker/docker-bench-security/master/benchmark_log.png)
 
 The Docker Bench for Security is a script that checks for dozens of common
 best-practices around deploying Docker containers in production. The tests are
@@ -24,8 +24,8 @@ running our pre-built container:
 docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc:ro \
-    -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
-    -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+    -v /usr/bin/containerd:/usr/bin/containerd:ro \
+    -v /usr/bin/runc:/usr/bin/runc:ro \
     -v /usr/lib/systemd:/usr/lib/systemd:ro \
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
@@ -33,14 +33,16 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
     docker/docker-bench-security
 ```
 
-Don't forget to adjust the shared volumes according to your operating system. Some examples are:
+Don't forget to adjust the shared volumes according to your operating system.
+Some examples are:
+
 1. `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above Docker binaries.
 
 ```sh
 docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc \
-    -v usr/local/bin/
+    -v /usr/local/bin:/usr/local/bin:ro \
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --label docker_bench_security \
@@ -54,8 +56,8 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc:ro \
     -v /lib/systemd/system:/lib/systemd/system:ro \
-    -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
-    -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+    -v /usr/bin/containerd:/usr/bin/containerd:ro \
+    -v /usr/bin/runc:/usr/bin/runc:ro \
     -v /usr/lib/systemd:/usr/lib/systemd:ro \
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
