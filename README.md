@@ -36,20 +36,21 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
 Don't forget to adjust the shared volumes according to your operating system.
 Some examples are:
 
-1. `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above Docker binaries.
+1. `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above Docker
+    binaries.
 
 ```sh
 docker run -it --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc \
-    -v /usr/local/bin:/usr/local/bin:ro \
     -v /var/lib:/var/lib:ro \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --label docker_bench_security \
     docker/docker-bench-security
 ```
 
-2. On Ubuntu the `docker.service` and `docker.secret` files are located in `/lib/systemd/system` folder by default.
+2. On Ubuntu the `docker.service` and `docker.secret` files are located in
+   `/lib/systemd/system` folder by default.
 
 ```sh
 docker run -it --net host --pid host --userns host --cap-add audit_control \
@@ -110,7 +111,8 @@ will run all available checks except the docker_enterprise_configuration group
 and `2.2 Ensure the logging level is set to 'info'`
 
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c container_images -e check_4_5`
-will run just the container_images checks except `4.5 Ensure Content trust for Docker is Enabled`
+will run just the container_images checks except
+`4.5 Ensure Content trust for Docker is Enabled`
 
 Note that when submitting checks, provide information why it is a
 reasonable test to add and please include some kind of official documentation
@@ -125,15 +127,9 @@ following steps:
 git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
 docker build --no-cache -t docker-bench-security .
-docker run -it --net host --pid host --cap-add audit_control \
-    -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
-    -v /var/lib:/var/lib:ro \
-    -v /var/run/docker.sock:/var/run/docker.sock:ro \
-    -v /usr/lib/systemd:/usr/lib/systemd:ro \
-    -v /etc:/etc:ro --label docker_bench_security \
-    docker-bench-security
 ```
 
+followed but an appropiate `docker run` command as stated above
 or use [Docker Compose](https://docs.docker.com/compose/):
 
 ```sh
