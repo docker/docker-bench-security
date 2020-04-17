@@ -129,7 +129,7 @@ cd docker-bench-security
 docker build --no-cache -t docker-bench-security .
 ```
 
-followed but an appropiate `docker run` command as stated above
+followed by an appropriate `docker run` command as stated above
 or use [Docker Compose](https://docs.docker.com/compose/):
 
 ```sh
