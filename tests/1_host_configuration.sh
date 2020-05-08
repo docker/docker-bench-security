@@ -93,7 +93,11 @@ check_1_2_2() {
   starttestjson "$id_1_2_2" "$desc_1_2_2"
 
   totalChecks=$((totalChecks + 1))
-  docker_users=$(getent group docker)
+  if command -v getent >/dev/null 2>&1; then
+    docker_users=$(getent group docker)
+  else
+    docker_users=$(grep 'docker' /etc/group)
+  fi
   info "$check_1_2_2"
   for u in $docker_users; do
     info "       * $u"

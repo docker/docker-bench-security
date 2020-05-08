@@ -24,10 +24,19 @@ readonly myname
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
-req_progs='awk docker grep ss stat'
+req_progs='awk docker grep stat'
 for p in $req_progs; do
   command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
 done
+
+if command -v ss >/dev/null 2>&1; then
+  netbin=ss
+elif command -v netstat >/dev/null 2>&1; then
+  netbin=netstat
+else
+  echo "ss or netstat command not found."
+  exit 1
+fi
 
 # Ensure we can connect to docker daemon
 if ! docker ps -q >/dev/null 2>&1; then
