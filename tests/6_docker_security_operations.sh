@@ -12,7 +12,7 @@ check_6() {
 # 6.1
 check_6_1() {
   id_6_1="6.1"
-  desc_6_1="Ensure that image sprawl is avoided"
+  desc_6_1="Ensure that image sprawl is avoided (Not Scored)"
   check_6_1="$id_6_1  - $desc_6_1"
   starttestjson "$id_6_1" "$desc_6_1"
 
@@ -39,7 +39,7 @@ check_6_1() {
 # 6.2
 check_6_2() {
   id_6_2="6.2"
-  desc_6_2="Ensure that container sprawl is avoided"
+  desc_6_2="Ensure that container sprawl is avoided (Not Scored)"
   check_6_2="$id_6_2  - $desc_6_2"
   starttestjson "$id_6_2" "$desc_6_2"
 

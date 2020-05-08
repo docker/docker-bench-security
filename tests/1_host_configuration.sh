@@ -20,7 +20,7 @@ check_1_1() {
 # 1.1.1
 check_1_1_1() {
   id_1_1_1="1.1.1"
-  desc_1_1_1="Ensure the container host has been Hardened"
+  desc_1_1_1="Ensure the container host has been Hardened (Not Scored)"
   check_1_1_1="$id_1_1_1  - $desc_1_1_1"
   starttestjson "$id_1_1_1" "$desc_1_1_1"
 
@@ -33,7 +33,7 @@ check_1_1_1() {
 # 1.1.2
 check_1_1_2() {
   id_1_1_2="1.1.2"
-  desc_1_1_2="Ensure Docker is up to date"
+  desc_1_1_2="Ensure that the version of Docker is up to date (Not Scored)"
   check_1_1_2="$id_1_1_2  - $desc_1_1_2"
   starttestjson "$id_1_1_2" "$desc_1_1_2"
 
@@ -68,7 +68,7 @@ check_1_2() {
 # 1.2.1
 check_1_2_1() {
   id_1_2_1="1.2.1"
-  desc_1_2_1="Ensure a separate partition for containers has been created"
+  desc_1_2_1="Ensure a separate partition for containers has been created (Scored)"
   check_1_2_1="$id_1_2_1 - $desc_1_2_1"
   starttestjson "$id_1_2_1" "$desc_1_2_1"
 
@@ -88,7 +88,7 @@ check_1_2_1() {
 # 1.2.2
 check_1_2_2() {
   id_1_2_2="1.2.2"
-  desc_1_2_2="Ensure only trusted users are allowed to control Docker daemon"
+  desc_1_2_2="Ensure only trusted users are allowed to control Docker daemon (Scored)"
   check_1_2_2="$id_1_2_2  - $desc_1_2_2"
   starttestjson "$id_1_2_2" "$desc_1_2_2"
 
@@ -105,7 +105,7 @@ check_1_2_2() {
 # 1.2.3
 check_1_2_3() {
   id_1_2_3="1.2.3"
-  desc_1_2_3="Ensure auditing is configured for the Docker daemon"
+  desc_1_2_3="Ensure auditing is configured for the Docker daemon (Scored)"
   check_1_2_3="$id_1_2_3  - $desc_1_2_3"
   starttestjson "$id_1_2_3" "$desc_1_2_3"
 
@@ -135,7 +135,7 @@ check_1_2_3() {
 # 1.2.4
 check_1_2_4() {
   id_1_2_4="1.2.4"
-  desc_1_2_4="Ensure auditing is configured for Docker files and directories - /var/lib/docker"
+  desc_1_2_4="Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)"
   check_1_2_4="$id_1_2_4  - $desc_1_2_4"
   starttestjson "$id_1_2_4" "$desc_1_2_4"
 
@@ -172,7 +172,7 @@ check_1_2_4() {
 # 1.2.5
 check_1_2_5() {
   id_1_2_5="1.2.5"
-  desc_1_2_5="Ensure auditing is configured for Docker files and directories - /etc/docker"
+  desc_1_2_5="Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)"
   check_1_2_5="$id_1_2_5  - $desc_1_2_5"
   starttestjson "$id_1_2_5" "$desc_1_2_5"
 
@@ -209,7 +209,7 @@ fi
 # 1.2.6
 check_1_2_6() {
   id_1_2_6="1.2.6"
-  desc_1_2_6="Ensure auditing is configured for Docker files and directories - docker.service"
+  desc_1_2_6="Ensure auditing is configured for Docker files and directories - docker.service (Scored)"
   check_1_2_6="$id_1_2_6  - $desc_1_2_6"
   starttestjson "$id_1_2_6" "$desc_1_2_6"
 
@@ -246,7 +246,7 @@ check_1_2_6() {
 # 1.2.7
 check_1_2_7() {
   id_1_2_7="1.2.7"
-  desc_1_2_7="Ensure auditing is configured for Docker files and directories - docker.socket"
+  desc_1_2_7="Ensure auditing is configured for Docker files and directories - docker.socket (Scored)"
   check_1_2_7="$id_1_2_7  - $desc_1_2_7"
   starttestjson "$id_1_2_7" "$desc_1_2_7"
 
@@ -283,7 +283,7 @@ check_1_2_7() {
 # 1.2.8
 check_1_2_8() {
   id_1_2_8="1.2.8"
-  desc_1_2_8="Ensure auditing is configured for Docker files and directories - /etc/default/docker"
+  desc_1_2_8="Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)"
   check_1_2_8="$id_1_2_8  - $desc_1_2_8"
   starttestjson "$id_1_2_8" "$desc_1_2_8"
 
@@ -320,7 +320,7 @@ check_1_2_8() {
 # 1.2.9
 check_1_2_9() {
   id_1_2_9="1.2.9"
-  desc_1_2_9="Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker"
+  desc_1_2_9="Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker (Scored)"
   check_1_2_9="$id_1_2_9  - $desc_1_2_9"
   starttestjson "$id_1_2_9" "$desc_1_2_9"
 
@@ -357,7 +357,7 @@ check_1_2_9() {
 # 1.2.10
 check_1_2_10() {
   id_1_2_10="1.2.10"
-  desc_1_2_10="Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json"
+  desc_1_2_10="Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)"
   check_1_2_10="$id_1_2_10  - $desc_1_2_10"
   starttestjson "$id_1_2_10" "$desc_1_2_10"
 
@@ -394,7 +394,7 @@ check_1_2_10() {
 # 1.2.11
 check_1_2_11() {
   id_1_2_11="1.2.11"
-  desc_1_2_11="Ensure auditing is configured for Docker files and directories - /usr/bin/containerd"
+  desc_1_2_11="Ensure auditing is configured for Docker files and directories - /usr/bin/containerd (Scored)"
   check_1_2_11="$id_1_2_11  - $desc_1_2_11"
   starttestjson "$id_1_2_11" "$desc_1_2_11"
 
@@ -431,7 +431,7 @@ check_1_2_11() {
 # 1.2.12
 check_1_2_12() {
   id_1_2_12="1.2.12"
-  desc_1_2_12="Ensure auditing is configured for Docker files and directories - /usr/sbin/runc"
+  desc_1_2_12="Ensure auditing is configured for Docker files and directories - /usr/sbin/runc (Scored)"
   check_1_2_12="$id_1_2_12  - $desc_1_2_12"
   starttestjson "$id_1_2_12" "$desc_1_2_12"
 
