@@ -36,7 +36,7 @@ check_8_1_1() {
   fi
 
   id_8_1_1="8.1.1"
-  desc_8_1_1="Configure the LDAP authentication service"
+  desc_8_1_1="Configure the LDAP authentication service (Scored)"
   check_8_1_1="$id_8_1_1  - $desc_8_1_1"
   starttestjson "$id_8_1_1" "$desc_8_1_1"
 
@@ -53,7 +53,7 @@ check_8_1_2() {
   fi
 
   id_8_1_2="8.1.2"
-  desc_8_1_2="Use external certificates"
+  desc_8_1_2="Use external certificates (Scored)"
   check_8_1_2="$id_8_1_2  - $desc_8_1_2"
   starttestjson "$id_8_1_2" "$desc_8_1_2"
 
@@ -70,7 +70,7 @@ check_8_1_3() {
   fi
 
   id_8_1_3="8.1.3"
-  desc_8_1_3="Enforce the use of client certificate bundles for unprivileged users"
+  desc_8_1_3="Enforce the use of client certificate bundles for unprivileged users (Not Scored)"
   check_8_1_3="$id_8_1_3  - $desc_8_1_3"
   starttestjson "$id_8_1_3" "$desc_8_1_3"
 
@@ -87,7 +87,7 @@ check_8_1_4() {
   fi
 
   id_8_1_4="8.1.4"
-  desc_8_1_4="Configure applicable cluster role-based access control policies"
+  desc_8_1_4="Configure applicable cluster role-based access control policies (Not Scored)"
   check_8_1_4="$id_8_1_4  - $desc_8_1_4"
   starttestjson "$id_8_1_4" "$desc_8_1_4"
 
@@ -104,7 +104,7 @@ check_8_1_5() {
   fi
 
   id_8_1_5="8.1.5"
-  desc_8_1_5="Enable signed image enforcement"
+  desc_8_1_5="Enable signed image enforcement (Scored)"
   check_8_1_5="$id_8_1_5  - $desc_8_1_5"
   starttestjson "$id_8_1_5" "$desc_8_1_5"
 
@@ -121,7 +121,7 @@ check_8_1_6() {
   fi
 
   id_8_1_6="8.1.6"
-  desc_8_1_6="Set the Per-User Session Limit to a value of '3' or lower"
+  desc_8_1_6="Set the Per-User Session Limit to a value of '3' or lower (Scored)"
   check_8_1_6="$id_8_1_6  - $desc_8_1_6"
   starttestjson "$id_8_1_6" "$desc_8_1_6"
 
@@ -138,7 +138,7 @@ check_8_1_7() {
   fi
 
   id_8_1_7="8.1.7"
-  desc_8_1_7="Set the 'Lifetime Minutes' and 'Renewal Threshold Minutes' values to '15' or lower and '0' respectively"
+  desc_8_1_7="Set the 'Lifetime Minutes' and 'Renewal Threshold Minutes' values to '15' or lower and '0' respectively (Scored)"
   check_8_1_7="$id_8_1_7  - $desc_8_1_7"
   starttestjson "$id_8_1_7" "$desc_8_1_7"
 
@@ -166,7 +166,7 @@ check_8_2_1() {
   fi
 
   id_8_2_1="8.2.1"
-  desc_8_2_1="Enable image vulnerability scanning"
+  desc_8_2_1="Enable image vulnerability scanning (Scored)"
   check_8_2_1="$id_8_2_1  - $desc_8_2_1"
   starttestjson "$id_8_2_1" "$desc_8_2_1"
 

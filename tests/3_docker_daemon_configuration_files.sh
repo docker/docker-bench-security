@@ -12,7 +12,7 @@ check_3() {
 # 3.1
 check_3_1() {
   id_3_1="3.1"
-  desc_3_1="Ensure that docker.service file ownership is set to root:root"
+  desc_3_1="Ensure that the docker.service file ownership is set to root:root (Scored)"
   check_3_1="$id_3_1  - $desc_3_1"
   starttestjson "$id_3_1" "$desc_3_1"
 
@@ -40,7 +40,7 @@ check_3_1() {
 # 3.2
 check_3_2() {
   id_3_2="3.2"
-  desc_3_2="Ensure that docker.service file permissions are appropriately set"
+  desc_3_2="Ensure that docker.service file permissions are appropriately set (Scored)"
   check_3_2="$id_3_2  - $desc_3_2"
   starttestjson "$id_3_2" "$desc_3_2"
 
@@ -68,7 +68,7 @@ check_3_2() {
 # 3.3
 check_3_3() {
   id_3_3="3.3"
-  desc_3_3="Ensure that docker.socket file ownership is set to root:root"
+  desc_3_3="Ensure that docker.socket file ownership is set to root:root (Scored)"
   check_3_3="$id_3_3  - $desc_3_3"
   starttestjson "$id_3_3" "$desc_3_3"
 
@@ -96,7 +96,7 @@ check_3_3() {
 # 3.4
 check_3_4() {
   id_3_4="3.4"
-  desc_3_4="Ensure that docker.socket file permissions are set to 644 or more restrictive"
+  desc_3_4="Ensure that docker.socket file permissions are set to 644 or more restrictive (Scored)"
   check_3_4="$id_3_4  - $desc_3_4"
   starttestjson "$id_3_4" "$desc_3_4"
 
@@ -124,7 +124,7 @@ check_3_4() {
 # 3.5
 check_3_5() {
   id_3_5="3.5"
-  desc_3_5="Ensure that /etc/docker directory ownership is set to root:root"
+  desc_3_5="Ensure that the /etc/docker directory ownership is set to root:root (Scored)"
   check_3_5="$id_3_5  - $desc_3_5"
   starttestjson "$id_3_5" "$desc_3_5"
 
@@ -152,7 +152,7 @@ check_3_5() {
 # 3.6
 check_3_6() {
   id_3_6="3.6"
-  desc_3_6="Ensure that /etc/docker directory permissions are set to 755 or more restrictive"
+  desc_3_6="Ensure that /etc/docker directory permissions are set to 755 or more restrictively (Scored)"
   check_3_6="$id_3_6  - $desc_3_6"
   starttestjson "$id_3_6" "$desc_3_6"
 
@@ -180,7 +180,7 @@ check_3_6() {
 # 3.7
 check_3_7() {
   id_3_7="3.7"
-  desc_3_7="Ensure that registry certificate file ownership is set to root:root"
+  desc_3_7="Ensure that registry certificate file ownership is set to root:root (Scored)"
   check_3_7="$id_3_7  - $desc_3_7"
   starttestjson "$id_3_7" "$desc_3_7"
 
@@ -215,7 +215,7 @@ check_3_7() {
 # 3.8
 check_3_8() {
   id_3_8="3.8"
-  desc_3_8="Ensure that registry certificate file permissions are set to 444 or more restrictive"
+  desc_3_8="Ensure that registry certificate file permissions are set to 444 or more restrictively (Scored)"
   check_3_8="$id_3_8  - $desc_3_8"
   starttestjson "$id_3_8" "$desc_3_8"
 
@@ -250,7 +250,7 @@ check_3_8() {
 # 3.9
 check_3_9() {
   id_3_9="3.9"
-  desc_3_9="Ensure that TLS CA certificate file ownership is set to root:root"
+  desc_3_9="Ensure that TLS CA certificate file ownership is set to root:root (Scored)"
   check_3_9="$id_3_9  - $desc_3_9"
   starttestjson "$id_3_9" "$desc_3_9"
 
@@ -282,7 +282,7 @@ check_3_9() {
 # 3.10
 check_3_10() {
   id_3_10="3.10"
-  desc_3_10="Ensure that TLS CA certificate file permissions are set to 444 or more restrictive"
+  desc_3_10="Ensure that TLS CA certificate file permissions are set to 444 or more restrictively (Scored)"
   check_3_10="$id_3_10  - $desc_3_10"
   starttestjson "$id_3_10" "$desc_3_10"
 
@@ -314,7 +314,7 @@ check_3_10() {
 # 3.11
 check_3_11() {
   id_3_11="3.11"
-  desc_3_11="Ensure that Docker server certificate file ownership is set to root:root"
+  desc_3_11="Ensure that Docker server certificate file ownership is set to root:root (Scored)"
   check_3_11="$id_3_11  - $desc_3_11"
   starttestjson "$id_3_11" "$desc_3_11"
 
@@ -346,7 +346,7 @@ check_3_11() {
 # 3.12
 check_3_12() {
   id_3_12="3.12"
-  desc_3_12="Ensure that Docker server certificate file permissions are set to 444 or more restrictive"
+  desc_3_12="Ensure that the Docker server certificate file permissions are set to 444 or more restrictively (Scored)"
   check_3_12="$id_3_12  - $desc_3_12"
   starttestjson "$id_3_12" "$desc_3_12"
 
@@ -378,7 +378,7 @@ check_3_12() {
 # 3.13
 check_3_13() {
   id_3_13="3.13"
-  desc_3_13="Ensure that Docker server certificate key file ownership is set to root:root"
+  desc_3_13="Ensure that the Docker server certificate key file ownership is set to root:root (Scored)"
   check_3_13="$id_3_13  - $desc_3_13"
   starttestjson "$id_3_13" "$desc_3_13"
 
@@ -410,7 +410,7 @@ check_3_13() {
 # 3.14
 check_3_14() {
   id_3_14="3.14"
-  desc_3_14="Ensure that Docker server certificate key file permissions are set to 400"
+  desc_3_14="Ensure that the Docker server certificate key file permissions are set to 400 (Scored)"
   check_3_14="$id_3_14  - $desc_3_14"
   starttestjson "$id_3_14" "$desc_3_14"
 
@@ -442,7 +442,7 @@ check_3_14() {
 # 3.15
 check_3_15() {
   id_3_15="3.15"
-  desc_3_15="Ensure that Docker socket file ownership is set to root:docker"
+  desc_3_15="Ensure that the Docker socket file ownership is set to root:docker (Scored)"
   check_3_15="$id_3_15  - $desc_3_15"
   starttestjson "$id_3_15" "$desc_3_15"
 
@@ -470,7 +470,7 @@ check_3_15() {
 # 3.16
 check_3_16() {
   id_3_16="3.16"
-  desc_3_16="Ensure that Docker socket file permissions are set to 660 or more restrictive"
+  desc_3_16="Ensure that the Docker socket file permissions are set to 660 or more restrictively (Scored)"
   check_3_16="$id_3_16  - $desc_3_16"
   starttestjson "$id_3_16" "$desc_3_16"
 
@@ -498,7 +498,7 @@ check_3_16() {
 # 3.17
 check_3_17() {
   id_3_17="3.17"
-  desc_3_17="Ensure that daemon.json file ownership is set to root:root"
+  desc_3_17="Ensure that the daemon.json file ownership is set to root:root (Scored)"
   check_3_17="$id_3_17  - $desc_3_17"
   starttestjson "$id_3_17" "$desc_3_17"
 
@@ -526,7 +526,7 @@ check_3_17() {
 # 3.18
 check_3_18() {
   id_3_18="3.18"
-  desc_3_18="Ensure that daemon.json file permissions are set to 644 or more restrictive"
+  desc_3_18="Ensure that daemon.json file permissions are set to 644 or more restrictive (Scored)"
   check_3_18="$id_3_18  - $desc_3_18"
   starttestjson "$id_3_18" "$desc_3_18"
 
@@ -554,7 +554,7 @@ check_3_18() {
 # 3.19
 check_3_19() {
   id_3_19="3.19"
-  desc_3_19="Ensure that /etc/default/docker file ownership is set to root:root"
+  desc_3_19="Ensure that the /etc/default/docker file ownership is set to root:root (Scored)"
   check_3_19="$id_3_19  - $desc_3_19"
   starttestjson "$id_3_19" "$desc_3_19"
 
@@ -582,7 +582,7 @@ check_3_19() {
 # 3.20
 check_3_20() {
   id_3_20="3.20"
-  desc_3_20="Ensure that the /etc/sysconfig/docker file ownership is set to root:root"
+  desc_3_20="Ensure that the /etc/sysconfig/docker file ownership is set to root:root (Scored)"
   check_3_20="$id_3_20  - $desc_3_20"
   starttestjson "$id_3_20" "$desc_3_20"
 
@@ -610,7 +610,7 @@ check_3_20() {
 # 3.21
 check_3_21() {
   id_3_21="3.21"
-  desc_3_21="Ensure that /etc/sysconfig/docker file permissions are set to 644 or more restrictive"
+  desc_3_21="Ensure that the /etc/sysconfig/docker file permissions are set to 644 or more restrictively (Scored)"
   check_3_21="$id_3_21  - $desc_3_21"
   starttestjson "$id_3_21" "$desc_3_21"
 
@@ -638,7 +638,7 @@ check_3_21() {
 # 3.22
 check_3_22() {
   id_3_22="3.22"
-  desc_3_22="Ensure that /etc/default/docker file permissions are set to 644 or more restrictive"
+  desc_3_22="Ensure that the /etc/default/docker file permissions are set to 644 or more restrictively (Scored)"
   check_3_22="$id_3_22  - $desc_3_22"
   starttestjson "$id_3_22" "$desc_3_22"
 

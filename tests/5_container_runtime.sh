@@ -29,7 +29,7 @@ check_5_1() {
   fi
 
   id_5_1="5.1"
-  desc_5_1="Ensure that, if applicable, an AppArmor Profile is enabled "
+  desc_5_1="Ensure that, if applicable, an AppArmor Profile is enabled (Scored)"
   check_5_1="$id_5_1  - $desc_5_1"
   starttestjson "$id_5_1" "$desc_5_1"
 
@@ -71,7 +71,7 @@ check_5_2() {
   fi
 
   id_5_2="5.2"
-  desc_5_2="Ensure that, if applicable, SELinux security options are set"
+  desc_5_2="Ensure that, if applicable, SELinux security options are set (Scored)"
   check_5_2="$id_5_2  - $desc_5_2"
   starttestjson "$id_5_2" "$desc_5_2"
 
@@ -113,7 +113,7 @@ check_5_3() {
   fi
 
   id_5_3="5.3"
-  desc_5_3="Ensure Linux Kernel Capabilities are restricted within containers"
+  desc_5_3="Ensure that Linux kernel capabilities are restricted within containers (Scored)"
   check_5_3="$id_5_3  - $desc_5_3"
   starttestjson "$id_5_3" "$desc_5_3"
 
@@ -158,7 +158,7 @@ check_5_4() {
   fi
 
   id_5_4="5.4"
-  desc_5_4="Ensure that privileged containers are not used"
+  desc_5_4="Ensure that privileged containers are not used (Scored)"
   check_5_4="$id_5_4  - $desc_5_4"
   starttestjson "$id_5_4" "$desc_5_4"
 
@@ -200,7 +200,7 @@ check_5_5() {
   fi
 
   id_5_5="5.5"
-  desc_5_5="Ensure sensitive host system directories are not mounted on containers"
+  desc_5_5="Ensure sensitive host system directories are not mounted on containers (Scored)"
   check_5_5="$id_5_5  - $desc_5_5"
   starttestjson "$id_5_5" "$desc_5_5"
 
@@ -262,7 +262,7 @@ check_5_6() {
   fi
 
   id_5_6="5.6"
-  desc_5_6="Ensure sshd is not run within containers"
+  desc_5_6="Ensure sshd is not run within containers (Scored)"
   check_5_6="$id_5_6  - $desc_5_6"
   starttestjson "$id_5_6" "$desc_5_6"
 
@@ -318,7 +318,7 @@ check_5_7() {
   fi
 
   id_5_7="5.7"
-  desc_5_7="Ensure privileged ports are not mapped within containers"
+  desc_5_7="Ensure privileged ports are not mapped within containers (Scored)"
   check_5_7="$id_5_7  - $desc_5_7"
   starttestjson "$id_5_7" "$desc_5_7"
 
@@ -364,7 +364,7 @@ check_5_8() {
   fi
 
   id_5_8="5.8"
-  desc_5_8="Ensure that only needed ports are open on the container"
+  desc_5_8="Ensure that only needed ports are open on the container (Not Scored)"
   check_5_8="$id_5_8  - $desc_5_8"
   starttestjson "$id_5_8" "$desc_5_8"
 
@@ -381,7 +381,7 @@ check_5_9() {
   fi
 
   id_5_9="5.9"
-  desc_5_9="Ensure the host's network namespace is not shared"
+  desc_5_9="Ensure that the host's network namespace is not shared (Scored)"
   check_5_9="$id_5_9  - $desc_5_9"
   starttestjson "$id_5_9" "$desc_5_9"
 
@@ -423,7 +423,7 @@ check_5_10() {
   fi
 
   id_5_10="5.10"
-  desc_5_10="Ensure that the memory usage for containers is limited"
+  desc_5_10="Ensure that the memory usage for containers is limited (Scored)"
   check_5_10="$id_5_10  - $desc_5_10"
   starttestjson "$id_5_10" "$desc_5_10"
 
@@ -469,7 +469,7 @@ check_5_11() {
   fi
 
   id_5_11="5.11"
-  desc_5_11="Ensure CPU priority is set appropriately on the container"
+  desc_5_11="Ensure that CPU priority is set appropriately on containers (Scored)"
   check_5_11="$id_5_11  - $desc_5_11"
   starttestjson "$id_5_11" "$desc_5_11"
 
@@ -515,7 +515,7 @@ check_5_12() {
   fi
 
   id_5_12="5.12"
-  desc_5_12="Ensure that the container's root filesystem is mounted as read only"
+  desc_5_12="Ensure that the container's root filesystem is mounted as read only (Scored)"
   check_5_12="$id_5_12  - $desc_5_12"
   starttestjson "$id_5_12" "$desc_5_12"
 
@@ -557,7 +557,7 @@ check_5_13() {
   fi
 
   id_5_13="5.13"
-  desc_5_13="Ensure that incoming container traffic is bound to a specific host interface"
+  desc_5_13="Ensure that incoming container traffic is bound to a specific host interface (Scored)"
   check_5_13="$id_5_13  - $desc_5_13"
   starttestjson "$id_5_13" "$desc_5_13"
 
@@ -599,7 +599,7 @@ check_5_14() {
   fi
 
   id_5_14="5.14"
-  desc_5_14="Ensure that the 'on-failure' container restart policy is set to '5'"
+  desc_5_14="Ensure that the 'on-failure' container restart policy is set to '5' (Scored)"
   check_5_14="$id_5_14  - $desc_5_14"
   starttestjson "$id_5_14" "$desc_5_14"
 
@@ -641,7 +641,7 @@ check_5_15() {
   fi
 
   id_5_15="5.15"
-  desc_5_15="Ensure the host's process namespace is not shared"
+  desc_5_15="Ensure that the host's process namespace is not shared (Scored)"
   check_5_15="$id_5_15  - $desc_5_15"
   starttestjson "$id_5_15" "$desc_5_15"
 
@@ -683,7 +683,7 @@ check_5_16() {
   fi
 
   id_5_16="5.16"
-  desc_5_16="Ensure the host's IPC namespace is not shared"
+  desc_5_16="Ensure that the host's IPC namespace is not shared (Scored)"
   check_5_16="$id_5_16  - $desc_5_16"
   starttestjson "$id_5_16" "$desc_5_16"
 
@@ -725,7 +725,7 @@ check_5_17() {
   fi
 
   id_5_17="5.17"
-  desc_5_17="Ensure that host devices are not directly exposed to containers"
+  desc_5_17="Ensure that host devices are not directly exposed to containers (Not Scored)"
   check_5_17="$id_5_17  - $desc_5_17"
   starttestjson "$id_5_17" "$desc_5_17"
 
@@ -767,7 +767,7 @@ check_5_18() {
   fi
 
   id_5_18="5.18"
-  desc_5_18="Ensure that the default ulimit is overwritten at runtime if needed"
+  desc_5_18="Ensure that the default ulimit is overwritten at runtime if needed (Not Scored)"
   check_5_18="$id_5_18  - $desc_5_18"
   starttestjson "$id_5_18" "$desc_5_18"
 
@@ -809,7 +809,7 @@ check_5_19() {
   fi
 
   id_5_19="5.19"
-  desc_5_19="Ensure mount propagation mode is not set to shared"
+  desc_5_19="Ensure mount propagation mode is not set to shared (Scored)"
   check_5_19="$id_5_19  - $desc_5_19"
   starttestjson "$id_5_19" "$desc_5_19"
 
@@ -850,7 +850,7 @@ check_5_20() {
   fi
 
   id_5_20="5.20"
-  desc_5_20="Ensure the host's UTS namespace is not shared"
+  desc_5_20="Ensure that the host's UTS namespace is not shared (Scored)"
   check_5_20="$id_5_20  - $desc_5_20"
   starttestjson "$id_5_20" "$desc_5_20"
 
@@ -892,7 +892,7 @@ check_5_21() {
   fi
 
   id_5_21="5.21"
-  desc_5_21="Ensure the default seccomp profile is not Disabled"
+  desc_5_21="Ensurethe default seccomp profile is not Disabled (Scored)"
   check_5_21="$id_5_21  - $desc_5_21"
   starttestjson "$id_5_21" "$desc_5_21"
 
@@ -933,7 +933,7 @@ check_5_22() {
   fi
 
   id_5_22="5.22"
-  desc_5_22="Ensure docker exec commands are not used with privileged option"
+  desc_5_22="Ensure that docker exec commands are not used with the privileged option (Scored)"
   check_5_22="$id_5_22  - $desc_5_22"
   starttestjson "$id_5_22" "$desc_5_22"
 
@@ -950,7 +950,7 @@ check_5_23() {
   fi
 
   id_5_23="5.23"
-  desc_5_23="Ensure that docker exec commands are not used with the user=root option"
+  desc_5_23="Ensure that docker exec commands are not used with the user=root option (Not Scored)"
   check_5_23="$id_5_23  - $desc_5_23"
   starttestjson "$id_5_23" "$desc_5_23"
 
@@ -967,7 +967,7 @@ check_5_24() {
   fi
 
   id_5_24="5.24"
-  desc_5_24="Ensure that cgroup usage is confirmed"
+  desc_5_24="Ensure that cgroup usage is confirmed (Scored)"
   check_5_24="$id_5_24  - $desc_5_24"
   starttestjson "$id_5_24" "$desc_5_24"
 
@@ -1008,7 +1008,7 @@ check_5_25() {
     return
   fi
   id_5_25="5.25"
-  desc_5_25="Ensure that the container is restricted from acquiring additional privileges"
+  desc_5_25="Ensure that the container is restricted from acquiring additional privileges (Scored)"
   check_5_25="$id_5_25  - $desc_5_25"
   starttestjson "$id_5_25" "$desc_5_25"
 
@@ -1048,7 +1048,7 @@ check_5_26() {
   fi
 
   id_5_26="5.26"
-  desc_5_26="Ensure that container health is checked at runtime"
+  desc_5_26="Ensure that container health is checked at runtime (Scored)"
   check_5_26="$id_5_26  - $desc_5_26"
   starttestjson "$id_5_26" "$desc_5_26"
 
@@ -1086,7 +1086,7 @@ check_5_27() {
   fi
 
   id_5_27="5.27"
-  desc_5_27="Ensure that Docker commands always make use of the latest version of their image"
+  desc_5_27="Ensure that Docker commands always make use of the latest version of their image (Not Scored)"
   check_5_27="$id_5_27  - $desc_5_27"
   starttestjson "$id_5_27" "$desc_5_27"
 
@@ -1103,7 +1103,7 @@ check_5_28() {
   fi
 
   id_5_28="5.28"
-  desc_5_28="Ensure that the PIDs cgroup limit is used"
+  desc_5_28="Ensure that the PIDs cgroup limit is used (Scored)"
   check_5_28="$id_5_28  - $desc_5_28"
   starttestjson "$id_5_28" "$desc_5_28"
 
@@ -1145,7 +1145,7 @@ check_5_29() {
   fi
 
   id_5_29="5.29"
-  desc_5_29="Ensure that Docker's default bridge 'docker0' is not used"
+  desc_5_29="Ensure that Docker's default bridge "docker0" is not used (Not Scored)"
   check_5_29="$id_5_29  - $desc_5_29"
   starttestjson "$id_5_29" "$desc_5_29"
 
@@ -1198,7 +1198,7 @@ check_5_30() {
   fi
 
   id_5_30="5.30"
-  desc_5_30="Ensure that the host's user namespaces are not shared"
+  desc_5_30="Ensure that the host's user namespaces are not shared (Scored)"
   check_5_30="$id_5_30  - $desc_5_30"
   starttestjson "$id_5_30" "$desc_5_30"
 
@@ -1238,7 +1238,7 @@ check_5_31() {
   fi
 
   id_5_31="5.31"
-  desc_5_31="Ensure that the Docker socket is not mounted inside any containers"
+  desc_5_31="Ensure that the Docker socket is not mounted inside any containers (Scored)"
   check_5_31="$id_5_31  - $desc_5_31"
   starttestjson "$id_5_31" "$desc_5_31"
 

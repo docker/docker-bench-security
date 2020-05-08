@@ -12,7 +12,7 @@ check_2() {
 # 2.1
 check_2_1() {
   id_2_1="2.1"
-  desc_2_1="Ensure network traffic is restricted between containers on the default bridge"
+  desc_2_1="Ensure network traffic is restricted between containers on the default bridge (Scored)"
   check_2_1="$id_2_1  - $desc_2_1"
   starttestjson "$id_2_1" "$desc_2_1"
 
@@ -35,7 +35,7 @@ check_2_1() {
 # 2.2
 check_2_2() {
   id_2_2="2.2"
-  desc_2_2="Ensure the logging level is set to 'info'"
+  desc_2_2="Ensure the logging level is set to 'info' (Scored)"
   check_2_2="$id_2_2  - $desc_2_2"
   starttestjson "$id_2_2" "$desc_2_2"
 
@@ -74,7 +74,7 @@ check_2_2() {
 # 2.3
 check_2_3() {
   id_2_3="2.3"
-  desc_2_3="Ensure Docker is allowed to make changes to iptables"
+  desc_2_3="Ensure Docker is allowed to make changes to iptables (Scored)"
   check_2_3="$id_2_3  - $desc_2_3"
   starttestjson "$id_2_3" "$desc_2_3"
 
@@ -97,7 +97,7 @@ check_2_3() {
 # 2.4
 check_2_4() {
   id_2_4="2.4"
-  desc_2_4="Ensure insecure registries are not used"
+  desc_2_4="Ensure insecure registries are not used (Scored)"
   check_2_4="$id_2_4  - $desc_2_4"
   starttestjson "$id_2_4" "$desc_2_4"
 
@@ -126,7 +126,7 @@ check_2_4() {
 # 2.5
 check_2_5() {
   id_2_5="2.5"
-  desc_2_5="Ensure aufs storage driver is not used"
+  desc_2_5="Ensure aufs storage driver is not used (Scored)"
   check_2_5="$id_2_5  - $desc_2_5"
   starttestjson "$id_2_5" "$desc_2_5"
 
@@ -145,7 +145,7 @@ check_2_5() {
 # 2.6
 check_2_6() {
   id_2_6="2.6"
-  desc_2_6="Ensure TLS authentication for Docker daemon is configured"
+  desc_2_6="Ensure TLS authentication for Docker daemon is configured (Scored)"
   check_2_6="$id_2_6  - $desc_2_6"
   starttestjson "$id_2_6" "$desc_2_6"
 
@@ -180,7 +180,7 @@ check_2_6() {
 # 2.7
 check_2_7() {
   id_2_7="2.7"
-  desc_2_7="Ensure the default ulimit is configured appropriately"
+  desc_2_7="Ensure the default ulimit is configured appropriately (Not Scored)"
   check_2_7="$id_2_7  - $desc_2_7"
   starttestjson "$id_2_7" "$desc_2_7"
 
@@ -204,7 +204,7 @@ check_2_7() {
 # 2.8
 check_2_8() {
   id_2_8="2.8"
-  desc_2_8="Enable user namespace support"
+  desc_2_8="Enable user namespace support (Scored)"
   check_2_8="$id_2_8  - $desc_2_8"
   starttestjson "$id_2_8" "$desc_2_8"
 
@@ -227,7 +227,7 @@ check_2_8() {
 # 2.9
 check_2_9() {
   id_2_9="2.9"
-  desc_2_9="Ensure the default cgroup usage has been confirmed"
+  desc_2_9="Ensure the default cgroup usage has been confirmed (Scored)"
   check_2_9="$id_2_9  - $desc_2_9"
   starttestjson "$id_2_9" "$desc_2_9"
 
@@ -252,7 +252,7 @@ check_2_9() {
 # 2.10
 check_2_10() {
   id_2_10="2.10"
-  desc_2_10="Ensure base device size is not changed until needed"
+  desc_2_10="Ensure base device size is not changed until needed (Scored)"
   check_2_10="$id_2_10  - $desc_2_10"
   starttestjson "$id_2_10" "$desc_2_10"
 
@@ -275,7 +275,7 @@ check_2_10() {
 # 2.11
 check_2_11() {
   id_2_11="2.11"
-  desc_2_11="Ensure that authorization for Docker client commands is enabled"
+  desc_2_11="Ensure that authorization for Docker client commands is enabled (Scored)"
   check_2_11="$id_2_11  - $desc_2_11"
   starttestjson "$id_2_11" "$desc_2_11"
 
@@ -298,7 +298,7 @@ check_2_11() {
 # 2.12
 check_2_12() {
   id_2_12="2.12"
-  desc_2_12="Ensure centralized and remote logging is configured"
+  desc_2_12="2.12 Ensure centralized and remote logging is configured (Scored)"
   check_2_12="$id_2_12  - $desc_2_12"
   starttestjson "$id_2_12" "$desc_2_12"
 
@@ -317,7 +317,7 @@ check_2_12() {
 # 2.13
 check_2_13() {
   id_2_13="2.13"
-  desc_2_13="Ensure live restore is Enabled"
+  desc_2_13="Ensure live restore is enabled (Scored)"
   check_2_13="$id_2_13  - $desc_2_13"
   starttestjson "$id_2_13" "$desc_2_13"
 
@@ -346,7 +346,7 @@ check_2_13() {
 # 2.14
 check_2_14() {
   id_2_14="2.14"
-  desc_2_14="Ensure Userland Proxy is Disabled"
+  desc_2_14="Ensure Userland Proxy is Disabled (Scored)"
   check_2_14="$id_2_14  - $desc_2_14"
   starttestjson "$id_2_14" "$desc_2_14"
 
@@ -369,7 +369,7 @@ check_2_14() {
 # 2.15
 check_2_15() {
   id_2_15="2.15"
-  desc_2_15="Ensure that a daemon-wide custom seccomp profile is applied if appropriate"
+  desc_2_15="Ensure that a daemon-wide custom seccomp profile is applied if appropriate (Not Scored)"
   check_2_15="$id_2_15  - $desc_2_15"
   starttestjson "$id_2_15" "$desc_2_15"
 
@@ -388,7 +388,7 @@ check_2_15() {
 # 2.16
 check_2_16() {
   id_2_16="2.16"
-  desc_2_16="Ensure that experimental features are not implemented in production"
+  desc_2_16="Ensure that experimental features are not implemented in production (Scored)"
   check_2_16="$id_2_16  - $desc_2_16"
   starttestjson "$id_2_16" "$desc_2_16"
 
@@ -407,7 +407,7 @@ check_2_16() {
 # 2.17
 check_2_17() {
   id_2_17="2.17"
-  desc_2_17="Ensure containers are restricted from acquiring new privileges"
+  desc_2_17="Ensure containers are restricted from acquiring new privileges (Scored)"
   check_2_17="$id_2_17  - $desc_2_17"
   starttestjson "$id_2_17" "$desc_2_17"
 
