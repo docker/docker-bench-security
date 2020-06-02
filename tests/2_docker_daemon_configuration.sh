@@ -298,7 +298,7 @@ check_2_11() {
 # 2.12
 check_2_12() {
   id_2_12="2.12"
-  desc_2_12="2.12 Ensure centralized and remote logging is configured (Scored)"
+  desc_2_12="Ensure centralized and remote logging is configured (Scored)"
   check_2_12="$id_2_12  - $desc_2_12"
   starttestjson "$id_2_12" "$desc_2_12"
 
