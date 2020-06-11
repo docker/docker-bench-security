@@ -86,8 +86,9 @@ version 1.13.0 or later.
   -l FILE      optional  Log output in FILE
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
-  -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
-  -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
+  -i INCLUDE   optional  Comma delimited list of patterns within a container name to check
+  -x EXCLUDE   optional  Comma delimited list of patterns within a container name to exclude from check
+  -t TARGET    optional  Comma delimited list of images name to check
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests
@@ -113,6 +114,9 @@ and `2.2 Ensure the logging level is set to 'info'`
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c container_images -e check_4_5`
 will run just the container_images checks except
 `4.5 Ensure Content trust for Docker is Enabled`
+
+`sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -t image_name`
+will run all available checks on the image_name image
 
 Note that when submitting checks, provide information why it is a
 reasonable test to add and please include some kind of official documentation
