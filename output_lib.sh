@@ -75,7 +75,22 @@ resulttestjson() {
       printf "\"result\": \"%s\", \"details\": \"%s\"}" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
   else
       # Result also includes details and a list of items. Add that directly to details and to an array property "items"
-      itemsJson=$(printf "["; ISEP=""; for item in $3; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
-      printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s}" "$1" "$2" "$3" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
+      # Also limit the number of items to $limit, if $limit is non-zero
+      if [ $limit != 0 ]; then
+        truncItems=""
+        ITEM_COUNT=0
+        for item in $3; do
+          truncItems="$truncItems $item"
+          ITEM_COUNT=$((ITEM_COUNT + 1));
+          if [ "$ITEM_COUNT" == "$limit" ]; then
+            truncItems="$truncItems (truncated)"
+            break;
+          fi
+        done
+      else
+        truncItems=$3
+      fi
+      itemsJson=$(printf "["; ISEP=""; ITEMCOUNT=0; for item in $truncItems; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
+      printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s}" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
 }
