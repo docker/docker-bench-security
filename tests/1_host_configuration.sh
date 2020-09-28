@@ -73,8 +73,9 @@ check_1_2_1() {
   starttestjson "$id_1_2_1" "$desc_1_2_1"
 
   totalChecks=$((totalChecks + 1))
-
-  if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
+  local system_partition=$(df / --output=source 2> /dev/null | sed -n 2p)
+  local docker_partition=$(df "$(docker info -f '{{ .DockerRootDir }}')" --output=source 2> /dev/null | sed -n 2p)
+  if [ "$system_partition" != "$docker_partition" ] && [ ! -z "$docker_partition" ] ; then
     pass "$check_1_2_1"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
