@@ -73,8 +73,12 @@ check_1_2_1() {
   starttestjson "$id_1_2_1" "$desc_1_2_1"
 
   totalChecks=$((totalChecks + 1))
+  docker_root_dir=$(docker info -f '{{ .DockerRootDir }}')
+  if docker info | grep -q userns ; then
+    docker_root_dir=$(readlink -f "$docker_root_dir/..")
+  fi
 
-  if mountpoint -q -- "$(docker info -f '{{ .DockerRootDir }}')" >/dev/null 2>&1; then
+  if mountpoint -q -- "$docker_root_dir" >/dev/null 2>&1; then
     pass "$check_1_2_1"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
