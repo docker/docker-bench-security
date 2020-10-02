@@ -387,20 +387,30 @@ check_2_15() {
 
 # 2.16
 check_2_16() {
+  docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
+    | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
+
   id_2_16="2.16"
   desc_2_16="Ensure that experimental features are not implemented in production (Scored)"
   check_2_16="$id_2_16  - $desc_2_16"
   starttestjson "$id_2_16" "$desc_2_16"
 
   totalChecks=$((totalChecks + 1))
-  if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
-    pass "$check_2_16"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+  if [ "$docker_version" -le 1903 ]; then
+    if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
+      pass "$check_2_16"
+      resulttestjson "PASS"
+      currentScore=$((currentScore + 1))
+    else
+      warn "$check_2_16"
+      resulttestjson "WARN"
+      currentScore=$((currentScore - 1))
+    fi
   else
-    warn "$check_2_16"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    desc_2_16="$desc_2_16 (Deprecated)"
+    check_2_16="$id_2_16  - $desc_2_16"
+    info "$desc_2_16"
+    resulttestjson "INFO"
   fi
 }
 
