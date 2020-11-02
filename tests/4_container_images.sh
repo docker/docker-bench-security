@@ -39,11 +39,11 @@ check_4_1() {
         if [ $fail -eq 0 ]; then
           warn "$check_4_1"
           warn "     * Running as root: $c"
-	  root_containers="$root_containers $c"
+          root_containers="$root_containers $c"
           fail=1
         else
           warn "     * Running as root: $c"
-	  root_containers="$root_containers $c"
+          root_containers="$root_containers $c"
         fi
       fi
     done
@@ -138,7 +138,10 @@ check_4_6() {
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         warn "     * No Healthcheck found: $imgName"
-	no_health_images="$no_health_images $imgName"
+        no_health_images="$no_health_images $imgName"
+      else
+        warn "     * No Healthcheck found: $img"
+        no_health_images="$no_health_images $img"
       fi
     fi
   done
@@ -171,7 +174,7 @@ check_4_7() {
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
         info "     * Update instruction found: $imgName"
-	update_images="$update_images $imgName"
+        update_images="$update_images $imgName"
       fi
     fi
   done
