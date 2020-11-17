@@ -21,7 +21,7 @@ The easiest way to run your hosts against the Docker Bench for Security is by
 running our pre-built container:
 
 ```sh
-docker run -it --net host --pid host --userns host --cap-add audit_control \
+docker run --rm --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc:ro \
     -v /usr/bin/containerd:/usr/bin/containerd:ro \
@@ -40,7 +40,7 @@ Some examples are:
     binaries.
 
 ```sh
-docker run -it --net host --pid host --userns host --cap-add audit_control \
+docker run --rm --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc \
     -v /var/lib:/var/lib:ro \
@@ -53,7 +53,7 @@ docker run -it --net host --pid host --userns host --cap-add audit_control \
    `/lib/systemd/system` folder by default.
 
 ```sh
-docker run -it --net host --pid host --userns host --cap-add audit_control \
+docker run --rm --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc:ro \
     -v /lib/systemd/system:/lib/systemd/system:ro \
