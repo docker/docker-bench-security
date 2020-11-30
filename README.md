@@ -36,7 +36,7 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 Don't forget to adjust the shared volumes according to your operating system.
 Some examples are:
 
-1. `Docker Desktop` on macOS don't have `/usr/lib/systemd` or the above Docker
+1. `Docker Desktop` on macOS doesn't have `/usr/lib/systemd` or the above Docker
     binaries.
 
 ```sh
@@ -68,14 +68,14 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 
 Docker bench requires Docker 1.13.0 or later in order to run.
 
-Note that when distributions doesn't contain `auditctl`, the audit tests will
+Note that when distributions don't contain `auditctl`, the audit tests will
 check `/etc/audit/audit.rules` to see if a rule is present instead.
 
-Distribution specific Dockerfiles that fixes this issue are available in the
+Distribution specific Dockerfiles that fix these issues are available in the
 [distros directory](https://github.com/docker/docker-bench-security/tree/master/distros).
 
 The [distribution specific Dockerfiles](https://github.com/docker/docker-bench-security/tree/master/distros)
-may also help if the distribution you're using haven't yet shipped Docker
+may also help if the distribution you're using hasn't yet shipped Docker
 version 1.13.0 or later.
 
 ### Docker Bench for Security options
@@ -95,7 +95,7 @@ and produce logs in the current directory named `docker-bench-security.sh.log.js
 and `docker-bench-security.sh.log`.
 The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6`
 and community contributed checks are named `check_c_<number>`.
-A complete list of checks are present in [functions_lib.sh](functions_lib.sh).
+A complete list of checks is present in [functions_lib.sh](functions_lib.sh).
 
 `sh docker-bench-security.sh -l /tmp/docker-bench-security.sh.log -c check_2_2`
 will only run check `2.2 Ensure the logging level is set to 'info'`.
