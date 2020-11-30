@@ -1,0 +1,34 @@
+# Docker Bench for Security maintainers file
+#
+# This file describes who runs the docker/docker-bench-security project and how.
+# This is a living document - if you see something out of date or missing, speak up!
+#
+# It is structured to be consumable by both humans and programs.
+# To extract its contents programmatically, use any TOML-compliant parser.
+#
+# This file is compiled into the MAINTAINERS file in docker/opensource.
+#
+[Org]
+	[Org."Core maintainers"]
+		people = [
+			"diogomonica",
+			"konstruktoid",
+		]
+
+[people]
+
+# A reference list of all people associated with the project.
+# All other sections should refer to people by their canonical key
+# in the people section.
+
+	# ADD YOURSELF HERE IN ALPHABETICAL ORDER
+
+	[people.diogomonica]
+	Name = "Dr. Diogo Mónica"
+	Email = "diogo@docker.com"
+	GitHub = "diogomonica"
+
+	[people.konstruktoid]
+	Name = "Thomas Sjögren"
+	Email = "thomas.sjogren@protonmail.com"
+	GitHub = "konstruktoid"

@@ -1,0 +1,13 @@
+# REPOSITORY https://github.com/docker/docker-bench-security
+FROM opensuse/leap:latest
+
+RUN zypper -n in audit docker iproute2 && \
+    mkdir /docker-bench-security && \
+    rm /usr/bin/awk && \
+    cp /usr/bin/gawk /usr/bin/awk
+
+COPY . /docker-bench-security
+
+WORKDIR /docker-bench-security
+
+ENTRYPOINT ["/bin/bash", "docker-bench-security.sh"]
