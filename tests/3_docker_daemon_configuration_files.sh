@@ -47,7 +47,7 @@ check_3_2() {
   totalChecks=$((totalChecks + 1))
   file="$(get_service_file docker.service)"
   if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -eq 644 ] || [ "$(stat -c %a $file)" -eq 600 ]; then
+    if [ "$(stat -c %a $file)" -le 644 ]; then
       pass "$check_3_2"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
