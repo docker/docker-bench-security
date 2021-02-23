@@ -83,7 +83,7 @@ version 1.13.0 or later.
 ```sh
   -b           optional  Do not print colors
   -h           optional  Print this help message
-  -l FILE      optional  Log output in FILE inside docker bench container
+  -l FILE      optional  Log output in FILE, inside container if run using docker
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
@@ -91,8 +91,11 @@ version 1.13.0 or later.
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests
-and produce logs in the current directory inside the container, named `docker-bench-security.sh.log.json`
+and produce logs in the current directory, named `docker-bench-security.sh.log.json`
 and `docker-bench-security.sh.log`.
+
+If the docker container is used then the log files will be created inside the container. If you wish to access them from the host after the container has been run you will need to mount a volume for storing them in.
+
 The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6`
 and community contributed checks are named `check_c_<number>`.
 A complete list of checks is present in [functions_lib.sh](functions_lib.sh).
