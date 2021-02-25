@@ -158,7 +158,7 @@ check_4_6() {
 # 4.7
 check_4_7() {
   id_4_7="4.7"
-  desc_4_7="Ensure update instructions are not use alone in the Dockerfile (Not Scored)"
+  desc_4_7="Ensure update instructions are not used alone in the Dockerfile (Not Scored)"
   check_4_7="$id_4_7  - $desc_4_7"
   starttestjson "$id_4_7" "$desc_4_7"
 
