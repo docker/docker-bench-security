@@ -118,12 +118,12 @@ get_service_file() {
 }
 
 yell_info() {
-yell "# ------------------------------------------------------------------------------
+yell "# --------------------------------------------------------------------------------------------
 # Docker Bench for Security v$version
 #
-# Docker, Inc. (c) 2015-
+# Docker, Inc. (c) 2015-$(date +"%Y")
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # Inspired by the CIS Docker Benchmark v1.2.0.
-# ------------------------------------------------------------------------------"
+# --------------------------------------------------------------------------------------------"
 }
