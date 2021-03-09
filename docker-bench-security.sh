@@ -103,7 +103,7 @@ fi
 totalChecks=0
 currentScore=0
 
-logit "Initializing $(date)\n"
+logit "Initializing $(date +%Y-%m-%dT%H:%m:%S%:z)\n"
 beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
