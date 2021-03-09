@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # Docker Bench for Security
 #
-# Docker, Inc. (c) 2015-
+# Docker, Inc. (c) 2015-2021
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # ------------------------------------------------------------------------------

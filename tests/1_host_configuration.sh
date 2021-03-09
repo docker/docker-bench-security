@@ -69,6 +69,7 @@ check_1_2() {
 check_1_2_1() {
   local id="1.2.1"
   local desc="Ensure a separate partition for containers has been created (Scored)"
+  local remediation="For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
@@ -84,6 +85,7 @@ check_1_2_1() {
     currentScore=$((currentScore + 1))
   else
     warn "$check"
+    info "       * Remediation: $remediation"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi
@@ -114,6 +116,8 @@ check_1_2_2() {
 check_1_2_3() {
   local id="1.2.3"
   local desc="Ensure auditing is configured for the Docker daemon (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /usr/bin/dockerd -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -126,7 +130,8 @@ check_1_2_3() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
-      warn "       * Install auditd"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -136,7 +141,8 @@ check_1_2_3() {
     currentScore=$((currentScore + 1))
   else
     warn "$check"
-    warn "       * Install auditd"
+    info "       * Remediation: $remediation"
+    info "       * Remediation impact: $remediationImpact"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi
@@ -146,6 +152,8 @@ check_1_2_3() {
 check_1_2_4() {
   local id="1.2.4"
   local desc="Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /var/lib/docker -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -159,6 +167,8 @@ check_1_2_4() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -168,6 +178,8 @@ check_1_2_4() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -183,6 +195,8 @@ check_1_2_4() {
 check_1_2_5() {
   local id="1.2.5"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /etc/docker -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -196,6 +210,8 @@ check_1_2_5() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -205,6 +221,8 @@ check_1_2_5() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -220,6 +238,8 @@ fi
 check_1_2_6() {
   local id="1.2.6"
   local desc="Ensure auditing is configured for Docker files and directories - docker.service (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w $(systemctl show -p FragmentPath docker.service | sed 's/.*=//') -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -233,6 +253,8 @@ check_1_2_6() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -242,6 +264,8 @@ check_1_2_6() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -257,6 +281,8 @@ check_1_2_6() {
 check_1_2_7() {
   local id="1.2.7"
   local desc="Ensure auditing is configured for Docker files and directories - docker.socket (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w $(systemctl show -p FragmentPath docker.socket | sed 's/.*=//') -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -270,6 +296,8 @@ check_1_2_7() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -279,6 +307,8 @@ check_1_2_7() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -294,6 +324,8 @@ check_1_2_7() {
 check_1_2_8() {
   local id="1.2.8"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /etc/default/docker -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -307,6 +339,8 @@ check_1_2_8() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -316,6 +350,8 @@ check_1_2_8() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -331,6 +367,8 @@ check_1_2_8() {
 check_1_2_9() {
   local id="1.2.9"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /etc/sysconfig/docker -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -344,6 +382,8 @@ check_1_2_9() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -353,6 +393,8 @@ check_1_2_9() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -368,6 +410,8 @@ check_1_2_9() {
 check_1_2_10() {
   local id="1.2.10"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /etc/docker/daemon.json -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -381,6 +425,8 @@ check_1_2_10() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -390,6 +436,8 @@ check_1_2_10() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -405,6 +453,8 @@ check_1_2_10() {
 check_1_2_11() {
   local id="1.2.11"
   local desc="Ensure auditing is configured for Docker files and directories - /usr/bin/containerd (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /usr/bin/containerd -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -418,6 +468,8 @@ check_1_2_11() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -427,6 +479,8 @@ check_1_2_11() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
@@ -442,6 +496,8 @@ check_1_2_11() {
 check_1_2_12() {
   local id="1.2.12"
   local desc="Ensure auditing is configured for Docker files and directories - /usr/sbin/runc (Scored)"
+  local remediation="Install and configure auditd using the following command: sudo apt-get install auditd. Add the following line to the /etc/audit/rules.d/audit.rules file: -w /usr/sbin/runc -k docker. Then restart the audit daemon using the following command: service auditd restart."
+  local remediationImpact="Because the audit can generate large log files, you need to make sure that they are rotated and archived periodically. It is a good idea to create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -455,6 +511,8 @@ check_1_2_12() {
         currentScore=$((currentScore + 1))
       else
         warn "$check"
+        info "       * Remediation: $remediation"
+        info "       * Remediation impact: $remediationImpact"
         resulttestjson "WARN"
         currentScore=$((currentScore - 1))
       fi
@@ -464,6 +522,8 @@ check_1_2_12() {
       currentScore=$((currentScore + 1))
     else
       warn "$check"
+      info "       * Remediation: $remediation"
+      info "       * Remediation impact: $remediationImpact"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi

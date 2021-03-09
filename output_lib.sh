@@ -52,7 +52,7 @@ beginjson () {
 }
 
 endjson (){
-  printf "\n  ], \"checks\": %s, \"score\": %s, \"end\": %s \n}]" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "\n  ], \"checks\": %s, \"score\": %s, \"end\": %s\n}]" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
 }
 
 logjson (){
@@ -103,9 +103,9 @@ resulttestjson() {
       printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
   # Log remediation measure
-  if [ ! -z "$remediation" ]; then
+  if [ -n "$remediation" ]; then
     printf ", \"remediation\": \"%s\"" "$remediation" | tee -a "$logger.json" 2>/dev/null 1>&2
-    if [ ! -z "$remediationImpact" ]; then
+    if [ -n "$remediationImpact" ]; then
       printf ", \"remediation-impact\": \"%s\"" "$remediationImpact" | tee -a "$logger.json" 2>/dev/null 1>&2
     fi
   fi
