@@ -24,7 +24,7 @@ readonly myname
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
-req_progs='awk docker grep stat'
+req_progs='awk docker grep stat tee tail wc xargs truncate'
 for p in $req_progs; do
   command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
 done
