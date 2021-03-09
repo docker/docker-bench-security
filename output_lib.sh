@@ -38,12 +38,21 @@ yell () {
   printf "%b\n" "${bldylw}$1${txtrst}\n"
 }
 
+appendjson () {
+  if [ -s "$logger.json" ]; then
+    tail -n 1 "$logger.json" | wc -c | xargs -I {} truncate "$logger.json" -s -{}
+    printf "},\n" | tee -a "$logger.json" 2>/dev/null 1>&2
+  else
+    printf "[" | tee -a "$logger.json" 2>/dev/null 1>&2
+  fi
+}
+
 beginjson () {
-  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s,\n  \"tests\": [" "$1" "$2" | tee "$logger.json" 2>/dev/null 1>&2
+  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s,\n  \"tests\": [" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
 }
 
 endjson (){
-  printf "\n  ], \"checks\": %s, \"score\": %s, \"end\": %s \n}\n" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "\n  ], \"checks\": %s, \"score\": %s, \"end\": %s \n}]" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
 }
 
 logjson (){
@@ -69,10 +78,10 @@ starttestjson() {
 
 resulttestjson() {
   if [ $# -eq 1 ]; then
-      printf "\"result\": \"%s\"}" "$1" | tee -a "$logger.json" 2>/dev/null 1>&2
+      printf "\"result\": \"%s\"" "$1" | tee -a "$logger.json" 2>/dev/null 1>&2
   elif [ $# -eq 2 ]; then
       # Result also contains details
-      printf "\"result\": \"%s\", \"details\": \"%s\"}" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+      printf "\"result\": \"%s\", \"details\": \"%s\"" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
   else
       # Result also includes details and a list of items. Add that directly to details and to an array property "items"
       # Also limit the number of items to $limit, if $limit is non-zero
@@ -91,7 +100,7 @@ resulttestjson() {
         truncItems=$3
       fi
       itemsJson=$(printf "["; ISEP=""; ITEMCOUNT=0; for item in $truncItems; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
-      printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s}" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
+      printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
   # Log remediation measure
   if [ ! -z "$remediation" ]; then
