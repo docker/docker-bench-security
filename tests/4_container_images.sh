@@ -2,25 +2,25 @@
 
 check_4() {
   logit "\n"
-  id_4="4"
-  desc_4="Container Images and Build File"
-  check_4="$id_4 - $desc_4"
-  info "$check_4"
-  startsectionjson "$id_4" "$desc_4"
+  local id="4"
+  local desc="Container Images and Build File"
+  local check="$id - $desc"
+  info "$check"
+  startsectionjson "$id" "$desc"
 }
 
 # 4.1
 check_4_1() {
-  id_4_1="4.1"
-  desc_4_1="Ensure that a user for the container has been created (Scored)"
-  check_4_1="$id_4_1  - $desc_4_1"
-  starttestjson "$id_4_1" "$desc_4_1"
+  local id="4.1"
+  local desc="Ensure that a user for the container has been created (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
 
   # If container_users is empty, there are no running containers
   if [ -z "$containers" ]; then
-    info "$check_4_1"
+    info "$check"
     info "     * No containers running"
     resulttestjson "INFO" "No containers running"
     currentScore=$((currentScore + 0))
@@ -37,7 +37,7 @@ check_4_1() {
       if [ "$user" = "User=0" ] || [ "$user" = "User=root" ] || [ "$user" = "User=" ] || [ "$user" = "User=[]" ] || [ "$user" = "User=<no value>" ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
-          warn "$check_4_1"
+          warn "$check"
           warn "     * Running as root: $c"
           root_containers="$root_containers $c"
           fail=1
@@ -49,7 +49,7 @@ check_4_1() {
     done
     # We went through all the containers and found none running as root
     if [ $fail -eq 0 ]; then
-        pass "$check_4_1"
+        pass "$check"
         resulttestjson "PASS"
         currentScore=$((currentScore + 1))
     else
@@ -63,57 +63,57 @@ check_4_1() {
 
 # 4.2
 check_4_2() {
-  id_4_2="4.2"
-  desc_4_2="Ensure that containers use only trusted base images (Not Scored)"
-  check_4_2="$id_4_2  - $desc_4_2"
-  starttestjson "$id_4_2" "$desc_4_2"
+  local id="4.2"
+  local desc="Ensure that containers use only trusted base images (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_2"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }
 
 # 4.3
 check_4_3() {
-  id_4_3="4.3"
-  desc_4_3="Ensure that unnecessary packages are not installed in the container (Not Scored)"
-  check_4_3="$id_4_3  - $desc_4_3"
-  starttestjson "$id_4_3" "$desc_4_3"
+  local id="4.3"
+  local desc="Ensure that unnecessary packages are not installed in the container (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_3"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }
 
 # 4.4
 check_4_4() {
-  id_4_4="4.4"
-  desc_4_4="Ensure images are scanned and rebuilt to include security patches (Not Scored)"
-  check_4_4="$id_4_4  - $desc_4_4"
-  starttestjson "$id_4_4" "$desc_4_4"
+  local id="4.4"
+  local desc="Ensure images are scanned and rebuilt to include security patches (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_4"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }
 
 # 4.5
 check_4_5() {
-  id_4_5="4.5"
-  desc_4_5="Ensure Content trust for Docker is Enabled (Scored)"
-  check_4_5="$id_4_5  - $desc_4_5"
-  starttestjson "$id_4_5" "$desc_4_5"
+  local id="4.5"
+  local desc="Ensure Content trust for Docker is Enabled (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if [ "x$DOCKER_CONTENT_TRUST" = "x1" ]; then
-    pass "$check_4_5"
+    pass "$check"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    warn "$check_4_5"
+    warn "$check"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi
@@ -121,10 +121,10 @@ check_4_5() {
 
 # 4.6
 check_4_6() {
-  id_4_6="4.6"
-  desc_4_6="Ensure that HEALTHCHECK instructions have been added to container images (Scored)"
-  check_4_6="$id_4_6  - $desc_4_6"
-  starttestjson "$id_4_6" "$desc_4_6"
+  local id="4.6"
+  local desc="Ensure that HEALTHCHECK instructions have been added to container images (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   fail=0
@@ -133,7 +133,7 @@ check_4_6() {
     if docker inspect --format='{{.Config.Healthcheck}}' "$img" 2>/dev/null | grep -e "<nil>" >/dev/null 2>&1; then
       if [ $fail -eq 0 ]; then
         fail=1
-        warn "$check_4_6"
+        warn "$check"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
@@ -146,7 +146,7 @@ check_4_6() {
     fi
   done
   if [ $fail -eq 0 ]; then
-    pass "$check_4_6"
+    pass "$check"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
@@ -157,10 +157,10 @@ check_4_6() {
 
 # 4.7
 check_4_7() {
-  id_4_7="4.7"
-  desc_4_7="Ensure update instructions are not used alone in the Dockerfile (Not Scored)"
-  check_4_7="$id_4_7  - $desc_4_7"
-  starttestjson "$id_4_7" "$desc_4_7"
+  local id="4.7"
+  local desc="Ensure update instructions are not used alone in the Dockerfile (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   fail=0
@@ -169,7 +169,7 @@ check_4_7() {
     if docker history "$img" 2>/dev/null | grep -e "update" >/dev/null 2>&1; then
       if [ $fail -eq 0 ]; then
         fail=1
-        info "$check_4_7"
+        info "$check"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
@@ -179,7 +179,7 @@ check_4_7() {
     fi
   done
   if [ $fail -eq 0 ]; then
-    pass "$check_4_7"
+    pass "$check"
     resulttestjson "PASS"
     currentScore=$((currentScore + 0))
   else
@@ -190,23 +190,23 @@ check_4_7() {
 
 # 4.8
 check_4_8() {
-  id_4_8="4.8"
-  desc_4_8="Ensure setuid and setgid permissions are removed (Not Scored)"
-  check_4_8="$id_4_8  - $desc_4_8"
-  starttestjson "$id_4_8" "$desc_4_8"
+  local id="4.8"
+  local desc="Ensure setuid and setgid permissions are removed (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_8"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }
 
 # 4.9
 check_4_9() {
-  id_4_9="4.9"
-  desc_4_9="Ensure that COPY is used instead of ADD in Dockerfiles (Not Scored)"
-  check_4_9="$id_4_9  - $desc_4_9"
-  starttestjson "$id_4_9" "$desc_4_9"
+  local id="4.9"
+  local desc="Ensure that COPY is used instead of ADD in Dockerfiles (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   fail=0
@@ -216,7 +216,7 @@ check_4_9() {
       sed '$d' | grep -q 'ADD'; then
       if [ $fail -eq 0 ]; then
         fail=1
-        info "$check_4_9"
+        info "$check"
       fi
       imgName=$(docker inspect --format='{{.RepoTags}}' "$img" 2>/dev/null)
       if ! [ "$imgName" = '[]' ]; then
@@ -227,7 +227,7 @@ check_4_9() {
     fi
   done
   if [ $fail -eq 0 ]; then
-    pass "$check_4_9"
+    pass "$check"
     resulttestjson "PASS"
     currentScore=$((currentScore + 0))
   else
@@ -237,26 +237,26 @@ check_4_9() {
 
 # 4.10
 check_4_10() {
-  id_4_10="4.10"
-  desc_4_10="Ensure secrets are not stored in Dockerfiles (Not Scored)"
-  check_4_10="$id_4_10  - $desc_4_10"
-  starttestjson "$id_4_10" "$desc_4_10"
+  local id="4.10"
+  local desc="Ensure secrets are not stored in Dockerfiles (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_10"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }
 
 # 4.11
 check_4_11() {
-  id_4_11="4.11"
-  desc_4_11="Ensure only verified packages are are installed (Not Scored)"
-  check_4_11="$id_4_11  - $desc_4_11"
-  starttestjson "$id_4_11" "$desc_4_11"
+  local id="4.11"
+  local desc="Ensure only verified packages are are installed (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
-  note "$check_4_11"
+  note "$check"
   resulttestjson "NOTE"
   currentScore=$((currentScore + 0))
 }

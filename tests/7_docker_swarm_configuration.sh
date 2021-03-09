@@ -2,27 +2,27 @@
 
 check_7() {
   logit "\n"
-  id_7="7"
-  desc_7="Docker Swarm Configuration"
-  check_7="$id_7 - $desc_7"
-  info "$check_7"
-  startsectionjson "$id_7" "$desc_7"
+  local id="7"
+  local desc="Docker Swarm Configuration"
+  local check="$id - $desc"
+  info "$check"
+  startsectionjson "$id" "$desc"
 }
 
 # 7.1
 check_7_1() {
-  id_7_1="7.1"
-  desc_7_1="Ensure swarm mode is not Enabled, if not needed (Scored)"
-  check_7_1="$id_7_1  - $desc_7_1"
-  starttestjson "$id_7_1" "$desc_7_1"
+  local id="7.1"
+  local desc="Ensure swarm mode is not Enabled, if not needed (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:*\sinactive\s*" >/dev/null 2>&1; then
-    pass "$check_7_1"
+    pass "$check"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   else
-    warn "$check_7_1"
+    warn "$check"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi
@@ -30,25 +30,25 @@ check_7_1() {
 
 # 7.2
 check_7_2() {
-  id_7_2="7.2"
-  desc_7_2="Ensure that the minimum number of manager nodes have been created in a swarm (Scored)"
-  check_7_2="$id_7_2  - $desc_7_2"
-  starttestjson "$id_7_2" "$desc_7_2"
+  local id="7.2"
+  local desc="Ensure that the minimum number of manager nodes have been created in a swarm (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
     managernodes=$(docker node ls | grep -c "Leader")
     if [ "$managernodes" -eq 1 ]; then
-      pass "$check_7_2"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
-      warn "$check_7_2"
+      warn "$check"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
   else
-    pass "$check_7_2 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -56,25 +56,25 @@ check_7_2() {
 
 # 7.3
 check_7_3() {
-  id_7_3="7.3"
-  desc_7_3="Ensure that swarm services are bound to a specific host interface (Scored)"
-  check_7_3="$id_7_3  - $desc_7_3"
-  starttestjson "$id_7_3" "$desc_7_3"
+  local id="7.3"
+  local desc="Ensure that swarm services are bound to a specific host interface (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
     $netbin -lnt | grep -e '\[::]:2377 ' -e ':::2377' -e '*:2377 ' -e ' 0\.0\.0\.0:2377 ' >/dev/null 2>&1
     if [ $? -eq 1 ]; then
-      pass "$check_7_3"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
-      warn "$check_7_3"
+      warn "$check"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     fi
   else
-    pass "$check_7_3 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -82,10 +82,10 @@ check_7_3() {
 
 # 7.4
 check_7_4() {
-  id_7_4="7.4"
-  desc_7_4="Ensure that all Docker swarm overlay networks are encrypted (Scored)"
-  check_7_4="$id_7_4  - $desc_7_4"
-  starttestjson "$id_7_4" "$desc_7_4"
+  local id="7.4"
+  local desc="Ensure that all Docker swarm overlay networks are encrypted (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   fail=0
@@ -95,7 +95,7 @@ check_7_4() {
       grep -v 'encrypted:' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check_7_4"
+        warn "$check"
         fail=1
       fi
       warn "     * Unencrypted overlay network: $(docker network inspect --format '{{ .Name }} ({{ .Scope }})' "$encnet")"
@@ -104,7 +104,7 @@ check_7_4() {
   done
   # We went through all the networks and found none that are unencrypted
   if [ $fail -eq 0 ]; then
-      pass "$check_7_4"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
   else
@@ -115,24 +115,24 @@ check_7_4() {
 
 # 7.5
 check_7_5() {
-  id_7_5="7.5"
-  desc_7_5="Ensure that Docker's secret management commands are used for managing secrets in a swarm cluster (Not Scored)"
-  check_7_5="$id_7_5  - $desc_7_5"
-  starttestjson "$id_7_5" "$desc_7_5"
+  local id="7.5"
+  local desc="Ensure that Docker's secret management commands are used for managing secrets in a swarm cluster (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     if [ "$(docker secret ls -q | wc -l)" -ge 1 ]; then
-      pass "$check_7_5"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
-      info "$check_7_5"
+      info "$check"
       resulttestjson "INFO"
       currentScore=$((currentScore + 0))
     fi
   else
-    pass "$check_7_5 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -140,24 +140,24 @@ check_7_5() {
 
 # 7.6
 check_7_6() {
-  id_7_6="7.6"
-  desc_7_6="Ensure that swarm manager is run in auto-lock mode (Scored)"
-  check_7_6="$id_7_6  - $desc_7_6"
-  starttestjson "$id_7_6" "$desc_7_6"
+  local id="7.6"
+  local desc="Ensure that swarm manager is run in auto-lock mode (Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     if ! docker swarm unlock-key 2>/dev/null | grep 'SWMKEY' 2>/dev/null 1>&2; then
-      warn "$check_7_6"
+      warn "$check"
       resulttestjson "WARN"
       currentScore=$((currentScore - 1))
     else
-      pass "$check_7_6"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     fi
   else
-    pass "$check_7_6 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -165,18 +165,18 @@ check_7_6() {
 
 # 7.7
 check_7_7() {
-  id_7_7="7.7"
-  desc_7_7="Ensure that the swarm manager auto-lock key is rotated periodically (Not Scored)"
-  check_7_7="$id_7_7  - $desc_7_7"
-  starttestjson "$id_7_7" "$desc_7_7"
+  local id="7.7"
+  local desc="Ensure that the swarm manager auto-lock key is rotated periodically (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-    note "$check_7_7"
+    note "$check"
     resulttestjson "NOTE"
     currentScore=$((currentScore + 0))
   else
-    pass "$check_7_7 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -184,24 +184,24 @@ check_7_7() {
 
 # 7.8
 check_7_8() {
-  id_7_8="7.8"
-  desc_7_8="Ensure that node certificates are rotated as appropriate (Not Scored)"
-  check_7_8="$id_7_8  - $desc_7_8"
-  starttestjson "$id_7_8" "$desc_7_8"
+  local id="7.8"
+  local desc="Ensure that node certificates are rotated as appropriate (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     if docker info 2>/dev/null | grep "Expiry Duration: 2 days"; then
-      pass "$check_7_8"
+      pass "$check"
       resulttestjson "PASS"
       currentScore=$((currentScore + 1))
     else
-      info "$check_7_8"
+      info "$check"
       resulttestjson "INFO"
       currentScore=$((currentScore + 0))
     fi
   else
-    pass "$check_7_8 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -209,18 +209,18 @@ check_7_8() {
 
 # 7.9
 check_7_9() {
-  id_7_9="7.9"
-  desc_7_9="Ensure that CA certificates are rotated as appropriate (Not Scored)"
-  check_7_9="$id_7_9  - $desc_7_9"
-  starttestjson "$id_7_9" "$desc_7_9"
+  local id="7.9"
+  local desc="Ensure that CA certificates are rotated as appropriate (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-    info "$check_7_9"
+    info "$check"
     resulttestjson "INFO"
     currentScore=$((currentScore + 0))
   else
-    pass "$check_7_9 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
@@ -228,18 +228,18 @@ check_7_9() {
 
 # 7.10
 check_7_10() {
-  id_7_10="7.10"
-  desc_7_10="Ensure that management plane traffic is separated from data plane traffic (Not Scored)"
-  check_7_10="$id_7_10  - $desc_7_10"
-  starttestjson "$id_7_10" "$desc_7_10"
+  local id="7.10"
+  local desc="Ensure that management plane traffic is separated from data plane traffic (Not Scored)"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
   totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
-    info "$check_7_10"
+    info "$check"
     resulttestjson "INFO"
     currentScore=$((currentScore + 0))
   else
-    pass "$check_7_10 (Swarm mode not enabled)"
+    pass "$check (Swarm mode not enabled)"
     resulttestjson "PASS"
     currentScore=$((currentScore + 1))
   fi
