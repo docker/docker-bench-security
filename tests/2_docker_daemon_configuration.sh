@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_2() {
-  logit "\n"
+  logit ""
   local id="2"
   local desc="Docker daemon configuration"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 
@@ -13,6 +13,8 @@ check_2() {
 check_2_1() {
   local id="2.1"
   local desc="Ensure network traffic is restricted between containers on the default bridge (Scored)"
+  local remediation="Edit the Docker daemon configuration file to ensure that inter-container communication is disabled: \"icc\": false"
+  local remediationImpact="Inter-container communication is disabled on the default network bridge. If any communication between containers on the same host is desired, it needs to be explicitly defined using container linking or custom networks."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -27,6 +29,7 @@ check_2_1() {
     currentScore=$((currentScore + 1))
   else
     warn "$check"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi

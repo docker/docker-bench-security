@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_8() {
-  logit "\n"
+  logit ""
   local id="8"
   local desc="Docker Enterprise Configuration"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 
@@ -153,7 +153,6 @@ check_8_2() {
     return
   fi
 
-  logit "\n"
   local id="8.2"
   local desc="Docker Trusted Registry Configuration"
   local check="$id - $desc"

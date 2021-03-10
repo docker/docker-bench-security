@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_3() {
-  logit "\n"
+  logit ""
   local id="3"
   local desc="Docker daemon configuration files"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 

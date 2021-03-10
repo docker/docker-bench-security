@@ -1,10 +1,10 @@
 #!/bin/sh
 check_c() {
-  logit "\n"
+  logit ""
   local id="99"
   local desc="Community contributed checks"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 

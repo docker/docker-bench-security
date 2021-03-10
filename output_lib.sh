@@ -7,10 +7,10 @@ if [ -n "$nocolor" ] && [ "$nocolor" = "nocolor" ]; then
   bldylw=''
   txtrst=''
 else
-  bldred='\033[1;31m'
-  bldgrn='\033[1;32m'
-  bldblu='\033[1;34m'
-  bldylw='\033[1;33m' # Yellow
+  bldred='\033[1;31m' # Bold Red
+  bldgrn='\033[1;32m' # Bold Green
+  bldblu='\033[1;34m' # Bold Blue
+  bldylw='\033[1;33m' # Bold Yellow
   txtrst='\033[0m'
 fi
 
@@ -110,4 +110,46 @@ resulttestjson() {
     fi
   fi
   printf "}" | tee -a "$logger.json" 2>/dev/null 1>&2
+}
+
+saveRemediation() {
+  local id remediation remediationImpact
+  while [ "${1}" ]; do
+    case "${1}" in
+      --id)
+        id="${2}"
+        shift
+        ;;
+      --rem)
+        remediation="${2}"
+        shift
+        ;;
+      --imp)
+        remediationImpact="${2}"
+        shift
+        ;;
+      *)
+        echo "Unknown parameter: ${1}" >&2
+        return 1
+    esac
+    if ! shift; then
+      echo 'Missing parameter argument.' >&2
+      return 1
+    fi
+  done
+
+  if [ -n "${remediation}" ]; then
+    if [ -n "${checkHeader}" ]; then
+      if [ -n "${addSpaceHeader}" ]; then
+        globalRemediation="${globalRemediation}\n"
+      fi
+      globalRemediation="${globalRemediation}\n${bldblu}[INFO]${txtrst} ${checkHeader}"
+      checkHeader=""
+      addSpaceHeader="1"
+    fi
+    globalRemediation="${globalRemediation}\n${bldblu}[INFO]${txtrst} ${id} - ${remediation}"
+    if [ -n "${remediationImpact}" ]; then
+      globalRemediation="${globalRemediation} Impact: ${remediationImpact}"
+    fi
+  fi
 }

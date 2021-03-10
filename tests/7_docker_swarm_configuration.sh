@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_7() {
-  logit "\n"
+  logit ""
   local id="7"
   local desc="Docker Swarm Configuration"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 

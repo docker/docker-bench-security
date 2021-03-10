@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_6() {
-  logit "\n"
+  logit ""
   local id="6"
   local desc="Docker Security Operations"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 

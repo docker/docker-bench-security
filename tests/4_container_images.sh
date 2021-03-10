@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_4() {
-  logit "\n"
+  logit ""
   local id="4"
   local desc="Container Images and Build File"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 
@@ -104,6 +104,8 @@ check_4_4() {
 check_4_5() {
   local id="4.5"
   local desc="Ensure Content trust for Docker is Enabled (Scored)"
+  local remediation="Add \"DOCKER_CONTENT_TRUST\" variable to the \"/etc/environment\" file using command \"echo \"DOCKER_CONTENT_TRUST=1\" | sudo tee -a /etc/environment\"."
+  local remediationImpact="This prevents users from working with tagged images unless they contain a signature."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -114,6 +116,7 @@ check_4_5() {
     currentScore=$((currentScore + 1))
   else
     warn "$check"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "WARN"
     currentScore=$((currentScore - 1))
   fi

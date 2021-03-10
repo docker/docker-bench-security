@@ -1,11 +1,11 @@
 #!/bin/sh
 
 check_5() {
-  logit "\n"
+  logit ""
   local id="5"
   local desc="Container Runtime"
-  local check="$id - $desc"
-  info "$check"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
   startsectionjson "$id" "$desc"
 }
 

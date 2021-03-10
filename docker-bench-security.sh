@@ -109,6 +109,9 @@ beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
+  logit "\n${bldylw}Section A - Checks result${txtrsr}"
+  globalRemediation=""
+
   # Get configuration location
   get_docker_configuration_file
 
@@ -193,9 +196,12 @@ main () {
     fi
   done
 
-  printf "\n"
+  logit "\n\n${bldylw}Section B - Remediation measures${txtrst}"
+  logit "${globalRemediation}"
+
+  logit "\n\n${bldylw}Section C - Score${txtrst}\n"
   info "Checks: $totalChecks"
-  info "Score: $currentScore"
+  info "Score: $currentScore\n"
 
   endjson "$totalChecks" "$currentScore" "$(date +%s)"
 }
