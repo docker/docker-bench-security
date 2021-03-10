@@ -1055,17 +1055,17 @@ check_5_26() {
   totalChecks=$((totalChecks + 1))
 
   fail=0
-  nohealthlocal check=""
+  nohealthcheck_containers=""
   for c in $containers; do
     if ! docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2; then
       if [ $fail -eq 0 ]; then
         warn "$check"
         warn "     * Health check not set: $c"
-        nohealthlocal check="$nohealthcheck_containers $c"
+        nohealthcheck_containers="$nohealthcheck_containers $c"
         fail=1
       else
         warn "     * Health check not set: $c"
-        nohealthlocal check="$nohealthcheck_containers $c"
+        nohealthcheck_containers="$nohealthcheck_containers $c"
       fi
     fi
   done
