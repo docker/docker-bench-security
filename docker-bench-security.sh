@@ -1,11 +1,11 @@
 #!/bin/sh
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
 # Docker Bench for Security
 #
 # Docker, Inc. (c) 2015-2021
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
 
 version='1.3.5'
 
@@ -50,7 +50,7 @@ usage () {
 
   -b           optional  Do not print colors
   -h           optional  Print this help message
-  -l FILE      optional  Log output in FILE
+  -l FILE      optional  Log output in FILE, inside container if run using docker
   -c CHECK     optional  Comma delimited list of specific check(s)
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check

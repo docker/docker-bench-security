@@ -88,6 +88,7 @@ version 1.13.0 or later.
   -e CHECK     optional  Comma delimited list of specific check(s) to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
+  -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests
