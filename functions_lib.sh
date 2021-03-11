@@ -41,6 +41,32 @@ host_configuration_level1() {
   check_1_end
 }
 
+host_general_configuration() {
+  check_1
+  check_1_1
+  check_1_1_1
+  check_1_1_2
+  check_1_end
+}
+
+linux_hosts_specific_configuration() {
+  check_1
+  check_1_2
+  check_1_2_1
+  check_1_2_2
+  check_1_2_3
+  check_1_2_4
+  check_1_2_5
+  check_1_2_6
+  check_1_2_7
+  check_1_2_8
+  check_1_2_9
+  check_1_2_10
+  check_1_2_11
+  check_1_2_12
+  check_1_end
+}
+
 docker_daemon_configuration() {
   check_2
   check_2_1
@@ -298,6 +324,26 @@ docker_enterprise_configuration_level1() {
   check_8_1_5
   check_8_1_6
   check_8_1_7
+  check_8_2
+  check_8_2_1
+  check_8_end
+}
+
+universal_control_plane_configuration() {
+  check_8
+  check_8_1
+  check_8_1_1
+  check_8_1_2
+  check_8_1_3
+  check_8_1_4
+  check_8_1_5
+  check_8_1_6
+  check_8_1_7
+  check_8_end
+}
+
+docker_trusted_registry_configuration() {
+  check_8
   check_8_2
   check_8_2_1
   check_8_end
