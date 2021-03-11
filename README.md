@@ -1,6 +1,6 @@
 # Docker Bench for Security
 
-![Docker Bench for Security running](https://raw.githubusercontent.com/docker/docker-bench-security/master/benchmark_log.png)
+![Docker Bench for Security running](benchmark_log.png)
 
 The Docker Bench for Security is a script that checks for dozens of common
 best-practices around deploying Docker containers in production. The tests are
