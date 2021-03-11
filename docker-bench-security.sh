@@ -196,8 +196,10 @@ main () {
     fi
   done
 
-  logit "\n\n${bldylw}Section B - Remediation measures${txtrst}"
-  logit "${globalRemediation}"
+  if [ -n "${globalRemediation}" ]; then
+    logit "\n\n${bldylw}Section B - Remediation measures${txtrst}"
+    logit "${globalRemediation}"
+  fi
 
   logit "\n\n${bldylw}Section C - Score${txtrst}\n"
   info "Checks: $totalChecks"
