@@ -103,7 +103,7 @@ resulttestjson() {
       printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
   # Log remediation measure
-  if [ -n "$remediation" ]; then
+  if [ -n "$remediation" ] && [ "$1" != "PASS" ]; then
     printf ", \"remediation\": \"%s\"" "$remediation" | tee -a "$logger.json" 2>/dev/null 1>&2
     if [ -n "$remediationImpact" ]; then
       printf ", \"remediation-impact\": \"%s\"" "$remediationImpact" | tee -a "$logger.json" 2>/dev/null 1>&2

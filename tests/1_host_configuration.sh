@@ -180,6 +180,7 @@ check_1_2_4() {
   else
     info "$check"
     info "       * Directory not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
   fi
@@ -221,6 +222,7 @@ check_1_2_5() {
   else
     info "$check"
     info "       * Directory not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "Directory not found"
     currentScore=$((currentScore + 0))
 fi
@@ -262,6 +264,7 @@ check_1_2_6() {
   else
     info "$check"
     info "       * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -303,6 +306,7 @@ check_1_2_7() {
   else
     info "$check"
     info "       * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -344,6 +348,7 @@ check_1_2_8() {
   else
     info "$check"
     info "       * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -385,6 +390,7 @@ check_1_2_9() {
   else
     info "$check"
     info "       * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -426,6 +432,7 @@ check_1_2_10() {
   else
     info "$check"
     info "        * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -467,6 +474,7 @@ check_1_2_11() {
   else
     info "$check"
     info "        * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
@@ -508,6 +516,7 @@ check_1_2_12() {
   else
     info "$check"
     info "        * File not found"
+    saveRemediation --id "${id}" --rem "${remediation}" --imp "${remediationImpact}"
     resulttestjson "INFO" "File not found"
     currentScore=$((currentScore + 0))
   fi
