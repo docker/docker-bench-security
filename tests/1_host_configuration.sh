@@ -67,7 +67,7 @@ check_1_2() {
 check_1_2_1() {
   local id="1.2.1"
   local desc="Ensure a separate partition for containers has been created (Scored)"
-  local remediation="For new installations, you should create a separate partition for the \"/var/lib/docker\" mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
+  local remediation="For new installations, you should create a separate partition for the \'/var/lib/docker\' mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
@@ -114,7 +114,7 @@ check_1_2_2() {
 check_1_2_3() {
   local id="1.2.3"
   local desc="Ensure auditing is configured for the Docker daemon (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /usr/bin/dockerd -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /usr/bin/dockerd -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -148,7 +148,7 @@ check_1_2_3() {
 check_1_2_4() {
   local id="1.2.4"
   local desc="Ensure auditing is configured for Docker files and directories - /var/lib/docker (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /var/lib/docker -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /var/lib/docker -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -190,7 +190,7 @@ check_1_2_4() {
 check_1_2_5() {
   local id="1.2.5"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/docker (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /etc/docker -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /etc/docker -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -232,7 +232,7 @@ fi
 check_1_2_6() {
   local id="1.2.6"
   local desc="Ensure auditing is configured for Docker files and directories - docker.service (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w $(systemctl show -p FragmentPath docker.service | sed 's/.*=//') -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w $(systemctl show -p FragmentPath docker.service | sed 's/.*=//') -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -274,7 +274,7 @@ check_1_2_6() {
 check_1_2_7() {
   local id="1.2.7"
   local desc="Ensure auditing is configured for Docker files and directories - docker.socket (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w $(systemctl show -p FragmentPath docker.socket | sed 's/.*=//') -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w $(systemctl show -p FragmentPath docker.socket | sed 's/.*=//') -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -316,7 +316,7 @@ check_1_2_7() {
 check_1_2_8() {
   local id="1.2.8"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/default/docker (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /etc/default/docker -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /etc/default/docker -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -358,7 +358,7 @@ check_1_2_8() {
 check_1_2_9() {
   local id="1.2.9"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/sysconfig/docker (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /etc/sysconfig/docker -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /etc/sysconfig/docker -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -400,7 +400,7 @@ check_1_2_9() {
 check_1_2_10() {
   local id="1.2.10"
   local desc="Ensure auditing is configured for Docker files and directories - /etc/docker/daemon.json (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /etc/docker/daemon.json -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /etc/docker/daemon.json -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -442,7 +442,7 @@ check_1_2_10() {
 check_1_2_11() {
   local id="1.2.11"
   local desc="Ensure auditing is configured for Docker files and directories - /usr/bin/containerd (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /usr/bin/containerd -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /usr/bin/containerd -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -484,7 +484,7 @@ check_1_2_11() {
 check_1_2_12() {
   local id="1.2.12"
   local desc="Ensure auditing is configured for Docker files and directories - /usr/sbin/runc (Scored)"
-  local remediation="Install and configure auditd using command \"sudo apt-get install auditd\". Add \"-w /usr/sbin/runc -k docker\" to the \"/etc/audit/rules.d/audit.rules\" file. Then restart the audit daemon using command \"service auditd restart\"."
+  local remediation="Install and configure auditd using command \'sudo apt-get install auditd\'. Add \'-w /usr/sbin/runc -k docker\' to the \'/etc/audit/rules.d/audit.rules\' file. Then restart the audit daemon using command \'service auditd restart\'."
   local remediationImpact="Audit can generate large log files. So you need to make sure that they are rotated and archived periodically. Create a separate partition for audit logs to avoid filling up other critical partitions."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
