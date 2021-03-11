@@ -95,7 +95,7 @@ do
 done
 
 if [ -z "$logger" ]; then
-  logger="${myname}.log"
+  logger="log/${myname}.log"
 fi
 
 if [ -z "$limit" ]; then
