@@ -104,7 +104,7 @@ check_4_4() {
 check_4_5() {
   local id="4.5"
   local desc="Ensure Content trust for Docker is Enabled (Scored)"
-  local remediation="Add \"DOCKER_CONTENT_TRUST\" variable to the \"/etc/environment\" file using command \"echo \"DOCKER_CONTENT_TRUST=1\" | sudo tee -a /etc/environment\"."
+  local remediation="Add DOCKER_CONTENT_TRUST variable to the /etc/environment file using command echo \"DOCKER_CONTENT_TRUST=1\" | sudo tee -a /etc/environment."
   local remediationImpact="This prevents users from working with tagged images unless they contain a signature."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
