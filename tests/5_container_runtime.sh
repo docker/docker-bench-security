@@ -13,18 +13,15 @@ check_running_containers() {
   # If containers is empty, there are no running containers
   if [ -z "$containers" ]; then
     info "  * No containers running, skipping Section 5"
-    running_containers=0
   else
-    running_containers=1
     # Make the loop separator be a new-line in POSIX compliant fashion
     set -f; IFS=$'
   '
   fi
 }
 
-# 5.1
 check_5_1() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -32,8 +29,6 @@ check_5_1() {
   local desc="Ensure that, if applicable, an AppArmor Profile is enabled (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   no_apparmor_containers=""
@@ -43,7 +38,7 @@ check_5_1() {
     if [ "$policy" = "AppArmorProfile=" ] || [ "$policy" = "AppArmorProfile=[]" ] || [ "$policy" = "AppArmorProfile=<no value>" ] || [ "$policy" = "AppArmorProfile=unconfined" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * No AppArmorProfile Found: $c"
 	no_apparmor_containers="$no_apparmor_containers $c"
         fail=1
@@ -55,18 +50,15 @@ check_5_1() {
   done
   # We went through all the containers and found none without AppArmor
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
   fi
 }
 
-# 5.2
 check_5_2() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -74,8 +66,6 @@ check_5_2() {
   local desc="Ensure that, if applicable, SELinux security options are set (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   no_securityoptions_containers=""
@@ -85,7 +75,7 @@ check_5_2() {
     if [ "$policy" = "SecurityOpt=" ] || [ "$policy" = "SecurityOpt=[]" ] || [ "$policy" = "SecurityOpt=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * No SecurityOptions Found: $c"
 	no_securityoptions_containers="$no_securityoptions_containers $c"
         fail=1
@@ -97,18 +87,15 @@ check_5_2() {
   done
   # We went through all the containers and found none without SELinux
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
   fi
 }
 
-# 5.3
 check_5_3() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -116,8 +103,6 @@ check_5_3() {
   local desc="Ensure that Linux kernel capabilities are restricted within containers (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   caps_containers=""
@@ -130,7 +115,7 @@ check_5_3() {
     if [ "$caps" != 'CapAdd=' ] && [ "$caps" != 'CapAdd=[]' ] && [ "$caps" != 'CapAdd=<no value>' ] && [ "$caps" != 'CapAdd=<nil>' ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * Capabilities added: $caps to $c"
 	caps_containers="$caps_containers $c"
         fail=1
@@ -142,18 +127,15 @@ check_5_3() {
   done
   # We went through all the containers and found none with extra capabilities
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Capabilities added for containers" "$caps_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Capabilities added for containers" "$caps_containers"
   fi
 }
 
-# 5.4
 check_5_4() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -161,8 +143,6 @@ check_5_4() {
   local desc="Ensure that privileged containers are not used (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   privileged_containers=""
@@ -172,7 +152,7 @@ check_5_4() {
     if [ "$privileged" = "true" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * Container running in Privileged mode: $c"
 	privileged_containers="$privileged_containers $c"
         fail=1
@@ -184,18 +164,15 @@ check_5_4() {
   done
   # We went through all the containers and found no privileged containers
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers running in privileged mode" "$privileged_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers running in privileged mode" "$privileged_containers"
   fi
 }
 
-# 5.5
 check_5_5() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -203,8 +180,6 @@ check_5_5() {
   local desc="Ensure sensitive host system directories are not mounted on containers (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   # List of sensitive directories to test for. Script uses new-lines as a separator.
   # Note the lack of identation. It needs it for the substring comparison.
@@ -233,7 +208,7 @@ check_5_5() {
       if [ $sensitive -eq 1 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
-          warn "$check"
+          warn -s "$check"
           warn "     * Sensitive directory $v mounted in: $c"
 	  sensitive_mount_containers="$sensitive_mount_containers $c:$v"
           fail=1
@@ -246,18 +221,15 @@ check_5_5() {
   done
   # We went through all the containers and found none with sensitive mounts
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
   fi
 }
 
-# 5.6
 check_5_6() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -265,8 +237,6 @@ check_5_6() {
   local desc="Ensure sshd is not run within containers (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   ssh_exec_containers=""
@@ -277,7 +247,7 @@ check_5_6() {
     if [ "$processes" -ge 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * Container running sshd: $c"
 	ssh_exec_containers="$ssh_exec_containers $c"
         fail=1
@@ -291,7 +261,7 @@ check_5_6() {
     exec_check=$(docker exec "$c" ps -el 2>/dev/null)
     if [ $? -eq 255 ]; then
         if [ $printcheck -eq 0 ]; then
-          warn "$check"
+          warn -s "$check"
           printcheck=1
         fi
       warn "     * Docker exec fails: $c"
@@ -302,18 +272,15 @@ check_5_6() {
   done
   # We went through all the containers and found none with sshd
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
   fi
 }
 
-# 5.7
 check_5_7() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -321,8 +288,6 @@ check_5_7() {
   local desc="Ensure privileged ports are not mapped within containers (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   privileged_port_containers=""
@@ -335,7 +300,7 @@ check_5_7() {
     if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
-          warn "$check"
+          warn -s "$check"
           warn "     * Privileged Port in use: $port in $c"
 	  privileged_port_containers="$privileged_port_containers $c:$port"
           fail=1
@@ -348,18 +313,15 @@ check_5_7() {
   done
   # We went through all the containers and found no privileged ports
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers using privileged ports" "$privileged_port_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers using privileged ports" "$privileged_port_containers"
   fi
 }
 
-# 5.8
 check_5_8() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -368,15 +330,12 @@ check_5_8() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "NOTE"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "NOTE"
 }
 
-# 5.9
 check_5_9() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -384,8 +343,6 @@ check_5_9() {
   local desc="Ensure that the host's network namespace is not shared (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   net_host_containers=""
@@ -395,7 +352,7 @@ check_5_9() {
     if [ "$mode" = "NetworkMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
+        warn -s "$check"
         warn "     * Container running with networking mode 'host': $c"
 	net_host_containers="$net_host_containers $c"
         fail=1
@@ -407,18 +364,15 @@ check_5_9() {
   done
   # We went through all the containers and found no Network Mode host
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 0))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
   fi
 }
 
-# 5.10
 check_5_10() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -426,8 +380,6 @@ check_5_10() {
   local desc="Ensure that the memory usage for containers is limited (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   mem_unlimited_containers=""
@@ -441,30 +393,27 @@ check_5_10() {
     if [ "$memory" = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Container running without memory restrictions: $c"
+        warn -s "$check"
+        warn "      * Container running without memory restrictions: $c"
 	mem_unlimited_containers="$mem_unlimited_containers $c"
         fail=1
       else
-        warn "     * Container running without memory restrictions: $c"
+        warn "      * Container running without memory restrictions: $c"
 	mem_unlimited_containers="$mem_unlimited_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no lack of Memory restrictions
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
   fi
 }
 
-# 5.11
 check_5_11() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -472,8 +421,6 @@ check_5_11() {
   local desc="Ensure that CPU priority is set appropriately on containers (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   cpu_unlimited_containers=""
@@ -487,30 +434,27 @@ check_5_11() {
     if [ "$shares" = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Container running without CPU restrictions: $c"
+        warn -s "$check"
+        warn "      * Container running without CPU restrictions: $c"
         cpu_unlimited_containers="$cpu_unlimited_containers $c"
         fail=1
       else
-        warn "     * Container running without CPU restrictions: $c"
+        warn "      * Container running without CPU restrictions: $c"
         cpu_unlimited_containers="$cpu_unlimited_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no lack of CPUShare restrictions
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
   fi
 }
 
-# 5.12
 check_5_12() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -518,8 +462,6 @@ check_5_12() {
   local desc="Ensure that the container's root filesystem is mounted as read only (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   fsroot_mount_containers=""
@@ -529,30 +471,27 @@ check_5_12() {
     if [ "$read_status" = "false" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Container running with root FS mounted R/W: $c"
+        warn -s "$check"
+        warn "      * Container running with root FS mounted R/W: $c"
 	fsroot_mount_containers="$fsroot_mount_containers $c"
         fail=1
       else
-        warn "     * Container running with root FS mounted R/W: $c"
+        warn "      * Container running with root FS mounted R/W: $c"
 	fsroot_mount_containers="$fsroot_mount_containers $c"
       fi
     fi
   done
   # We went through all the containers and found no R/W FS mounts
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
   fi
 }
 
-# 5.13
 check_5_13() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -561,8 +500,6 @@ check_5_13() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   incoming_unbound_containers=""
   for c in $containers; do
@@ -570,12 +507,12 @@ check_5_13() {
       if [ "$ip" = "0.0.0.0" ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
-          warn "$check"
-          warn "     * Port being bound to wildcard IP: $ip in $c"
+          warn -s "$check"
+          warn "      * Port being bound to wildcard IP: $ip in $c"
           incoming_unbound_containers="$incoming_unbound_containers $c:$ip"
           fail=1
         else
-          warn "     * Port being bound to wildcard IP: $ip in $c"
+          warn "      * Port being bound to wildcard IP: $ip in $c"
           incoming_unbound_containers="$incoming_unbound_containers $c:$ip"
         fi
       fi
@@ -583,18 +520,15 @@ check_5_13() {
   done
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
   fi
 }
 
-# 5.14
 check_5_14() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -602,8 +536,6 @@ check_5_14() {
   local desc="Ensure that the 'on-failure' container restart policy is set to '5' (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   maxretry_unset_containers=""
@@ -613,30 +545,27 @@ check_5_14() {
     if [ "$policy" != "MaximumRetryCount=5" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * MaximumRetryCount is not set to 5: $c"
+        warn -s "$check"
+        warn "      * MaximumRetryCount is not set to 5: $c"
 	maxretry_unset_containers="$maxretry_unset_containers $c"
         fail=1
       else
-        warn "     * MaximumRetryCount is not set to 5: $c"
+        warn "      * MaximumRetryCount is not set to 5: $c"
 	maxretry_unset_containers="$maxretry_unset_containers $c"
       fi
     fi
   done
   # We went through all the containers and they all had MaximumRetryCount=5
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
   fi
 }
 
-# 5.15
 check_5_15() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -644,8 +573,6 @@ check_5_15() {
   local desc="Ensure that the host's process namespace is not shared (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   pidns_shared_containers=""
@@ -655,30 +582,27 @@ check_5_15() {
     if [ "$mode" = "PidMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Host PID namespace being shared with: $c"
+        warn -s "$check"
+        warn "      * Host PID namespace being shared with: $c"
         pidns_shared_containers="$pidns_shared_containers $c"
         fail=1
       else
-        warn "     * Host PID namespace being shared with: $c"
+        warn "      * Host PID namespace being shared with: $c"
         pidns_shared_containers="$pidns_shared_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with PidMode as host
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
   fi
 }
 
-# 5.16
 check_5_16() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -686,8 +610,6 @@ check_5_16() {
   local desc="Ensure that the host's IPC namespace is not shared (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   ipcns_shared_containers=""
@@ -697,30 +619,27 @@ check_5_16() {
     if [ "$mode" = "IpcMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Host IPC namespace being shared with: $c"
+        warn -s "$check"
+        warn "      * Host IPC namespace being shared with: $c"
         ipcns_shared_containers="$ipcns_shared_containers $c"
         fail=1
       else
-        warn "     * Host IPC namespace being shared with: $c"
+        warn "      * Host IPC namespace being shared with: $c"
         ipcns_shared_containers="$ipcns_shared_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with IPCMode as host
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
   fi
 }
 
-# 5.17
 check_5_17() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -728,8 +647,6 @@ check_5_17() {
   local desc="Ensure that host devices are not directly exposed to containers (Not Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   hostdev_exposed_containers=""
@@ -739,30 +656,27 @@ check_5_17() {
     if [ "$devices" != "Devices=" ] && [ "$devices" != "Devices=[]" ] && [ "$devices" != "Devices=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        info "$check"
-        info "     * Container has devices exposed directly: $c"
+        info -c "$check"
+        info "      * Container has devices exposed directly: $c"
         hostdev_exposed_containers="$hostdev_exposed_containers $c"
         fail=1
       else
-        info "     * Container has devices exposed directly: $c"
+        info "      * Container has devices exposed directly: $c"
         hostdev_exposed_containers="$hostdev_exposed_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with devices
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -c "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
-      currentScore=$((currentScore + 0))
+      logcheckresult "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
   fi
 }
 
-# 5.18
 check_5_18() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -770,8 +684,6 @@ check_5_18() {
   local desc="Ensure that the default ulimit is overwritten at runtime if needed (Not Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   no_ulimit_containers=""
@@ -781,30 +693,27 @@ check_5_18() {
     if [ "$ulimits" = "Ulimits=" ] || [ "$ulimits" = "Ulimits=[]" ] || [ "$ulimits" = "Ulimits=<no value>" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        info "$check"
-        info "     * Container no default ulimit override: $c"
+        info -c "$check"
+        info "      * Container no default ulimit override: $c"
         no_ulimit_containers="$no_ulimit_containers $c"
         fail=1
       else
-        info "     * Container no default ulimit override: $c"
+        info "      * Container no default ulimit override: $c"
         no_ulimit_containers="$no_ulimit_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none without Ulimits
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -c "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
-      currentScore=$((currentScore + 0))
+      logcheckresult "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
   fi
 }
 
-# 5.19
 check_5_19() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -813,8 +722,6 @@ check_5_19() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   mountprop_shared_containers=""
   for c in $containers; do
@@ -822,30 +729,27 @@ check_5_19() {
      grep shared 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Mount propagation mode is shared: $c"
+        warn -s "$check"
+        warn "      * Mount propagation mode is shared: $c"
         mountprop_shared_containers="$mountprop_shared_containers $c"
         fail=1
       else
-        warn "     * Mount propagation mode is shared: $c"
+        warn "      * Mount propagation mode is shared: $c"
         mountprop_shared_containers="$mountprop_shared_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with shared propagation mode
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-    resulttestjson "WARN" "Containers with shared mount propagation" "$mountprop_shared_containers"
-    currentScore=$((currentScore - 1))
+    logcheckresult "WARN" "Containers with shared mount propagation" "$mountprop_shared_containers"
   fi
 }
 
-# 5.20
 check_5_20() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -853,8 +757,6 @@ check_5_20() {
   local desc="Ensure that the host's UTS namespace is not shared (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   utcns_shared_containers=""
@@ -864,30 +766,27 @@ check_5_20() {
     if [ "$mode" = "UTSMode=host" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Host UTS namespace being shared with: $c"
+        warn -s "$check"
+        warn "      * Host UTS namespace being shared with: $c"
         utcns_shared_containers="$utcns_shared_containers $c"
         fail=1
       else
-        warn "     * Host UTS namespace being shared with: $c"
+        warn "      * Host UTS namespace being shared with: $c"
         utcns_shared_containers="$utcns_shared_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
   fi
 }
 
-# 5.21
 check_5_21() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -896,8 +795,6 @@ check_5_21() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   seccomp_disabled_containers=""
   for c in $containers; do
@@ -905,30 +802,27 @@ check_5_21() {
       grep -E 'seccomp:unconfined|seccomp=unconfined' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Default seccomp profile disabled: $c"
+        warn -s "$check"
+        warn "      * Default seccomp profile disabled: $c"
         seccomp_disabled_containers="$seccomp_disabled_containers $c"
         fail=1
       else
-        warn "     * Default seccomp profile disabled: $c"
+        warn "      * Default seccomp profile disabled: $c"
         seccomp_disabled_containers="$seccomp_disabled_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with default secomp profile disabled
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
   fi
 }
 
-# 5.22
 check_5_22() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -937,15 +831,12 @@ check_5_22() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "NOTE"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "NOTE"
 }
 
-# 5.23
 check_5_23() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -954,15 +845,12 @@ check_5_23() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "NOTE"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "NOTE"
 }
 
-# 5.24
 check_5_24() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -970,8 +858,6 @@ check_5_24() {
   local desc="Ensure that cgroup usage is confirmed (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   unexpected_cgroup_containers=""
@@ -981,30 +867,27 @@ check_5_24() {
     if [ "$mode" != "CgroupParent=x" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Confirm cgroup usage: $c"
+        warn -s "$check"
+        warn "      * Confirm cgroup usage: $c"
         unexpected_cgroup_containers="$unexpected_cgroup_containers $c"
         fail=1
       else
-        warn "     * Confirm cgroup usage: $c"
+        warn "      * Confirm cgroup usage: $c"
         unexpected_cgroup_containers="$unexpected_cgroup_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
   fi
 }
 
-# 5.25
 check_5_25() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
   local id="5.25"
@@ -1012,38 +895,33 @@ check_5_25() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   addprivs_containers=""
   for c in $containers; do
     if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Privileges not restricted: $c"
+        warn -s "$check"
+        warn "      * Privileges not restricted: $c"
         addprivs_containers="$addprivs_containers $c"
         fail=1
       else
-        warn "     * Privileges not restricted: $c"
+        warn "      * Privileges not restricted: $c"
         addprivs_containers="$addprivs_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with capability to acquire additional privileges
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers without restricted privileges" "$addprivs_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers without restricted privileges" "$addprivs_containers"
   fi
 }
 
-# 5.26
 check_5_26() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1052,36 +930,31 @@ check_5_26() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   nohealthcheck_containers=""
   for c in $containers; do
     if ! docker inspect --format '{{ .Id }}: Health={{ .State.Health.Status }}' "$c" 2>/dev/null 1>&2; then
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Health check not set: $c"
+        warn -s "$check"
+        warn "      * Health check not set: $c"
         nohealthcheck_containers="$nohealthcheck_containers $c"
         fail=1
       else
-        warn "     * Health check not set: $c"
+        warn "      * Health check not set: $c"
         nohealthcheck_containers="$nohealthcheck_containers $c"
       fi
     fi
   done
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers without health check" "$nohealthcheck_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers without health check" "$nohealthcheck_containers"
   fi
 }
 
-# 5.27
 check_5_27() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1090,15 +963,12 @@ check_5_27() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  info "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  info -c "$check"
+  logcheckresult "INFO"
 }
 
-# 5.28
 check_5_28() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1106,8 +976,6 @@ check_5_28() {
   local desc="Ensure that the PIDs cgroup limit is used (Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   nopids_limit_containers=""
@@ -1117,30 +985,27 @@ check_5_28() {
     if [ "$pidslimit" = "0" ] || [  "$pidslimit" = "<nil>" ] || [  "$pidslimit" = "-1" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * PIDs limit not set: $c"
+        warn -s "$check"
+        warn "      * PIDs limit not set: $c"
         nopids_limit_containers="$nopids_limit_containers $c"
         fail=1
       else
-        warn "     * PIDs limit not set: $c"
+        warn "      * PIDs limit not set: $c"
         nopids_limit_containers="$nopids_limit_containers $c"
       fi
     fi
   done
   # We went through all the containers and found all with PIDs limit
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
   fi
 }
 
-# 5.29
 check_5_29() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1148,8 +1013,6 @@ check_5_29() {
   local desc="Ensure that Docker's default bridge "docker0" is not used (Not Scored)"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
-
-  totalChecks=$((totalChecks + 1))
 
   fail=0
   docker_network_containers=""
@@ -1161,7 +1024,7 @@ check_5_29() {
 
         if [ -n "$docker0Containers" ]; then
           if [ $fail -eq 0 ]; then
-            info "$check"
+            info -c "$check"
             fail=1
           fi
           for c in $docker0Containers; do
@@ -1172,28 +1035,24 @@ check_5_29() {
               cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
             fi
             if [ -n "$cName" ]; then
-              info "     * Container in docker0 network: $cName"
+              info "      * Container in docker0 network: $cName"
               docker_network_containers="$docker_network_containers $c:$cName"
             fi
           done
         fi
-      currentScore=$((currentScore + 0))
     fi
   done
   # We went through all the containers and found none in docker0 network
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -c "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "INFO" "Containers using docker0 network" "$docker_network_containers"
-      currentScore=$((currentScore + 0))
+      logcheckresult "INFO" "Containers using docker0 network" "$docker_network_containers"
   fi
 }
 
-# 5.30
 check_5_30() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1202,38 +1061,33 @@ check_5_30() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   hostns_shared_containers=""
   for c in $containers; do
     if docker inspect --format '{{ .HostConfig.UsernsMode }}' "$c" 2>/dev/null | grep -i 'host' >/dev/null 2>&1; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Namespace shared: $c"
+        warn -s "$check"
+        warn "      * Namespace shared: $c"
         hostns_shared_containers="$hostns_shared_containers $c"
         fail=1
       else
-        warn "     * Namespace shared: $c"
+        warn "      * Namespace shared: $c"
         hostns_shared_containers="$hostns_shared_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with host's user namespace shared
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
   fi
 }
 
-# 5.31
 check_5_31() {
-  if [ "$running_containers" -ne 1 ]; then
+  if [ -z "$containers" ]; then
     return
   fi
 
@@ -1242,32 +1096,28 @@ check_5_31() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-
   fail=0
   docker_sock_containers=""
   for c in $containers; do
     if docker inspect --format '{{ .Mounts }}' "$c" 2>/dev/null | grep 'docker.sock' >/dev/null 2>&1; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
-        warn "$check"
-        warn "     * Docker socket shared: $c"
+        warn -s "$check"
+        warn "      * Docker socket shared: $c"
         docker_sock_containers="$docker_sock_containers $c"
         fail=1
       else
-        warn "     * Docker socket shared: $c"
+        warn "      * Docker socket shared: $c"
         docker_sock_containers="$docker_sock_containers $c"
       fi
     fi
   done
   # We went through all the containers and found none with docker.sock shared
   if [ $fail -eq 0 ]; then
-      pass "$check"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
+      pass -s "$check"
+      logcheckresult "PASS"
   else
-      resulttestjson "WARN" "Containers sharing docker socket" "$docker_sock_containers"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Containers sharing docker socket" "$docker_sock_containers"
   fi
 }
 

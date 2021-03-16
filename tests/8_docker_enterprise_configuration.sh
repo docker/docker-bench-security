@@ -29,7 +29,6 @@ check_8_1() {
   info "$check"
 }
 
-# 8.1.1
 check_8_1_1() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -40,13 +39,10 @@ check_8_1_1() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.2
 check_8_1_2() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -57,13 +53,10 @@ check_8_1_2() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.3
 check_8_1_3() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -74,13 +67,10 @@ check_8_1_3() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.4
 check_8_1_4() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -91,13 +81,10 @@ check_8_1_4() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.5
 check_8_1_5() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -108,13 +95,10 @@ check_8_1_5() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.6
 check_8_1_6() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -125,13 +109,10 @@ check_8_1_6() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
-# 8.1.7
 check_8_1_7() {
   if [ "$enterprise_license" -ne 1 ]; then
     return
@@ -142,10 +123,8 @@ check_8_1_7() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
 check_8_2() {
@@ -169,10 +148,8 @@ check_8_2_1() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
-  note "$check"
-  resulttestjson "INFO"
-  currentScore=$((currentScore + 0))
+  note -c "$check"
+  logcheckresult "INFO"
 }
 
 check_8_end() {
