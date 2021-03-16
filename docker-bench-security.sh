@@ -10,8 +10,8 @@
 version='1.3.5'
 
 # Load dependencies
-. ./functions_lib.sh
-. ./helper_lib.sh
+. ./functions/functions_lib.sh
+. ./functions/helper_lib.sh
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
@@ -24,7 +24,7 @@ readonly myname
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
-req_progs='awk docker grep stat tee tail wc xargs truncate'
+req_progs='awk docker grep stat tee tail wc xargs truncate sed'
 for p in $req_progs; do
   command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
 done
@@ -64,13 +64,15 @@ Options:
   -b           optional  Do not print colors
   -h           optional  Print this help message
   -l FILE      optional  Log output in FILE, inside container if run using docker
-  -c CHECK     optional  Comma delimited list of specific check(s)
-  -e CHECK     optional  Comma delimited list of specific check(s) to exclude
+  -u USERS     optional  Comma delimited list of trusted docker user(s)
+  -c CHECK     optional  Comma delimited list of specific check(s) id
+  -e CHECK     optional  Comma delimited list of specific check(s) id to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
+  -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
 
-Complete list of checks: <https://github.com/docker/docker-bench-security/blob/master/functions_lib.sh>
+Complete list of checks: <https://github.com/docker/docker-bench-security/blob/master/tests/>
 Full documentation: <https://github.com/docker/docker-bench-security>
 Released under the Apache-2.0 License.
 EOF
@@ -79,22 +81,28 @@ EOF
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts bhl:c:e:i:x:t:n: args
+while getopts bhl:u:c:e:i:x:t:n:p args
 do
   case $args in
   b) nocolor="nocolor";;
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
+  u) dockertrustusers="$OPTARG" ;;
   c) check="$OPTARG" ;;
   e) checkexclude="$OPTARG" ;;
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
   n) limit="$OPTARG" ;;
+  p) printremediation="0" ;;
   *) usage; exit 1 ;;
   esac
 done
 
+# Default values
 if [ -z "$logger" ]; then
+  if [ ! -d log ]; then
+    mkdir log
+  fi
   logger="log/${myname}.log"
 fi
 
@@ -102,15 +110,19 @@ if [ -z "$limit" ]; then
   limit=0
 fi
 
+if [ -z "$printremediation" ]; then
+  printremediation="1"
+fi
+
 # Load output formating
-. ./output_lib.sh
+. ./functions/output_lib.sh
 
 yell_info
 
 # Warn if not root
 ID=$(id -u)
 if [ "x$ID" != "x0" ]; then
-  warn "Some tests might require root to run"
+  warn "$(yell 'Some tests might require root to run')\n"
   sleep 3
 fi
 
@@ -163,12 +175,6 @@ main () {
     images=$(docker images -q | grep -v "$benchcont")
   fi
 
-  if [ -z "$containers" ]; then
-    running_containers=0
-  else
-    running_containers=1
-  fi
-
   for test in tests/*.sh; do
     . ./"$test"
   done
@@ -178,7 +184,7 @@ main () {
     cis
   elif [ -z "$check" ]; then
     # No check defined but excludes defined set to calls in cis() function
-    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)
+    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)
   fi
 
   for c in $(echo "$check" | sed "s/,/ /g"); do
@@ -198,7 +204,7 @@ main () {
         continue
       elif echo "$c" | grep -vE 'check_[0-9]|check_[a-z]' 2>/dev/null 1>&2; then
         # Function not a check, fill loop_checks with all check from function
-        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)"
+        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)"
       else
         # Just one check
         loop_checks="$c"
@@ -213,7 +219,7 @@ main () {
     fi
   done
 
-  if [ -n "${globalRemediation}" ]; then
+  if [ -n "${globalRemediation}" ] && [ "$printremediation" = "1" ]; then
     logit "\n\n${bldylw}Section B - Remediation measures${txtrst}"
     logit "${globalRemediation}"
   fi
