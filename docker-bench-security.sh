@@ -7,7 +7,7 @@
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # --------------------------------------------------------------------------------------------
 
-version='1.3.5'
+version='1.3.6'
 
 # Load dependencies
 . ./functions/functions_lib.sh
