@@ -12,6 +12,8 @@ check_7() {
 check_7_1() {
   local id="7.1"
   local desc="Ensure swarm mode is not Enabled, if not needed (Scored)"
+  local remediation="If swarm mode has been enabled on a system in error, you should run the command: docker swarm leave"
+  local remediationImpact="Disabling swarm mode will impact the operation of Docker Enterprise components if these are in use."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -27,6 +29,8 @@ check_7_1() {
 check_7_2() {
   local id="7.2"
   local desc="Ensure that the minimum number of manager nodes have been created in a swarm (Scored)"
+  local remediation="If an excessive number of managers is configured, the excess nodes can be demoted to workers using command: docker node demote <manager node ID to be demoted>"
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -48,6 +52,8 @@ check_7_2() {
 check_7_3() {
   local id="7.3"
   local desc="Ensure that swarm services are bound to a specific host interface (Scored)"
+  local remediation="Resolving this issues requires re-initialization of the swarm, specifying a specific interface for the --listen-addr parameter."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -69,6 +75,8 @@ check_7_3() {
 check_7_4() {
   local id="7.4"
   local desc="Ensure that all Docker swarm overlay networks are encrypted (Scored)"
+  local remediation="You should create overlay networks the with --opt encrypted flag."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -98,6 +106,8 @@ check_7_4() {
 check_7_5() {
   local id="7.5"
   local desc="Ensure that Docker's secret management commands are used for managing secrets in a swarm cluster (Not Scored)"
+  local remediation="You should follow the docker secret documentation and use it to manage secrets effectively."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -118,6 +128,8 @@ check_7_5() {
 check_7_6() {
   local id="7.6"
   local desc="Ensure that swarm manager is run in auto-lock mode (Scored)"
+  local remediation="If you are initializing a swarm, use the command: docker swarm init --autolock. If you want to set --autolock on an existing swarm manager node, use the command: docker swarm update --autolock."
+  local remediationImpact="A swarm in auto-lock mode will not recover from a restart without manual intervention from an administrator to enter the unlock key. This may not always be desirable, and should be reviewed at a policy level."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -138,6 +150,8 @@ check_7_6() {
 check_7_7() {
   local id="7.7"
   local desc="Ensure that the swarm manager auto-lock key is rotated periodically (Not Scored)"
+  local remediation="You should run the command docker swarm unlock-key --rotate to rotate the keys. To facilitate auditing of this recommendation, you should maintain key rotation records and ensure that you establish a pre-defined frequency for key rotation."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -153,6 +167,8 @@ check_7_7() {
 check_7_8() {
   local id="7.8"
   local desc="Ensure that node certificates are rotated as appropriate (Not Scored)"
+  local remediation="You should run the command docker swarm update --cert-expiry 48h to set the desired expiry time on the node certificate."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -173,6 +189,8 @@ check_7_8() {
 check_7_9() {
   local id="7.9"
   local desc="Ensure that CA certificates are rotated as appropriate (Not Scored)"
+  local remediation="You should run the command docker swarm ca --rotate to rotate a certificate."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -188,6 +206,8 @@ check_7_9() {
 check_7_10() {
   local id="7.10"
   local desc="Ensure that management plane traffic is separated from data plane traffic (Not Scored)"
+  local remediation="You should initialize the swarm with dedicated interfaces for management and data planes respectively. Example: docker swarm init --advertise-addr=192.168.0.1 --data-path-addr=17.1.0.3"
+  local remediationImpact="This requires two network interfaces per node."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
