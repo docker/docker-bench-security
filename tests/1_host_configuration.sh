@@ -19,6 +19,8 @@ check_1_1() {
 check_1_1_1() {
   local id="1.1.1"
   local desc="Ensure the container host has been Hardened (Not Scored)"
+  local remediation="You may consider various Security Benchmarks for your container host."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -29,6 +31,8 @@ check_1_1_1() {
 check_1_1_2() {
   local id="1.1.2"
   local desc="Ensure that the version of Docker is up to date (Not Scored)"
+  local remediation="You should monitor versions of Docker releases and make sure your software is updated as required."
+  local remediationImpact="You should perform a risk assessment regarding Docker version updates and review how they may impact your operations."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -60,6 +64,7 @@ check_1_2_1() {
   local id="1.2.1"
   local desc="Ensure a separate partition for containers has been created (Scored)"
   local remediation="For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
+  local remediationImpact="None."
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
