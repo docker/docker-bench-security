@@ -12,6 +12,8 @@ check_6() {
 check_6_1() {
   local id="6.1"
   local desc="Ensure that image sprawl is avoided (Not Scored)"
+  local remediation="You should keep only the images that you actually need and establish a workflow to remove old or stale images from the host. Additionally, you should use features such as pull-by-digest to get specific images from the registry."
+  local remediationImpact="docker system prune -a removes all exited containers as well as all images and volumes that are not referenced by running containers, including for UCP and DTR."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -36,6 +38,8 @@ check_6_1() {
 check_6_2() {
   local id="6.2"
   local desc="Ensure that container sprawl is avoided (Not Scored)"
+  local remediation="You should periodically check your container inventory on each host and clean up containers which are not in active use with the command: docker container prune"
+  local remediationImpact="You should retain containers that are actively in use, and delete ones which are no longer needed."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
