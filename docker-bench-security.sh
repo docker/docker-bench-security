@@ -132,7 +132,7 @@ fi
 totalChecks=0
 currentScore=0
 
-logit "Initializing $(date +%Y-%m-%dT%H:%m:%S%:z)\n"
+logit "Initializing $(date +%Y-%m-%dT%H:%M:%S%:z)\n"
 appendjson
 beginjson "$version" "$(date +%s)"
 
