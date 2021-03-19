@@ -163,7 +163,7 @@ logcheckresult() {
   fi
 
   # Log remediation measure to JSON
-  if [ -n "$remediation" ] && [ "$1" != "PASS" ]; then
+  if [ -n "$remediation" ] && [ "$1" != "PASS" ] && [ "$printremediation" = "1" ]; then
     printf ", \"remediation\": \"%s\"" "$remediation" | tee -a "$logger.json" 2>/dev/null 1>&2
     if [ -n "$remediationImpact" ]; then
       printf ", \"remediation-impact\": \"%s\"" "$remediationImpact" | tee -a "$logger.json" 2>/dev/null 1>&2
