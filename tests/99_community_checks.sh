@@ -11,6 +11,8 @@ check_c() {
 check_c_1() {
   local id="C.1"
   local desc="This is a example check for a Scored check"
+  local remediation="This is an example remediation measure for a Scored check"
+  local remediationImpact="This is an example remediation impact for a Scored check"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -29,6 +31,8 @@ check_c_1() {
 check_c_1_1() {
   local id="C.1.1"
   local desc="This is a example check for a Not Scored check"
+  local remediation="This is an example remediation measure for a Not Scored check"
+  local remediationImpact="This is an example remediation impact for a Not Scored check"
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -50,6 +54,8 @@ check_c_2() {
 
   local id="C.2"
   local desc="Ensure operations on legacy registry (v1) are Disabled"
+  local remediation="Start docker daemon with --disable-legacy-registry=false flag. Starting with Docker 17.12, support for V1 registries has been removed, and the --disable-legacy-registry flag can no longer be used."
+  local remediationImpact="Prevents the docker daemon from pull, push, and login operations against v1 registries."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 

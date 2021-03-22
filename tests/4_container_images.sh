@@ -12,6 +12,8 @@ check_4() {
 check_4_1() {
   local id="4.1"
   local desc="Ensure that a user for the container has been created (Scored)"
+  local remediation="You should ensure that the Dockerfile for each container image contains the information: USER <username or ID>. If there is no specific user created in the container base image, then make use of the useradd command to add a specific user before the USER instruction in the Dockerfile."
+  local remediationImpact="Running as a non-root user can present challenges where you wish to bind mount volumes from the underlying host. In this case, care should be taken to ensure that the user running the contained process can read and write to the bound directory, according to their requirements."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -58,6 +60,8 @@ check_4_1() {
 check_4_2() {
   local id="4.2"
   local desc="Ensure that containers use only trusted base images (Not Scored)"
+  local remediation="Configure and use Docker Content trust. View the history of each Docker image to evaluate its risk, dependent on the sensitivity of the application you wish to deploy using it. Scan Docker images for vulnerabilities at regular intervals."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -68,6 +72,8 @@ check_4_2() {
 check_4_3() {
   local id="4.3"
   local desc="Ensure that unnecessary packages are not installed in the container (Not Scored)"
+  local remediation="You should not install anything within the container that is not required. You should consider using a minimal base image if you can. Some of the options available include BusyBox and Alpine. Not only can this trim your image size considerably, but there would also be fewer pieces of software which could contain vectors for attack."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -78,6 +84,8 @@ check_4_3() {
 check_4_4() {
   local id="4.4"
   local desc="Ensure images are scanned and rebuilt to include security patches (Not Scored)"
+  local remediation="Images should be re-built ensuring that the latest version of the base images are used, to keep the operating system patch level at an appropriate level. Once the images have been re-built, containers should be re-started making use of the updated images."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -105,6 +113,8 @@ check_4_5() {
 check_4_6() {
   local id="4.6"
   local desc="Ensure that HEALTHCHECK instructions have been added to container images (Scored)"
+  local remediation="You should follow the Docker documentation and rebuild your container images to include the HEALTHCHECK instruction."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -137,6 +147,8 @@ check_4_6() {
 check_4_7() {
   local id="4.7"
   local desc="Ensure update instructions are not used alone in the Dockerfile (Not Scored)"
+  local remediation="You should use update instructions together with install instructions and version pinning for packages while installing them. This prevent caching and force the extraction of the required versions. Alternatively, you could use the --no-cache flag during the docker build process to avoid using cached layers."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -166,6 +178,8 @@ check_4_7() {
 check_4_8() {
   local id="4.8"
   local desc="Ensure setuid and setgid permissions are removed (Not Scored)"
+  local remediation="You should allow setuid and setgid permissions only on executables which require them. You could remove these permissions at build time by adding the following command in your Dockerfile, preferably towards the end of the Dockerfile: RUN find / -perm /6000 -type f -exec chmod a-s {} ; || true"
+  local remediationImpact="The above command would break all executables that depend on setuid or setgid permissions including legitimate ones. You should therefore be careful to modify the command to suit your requirements so that it does not reduce the permissions of legitimate programs excessively. Because of this, you should exercise a degree of caution and examine all processes carefully before making this type of modification in order to avoid outages."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -176,6 +190,8 @@ check_4_8() {
 check_4_9() {
   local id="4.9"
   local desc="Ensure that COPY is used instead of ADD in Dockerfiles (Not Scored)"
+  local remediation="You should use COPY rather than ADD instructions in Dockerfiles."
+  local remediationImpact="Care needs to be taken in implementing this control if the application requires functionality that is part of the ADD instruction, for example, if you need to retrieve files from remote URLS."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -206,6 +222,8 @@ check_4_9() {
 check_4_10() {
   local id="4.10"
   local desc="Ensure secrets are not stored in Dockerfiles (Not Scored)"
+  local remediation="Do not store any kind of secrets within Dockerfiles. Where secrets are required during the build process, make use of a secrets management tool, such as the buildkit builder included with Docker."
+  local remediationImpact="A proper secrets management process will be required for Docker image building."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -216,6 +234,8 @@ check_4_10() {
 check_4_11() {
   local id="4.11"
   local desc="Ensure only verified packages are are installed (Not Scored)"
+  local remediation="You should use a secure package distribution mechanism of your choice to ensure the authenticity of software packages."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 

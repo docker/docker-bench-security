@@ -12,7 +12,12 @@ check_3() {
 check_3_1() {
   local id="3.1"
   local desc="Ensure that the docker.service file ownership is set to root:root (Scored)"
-  local remediation="Find out the file location: systemctl show -p FragmentPath docker.service. If the file does not exist, this recommendation is not applicable. If the file does exist, you should run the command chown root:root <path>, in order to set the ownership and group ownership for the file to root."
+  local remediation="Find out the file location: systemctl show -p FragmentPath docker.service. 
+
+IFind out the file location:
+systemctl show -p FragmentPath docker.service
+
+"
   local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -37,7 +42,7 @@ check_3_1() {
 check_3_2() {
   local id="3.2"
   local desc="Ensure that docker.service file permissions are appropriately set (Scored)"
-  local remediation="Find out the file location: systemctl show -p FragmentPath docker.service. If the file does not exist, this recommendation is not applicable. If the file exists, run the command chmod 644 <path> to set the file permissions to 644."
+  local remediation=""
   local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -62,7 +67,7 @@ check_3_2() {
 check_3_3() {
   local id="3.3"
   local desc="Ensure that docker.socket file ownership is set to root:root (Scored)"
-  local remediation="Find out the file location: systemctl show -p FragmentPath docker.socket. If the file does not exist, this recommendation is not applicable. If the file exists, run the command chown root:root <path> to set the ownership and group ownership for the file to root."
+  local remediation=""
   local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
@@ -87,7 +92,7 @@ check_3_3() {
 check_3_4() {
   local id="3.4"
   local desc="Ensure that docker.socket file permissions are set to 644 or more restrictive (Scored)"
-  local remediation="Find out the file location: systemctl show -p FragmentPath docker.socket. If the file does not exist, this recommendation is not applicable. If the file does exist, you should run the command chmod 644 <path> to set the file permissions to 644."
+  local remediation=""
   local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"

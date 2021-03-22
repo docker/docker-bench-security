@@ -27,6 +27,8 @@ check_5_1() {
 
   local id="5.1"
   local desc="Ensure that, if applicable, an AppArmor Profile is enabled (Scored)"
+  local remediation="If AppArmor is applicable for your Linux OS, you should enable it. Alternatively, Docker's default AppArmor policy can be used."
+  local remediationImpact="The container will have the security controls defined in the AppArmor profile. It should be noted that if the AppArmor profile is misconfigured, this may cause issues with the operation of the container."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -64,6 +66,8 @@ check_5_2() {
 
   local id="5.2"
   local desc="Ensure that, if applicable, SELinux security options are set (Scored)"
+  local remediation="Set the SELinux State. Set the SELinux Policy. Create or import a SELinux policy template for Docker containers. Start Docker in daemon mode with SELinux enabled. Start your Docker container using the security options."
+  local remediationImpact="Any restrictions defined in the SELinux policy will be applied to your containers. It should be noted that if your SELinux policy is misconfigured, this may have an impact on the correct operation of the affected containers."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -101,6 +105,8 @@ check_5_3() {
 
   local id="5.3"
   local desc="Ensure that Linux kernel capabilities are restricted within containers (Scored)"
+  local remediation="You could remove all the currently configured capabilities and then restore only the ones you specifically use: docker run --cap-drop=all --cap-add={<Capability 1>,<Capability 2>} <Run arguments> <Container Image Name or ID> <Command>"
+  local remediationImpact="Restrictions on processes within a container are based on which Linux capabilities are in force. Removal of the NET_RAW capability prevents the container from creating raw sockets which is good security practice under most circumstances, but may affect some networking utilities."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -141,6 +147,8 @@ check_5_4() {
 
   local id="5.4"
   local desc="Ensure that privileged containers are not used (Scored)"
+  local remediation="You should not run containers with the --privileged flag."
+  local remediationImpact="If you start a container without the --privileged flag, it will not have excessive default capabilities."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -178,6 +186,8 @@ check_5_5() {
 
   local id="5.5"
   local desc="Ensure sensitive host system directories are not mounted on containers (Scored)"
+  local remediation="You should not mount directories which are security sensitive on the host within containers, especially in read-write mode."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -235,6 +245,8 @@ check_5_6() {
 
   local id="5.6"
   local desc="Ensure sshd is not run within containers (Scored)"
+  local remediation="Uninstall the SSH daemon from the container and use docker exec to enter a container on the remote host."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -286,6 +298,8 @@ check_5_7() {
 
   local id="5.7"
   local desc="Ensure privileged ports are not mapped within containers (Scored)"
+  local remediation="You should not map container ports to privileged host ports when starting a container. You should also, ensure that there is no such container to host privileged port mapping declarations in the Dockerfile."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -327,6 +341,8 @@ check_5_8() {
 
   local id="5.8"
   local desc="Ensure that only needed ports are open on the container (Not Scored)"
+  local remediation="You should ensure that the Dockerfile for each container image only exposes needed ports."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -341,6 +357,8 @@ check_5_9() {
 
   local id="5.9"
   local desc="Ensure that the host's network namespace is not shared (Scored)"
+  local remediation="You should not pass the --net=host option when starting any container."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -378,6 +396,8 @@ check_5_10() {
 
   local id="5.10"
   local desc="Ensure that the memory usage for containers is limited (Scored)"
+  local remediation="You should run the container with only as much memory as it requires by using the --memory argument."
+  local remediationImpact="If correct memory limits are not set on each container, one process can expand its usage and cause other containers to run out of resources."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -419,6 +439,8 @@ check_5_11() {
 
   local id="5.11"
   local desc="Ensure that CPU priority is set appropriately on containers (Scored)"
+  local remediation="You should manage the CPU runtime between your containers dependent on their priority within your organization. To do so start the container using the --cpu-shares argument."
+  local remediationImpact="If you do not correctly assign CPU thresholds, the container process may run out of resources and become unresponsive. If CPU resources on the host are not constrainted, CPU shares do not place any restrictions on individual resources."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -460,6 +482,8 @@ check_5_12() {
 
   local id="5.12"
   local desc="Ensure that the container's root filesystem is mounted as read only (Scored)"
+  local remediation="You should add a --read-only flag at a container's runtime to enforce the container's root filesystem being mounted as read only."
+  local remediationImpact="Enabling --read-only at container runtime may break some container OS packages if a data writing strategy is not defined. You should define what the container's data should and should not persist at runtime in order to decide which strategy to use."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -497,6 +521,8 @@ check_5_13() {
 
   local id="5.13"
   local desc="Ensure that incoming container traffic is bound to a specific host interface (Scored)"
+  local remediation="You should bind the container port to a specific host interface on the desired host port. Example: docker run --detach --publish 10.2.3.4:49153:80 nginx In this example, the container port 80 is bound to the host port on 49153 and would accept incoming connection only from the 10.2.3.4 external interface."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -534,6 +560,8 @@ check_5_14() {
 
   local id="5.14"
   local desc="Ensure that the 'on-failure' container restart policy is set to '5' (Scored)"
+  local remediation="If you wish a container to be automatically restarted, a sample command is docker run --detach --restart=on-failure:5 nginx"
+  local remediationImpact="If this option is set, a container will only attempt to restart itself 5 times."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -571,6 +599,8 @@ check_5_15() {
 
   local id="5.15"
   local desc="Ensure that the host's process namespace is not shared (Scored)"
+  local remediation="You should not start a container with the --pid=host argument."
+  local remediationImpact="Container processes cannot see processes on the host system."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -608,6 +638,8 @@ check_5_16() {
 
   local id="5.16"
   local desc="Ensure that the host's IPC namespace is not shared (Scored)"
+  local remediation="You should not start a container with the --ipc=host argument."
+  local remediationImpact="Shared memory segments are used in order to accelerate interprocess communications, commonly in high-performance applications. If this type of application is containerized into multiple containers, you might need to share the IPC namespace of the containers in order to achieve high performance. Under these circumstances, you should still only share container specific IPC namespaces and not the host IPC namespace."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -645,6 +677,8 @@ check_5_17() {
 
   local id="5.17"
   local desc="Ensure that host devices are not directly exposed to containers (Not Scored)"
+  local remediation="You should not directly expose host devices to containers. If you do need to expose host devices to containers, you should use granular permissions as appropriate to your organization."
+  local remediationImpact="You would not be able to use host devices directly within containers."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -682,6 +716,8 @@ check_5_18() {
 
   local id="5.18"
   local desc="Ensure that the default ulimit is overwritten at runtime if needed (Not Scored)"
+  local remediation="You should only override the default ulimit settings if needed in a specific case."
+  local remediationImpact="If ulimits are not set correctly, overutilization by individual containers could make the host system unusable."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -719,6 +755,8 @@ check_5_19() {
 
   local id="5.19"
   local desc="Ensure mount propagation mode is not set to shared (Scored)"
+  local remediation="Do not mount volumes in shared mode propagation."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -755,6 +793,8 @@ check_5_20() {
 
   local id="5.20"
   local desc="Ensure that the host's UTS namespace is not shared (Scored)"
+  local remediation="You should not start a container with the --uts=host argument."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -792,6 +832,8 @@ check_5_21() {
 
   local id="5.21"
   local desc="Ensurethe default seccomp profile is not Disabled (Scored)"
+  local remediation="By default, seccomp profiles are enabled. You do not need to do anything unless you want to modify and use a modified seccomp profile."
+  local remediationImpact="With Docker 1.10 and greater, the default seccomp profile blocks syscalls, regardless of -- cap-add passed to the container."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -828,6 +870,8 @@ check_5_22() {
 
   local id="5.22"
   local desc="Ensure that docker exec commands are not used with the privileged option (Scored)"
+  local remediation="You should not use the --privileged option in docker exec commands."
+  local remediationImpact="If you need enhanced capabilities within a container, then run it with all the permissions it requires. These should be specified individually."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -842,6 +886,8 @@ check_5_23() {
 
   local id="5.23"
   local desc="Ensure that docker exec commands are not used with the user=root option (Not Scored)"
+  local remediation="You should not use the --user=root option in docker exec commands."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -856,6 +902,8 @@ check_5_24() {
 
   local id="5.24"
   local desc="Ensure that cgroup usage is confirmed (Scored)"
+  local remediation="You should not use the --cgroup-parent option within the docker run command unless strictly required."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -892,6 +940,8 @@ check_5_25() {
   fi
   local id="5.25"
   local desc="Ensure that the container is restricted from acquiring additional privileges (Scored)"
+  local remediation="You should start your container with the options: docker run --rm -it --security-opt=no-new-privileges ubuntu bash"
+  local remediationImpact="The no_new_priv option prevents LSMs like SELinux from allowing processes to acquire new privileges."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -927,6 +977,8 @@ check_5_26() {
 
   local id="5.26"
   local desc="Ensure that container health is checked at runtime (Scored)"
+  local remediation="You should run the container using the --health-cmd parameter."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -960,6 +1012,8 @@ check_5_27() {
 
   local id="5.27"
   local desc="Ensure that Docker commands always make use of the latest version of their image (Not Scored)"
+  local remediation="You should use proper version pinning mechanisms (the <latest> tag which is assigned by default is still vulnerable to caching attacks) to avoid extracting cached older versions. Version pinning mechanisms should be used for base images, packages, and entire images. You can customize version pinning rules according to your requirements."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -974,6 +1028,8 @@ check_5_28() {
 
   local id="5.28"
   local desc="Ensure that the PIDs cgroup limit is used (Scored)"
+  local remediation="Use --pids-limit flag with an appropriate value when launching the container."
+  local remediationImpact="Set the PIDs limit value as appropriate. Incorrect values might leave containers unusable."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -1011,6 +1067,8 @@ check_5_29() {
 
   local id="5.29"
   local desc="Ensure that Docker's default bridge "docker0" is not used (Not Scored)"
+  local remediation="You should follow the Docker documentation and set up a user-defined network. All the containers should be run in this network."
+  local remediationImpact="User-defined networks need to be configured and managed in line with organizational security policy."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -1058,6 +1116,8 @@ check_5_30() {
 
   local id="5.30"
   local desc="Ensure that the host's user namespaces are not shared (Scored)"
+  local remediation="You should not share user namespaces between host and containers."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
@@ -1093,6 +1153,8 @@ check_5_31() {
 
   local id="5.31"
   local desc="Ensure that the Docker socket is not mounted inside any containers (Scored)"
+  local remediation="You should ensure that no containers mount docker.sock as a volume."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
