@@ -15,7 +15,7 @@ version='1.3.6'
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
-myname=$(basename "${this_path}")     ## file name of this script.
+myname=$(basename "${this_path%.*}")     ## file name of this script.
 
 readonly version
 readonly this_path
@@ -50,7 +50,7 @@ Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
 Checks for dozens of common best-practices around deploying Docker containers in production.
 Inspired by the CIS Docker Benchmark v1.2.0.
 
-Usage: ${myname} [OPTIONS]
+Usage: ${myname}.sh [OPTIONS]
 
 Example:
   - Only run check "2.2 - Ensure the logging level is set to 'info'":
@@ -138,7 +138,7 @@ beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
-  logit "\n${bldylw}Section A - Checks result${txtrsr}"
+  logit "\n${bldylw}Section A - Check results${txtrsr}"
   globalRemediation=""
 
   # Get configuration location
