@@ -1,17 +1,17 @@
 #!/bin/sh
 
+bldred='\033[1;31m' # Bold Red
+bldgrn='\033[1;32m' # Bold Green
+bldblu='\033[1;34m' # Bold Blue
+bldylw='\033[1;33m' # Bold Yellow
+txtrst='\033[0m'
+
 if [ -n "$nocolor" ] && [ "$nocolor" = "nocolor" ]; then
   bldred=''
   bldgrn=''
   bldblu=''
   bldylw=''
   txtrst=''
-else
-  bldred='\033[1;31m' # Bold Red
-  bldgrn='\033[1;32m' # Bold Green
-  bldblu='\033[1;34m' # Bold Blue
-  bldylw='\033[1;33m' # Bold Yellow
-  txtrst='\033[0m'
 fi
 
 logit () {
@@ -30,9 +30,9 @@ info () {
   if [ "$infoCountCheck" = "true" ]; then
     printf "%b\n" "${bldblu}[INFO]${txtrst} $2" | tee -a "$logger"
     totalChecks=$((totalChecks + 1))
-  else
-    printf "%b\n" "${bldblu}[INFO]${txtrst} $1" | tee -a "$logger"
+    return
   fi
+  printf "%b\n" "${bldblu}[INFO]${txtrst} $1" | tee -a "$logger"
 }
 
 pass () {
@@ -45,14 +45,14 @@ pass () {
     *) exit 1 ;;
     esac
   done
+  if [ "$passScored" = "true" ] || [ "$passCountCheck" = "true" ]; then
+    printf "%b\n" "${bldgrn}[PASS]${txtrst} $2" | tee -a "$logger"
+    totalChecks=$((totalChecks + 1))
+  fi
   if [ "$passScored" = "true" ]; then
-    printf "%b\n" "${bldgrn}[PASS]${txtrst} $2" | tee -a "$logger"
-    totalChecks=$((totalChecks + 1))
     currentScore=$((currentScore + 1))
-  elif [ "$passCountCheck" = "true" ]; then
-    printf "%b\n" "${bldgrn}[PASS]${txtrst} $2" | tee -a "$logger"
-    totalChecks=$((totalChecks + 1))
-  else
+  fi
+  if [ "$passScored" != "true" ] && [ "$passCountCheck" != "true" ]; then
     printf "%b\n" "${bldgrn}[PASS]${txtrst} $1" | tee -a "$logger"
   fi
 }
@@ -70,9 +70,9 @@ warn () {
     printf "%b\n" "${bldred}[WARN]${txtrst} $2" | tee -a "$logger"
     totalChecks=$((totalChecks + 1))
     currentScore=$((currentScore - 1))
-  else
-    printf "%b\n" "${bldred}[WARN]${txtrst} $1" | tee -a "$logger"
+    return
   fi
+  printf "%b\n" "${bldred}[WARN]${txtrst} $1" | tee -a "$logger"
 }
 
 note () {
@@ -87,30 +87,21 @@ note () {
   if [ "$noteCountCheck" = "true" ]; then
     printf "%b\n" "${bldylw}[NOTE]${txtrst} $2" | tee -a "$logger"
     totalChecks=$((totalChecks + 1))
-  else
-    printf "%b\n" "${bldylw}[NOTE]${txtrst} $1" | tee -a "$logger"
-  fi
+    return 
+ fi
+  printf "%b\n" "${bldylw}[NOTE]${txtrst} $1" | tee -a "$logger"
 }
 
 yell () {
   printf "%b\n" "${bldylw}$1${txtrst}\n"
 }
 
-appendjson () {
-  if [ -s "$logger.json" ]; then
-    tail -n 1 "$logger.json" | wc -c | xargs -I {} truncate "$logger.json" -s -{}
-    printf "},\n" | tee -a "$logger.json" 2>/dev/null 1>&2
-  else
-    printf "[" | tee -a "$logger.json" 2>/dev/null 1>&2
-  fi
-}
-
 beginjson () {
-  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s,\n  \"tests\": [" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "{\n  \"dockerbenchsecurity\": \"%s\",\n  \"start\": %s,\n  \"tests\": [" "$1" "$2" | tee "$logger.json" 2>/dev/null 1>&2
 }
 
 endjson (){
-  printf "\n  ], \"checks\": %s, \"score\": %s, \"end\": %s\n}]" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "\n  ],\n  \"checks\": %s,\n  \"score\": %s,\n  \"end\": %s\n}" "$1" "$2" "$3" | tee -a "$logger.json" 2>/dev/null 1>&2
 }
 
 logjson (){
@@ -120,17 +111,17 @@ logjson (){
 SSEP=
 SEP=
 startsectionjson() {
-  printf "%s\n    {\"id\": \"%s\", \"desc\": \"%s\",  \"results\": [" "$SSEP" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "%s\n    {\n      \"id\": \"%s\",\n      \"desc\": \"%s\",\n      \"results\": [" "$SSEP" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
   SEP=
   SSEP=","
 }
 
 endsectionjson() {
-  printf "\n    ]}" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "\n      ]\n    }" | tee -a "$logger.json" 2>/dev/null 1>&2
 }
 
 starttestjson() {
-  printf "%s\n      {\"id\": \"%s\", \"desc\": \"%s\", " "$SEP" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "%s\n        {\n          \"id\": \"%s\",\n          \"desc\": \"%s\",\n          " "$SEP" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
   SEP=","
 }
 
@@ -138,10 +129,14 @@ logcheckresult() {
   # Log to JSON
   if [ $# -eq 1 ]; then
       printf "\"result\": \"%s\"" "$1" | tee -a "$logger.json" 2>/dev/null 1>&2
-  elif [ $# -eq 2 ]; then
+  fi
+
+  if [ $# -eq 2 ] && [ $# -ne 1 ]; then
       # Result also contains details
-      printf "\"result\": \"%s\", \"details\": \"%s\"" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
-  else
+      printf "\"result\": \"%s\",\n          \"details\": \"%s\"" "$1" "$2" | tee -a "$logger.json" 2>/dev/null 1>&2
+  fi
+
+  if [ $# -ne 2 ] && [ $# -ne 1 ]; then
       # Result also includes details and a list of items. Add that directly to details and to an array property "items"
       # Also limit the number of items to $limit, if $limit is non-zero
       if [ $limit != 0 ]; then
@@ -158,18 +153,18 @@ logcheckresult() {
       else
         truncItems=$3
       fi
-      itemsJson=$(printf "["; ISEP=""; ITEMCOUNT=0; for item in $truncItems; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "]")
-      printf "\"result\": \"%s\", \"details\": \"%s: %s\", \"items\": %s" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
+      itemsJson=$(printf "[\n            "; ISEP=""; ITEMCOUNT=0; for item in $truncItems; do printf "%s\"%s\"" "$ISEP" "$item"; ISEP=","; done; printf "\n          ]")
+      printf "\"result\": \"%s\",\n          \"details\": \"%s: %s\",\n          \"items\": %s" "$1" "$2" "$truncItems" "$itemsJson" | tee -a "$logger.json" 2>/dev/null 1>&2
   fi
 
   # Log remediation measure to JSON
   if [ -n "$remediation" ] && [ "$1" != "PASS" ] && [ "$printremediation" = "1" ]; then
-    printf ", \"remediation\": \"%s\"" "$remediation" | tee -a "$logger.json" 2>/dev/null 1>&2
+    printf ",\n          \"remediation\": \"%s\"" "$remediation" | tee -a "$logger.json" 2>/dev/null 1>&2
     if [ -n "$remediationImpact" ]; then
-      printf ", \"remediation-impact\": \"%s\"" "$remediationImpact" | tee -a "$logger.json" 2>/dev/null 1>&2
+      printf ",\n          \"remediation-impact\": \"%s\"" "$remediationImpact" | tee -a "$logger.json" 2>/dev/null 1>&2
     fi
   fi
-  printf "}" | tee -a "$logger.json" 2>/dev/null 1>&2
+  printf "\n        }" | tee -a "$logger.json" 2>/dev/null 1>&2
 
   # Save remediation measure for print log to stdout
   if [ -n "$remediation" ] && [ "$1" != "PASS" ]; then

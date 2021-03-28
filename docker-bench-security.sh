@@ -78,6 +78,14 @@ Released under the Apache-2.0 License.
 EOF
 }
 
+# Default values
+if [ ! -d log ]; then
+  mkdir log
+fi
+logger="log/${myname}.log"
+limit=0
+printremediation="1"
+
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
@@ -98,22 +106,6 @@ do
   esac
 done
 
-# Default values
-if [ -z "$logger" ]; then
-  if [ ! -d log ]; then
-    mkdir log
-  fi
-  logger="log/${myname}.log"
-fi
-
-if [ -z "$limit" ]; then
-  limit=0
-fi
-
-if [ -z "$printremediation" ]; then
-  printremediation="1"
-fi
-
 # Load output formating
 . ./functions/output_lib.sh
 
@@ -133,7 +125,6 @@ totalChecks=0
 currentScore=0
 
 logit "Initializing $(date +%Y-%m-%dT%H:%M:%S%:z)\n"
-appendjson
 beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
