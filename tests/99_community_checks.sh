@@ -19,13 +19,15 @@ check_c_1() {
   if docker info --format='{{ .Architecture }}' | grep 'x86_64' 2>/dev/null 1>&2; then
     pass -s "$check"
     logcheckresult "PASS"
-  elif docker info --format='{{ .Architecture }}' | grep 'aarch64' 2>/dev/null 1>&2; then
+    return
+  fi
+  if docker info --format='{{ .Architecture }}' | grep 'aarch64' 2>/dev/null 1>&2; then
     info -c "$check"
     logcheckresult "INFO"
-  else
-    warn -s "$check"
-    logcheckresult "WARN"
+    return
   fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_c_1_1() {
@@ -39,13 +41,15 @@ check_c_1_1() {
   if docker info --format='{{ .Architecture }}' | grep 'x86_64' 2>/dev/null 1>&2; then
     pass -c "$check"
     logcheckresult "PASS"
-  elif docker info --format='{{ .Architecture }}' | grep 'aarch64' 2>/dev/null 1>&2; then
+    return
+  fi
+  if docker info --format='{{ .Architecture }}' | grep 'aarch64' 2>/dev/null 1>&2; then
     info -c "$check"
     logcheckresult "INFO"
-  else
-    warn -c "$check"
-    logcheckresult "WARN"
+    return
   fi
+  warn -c "$check"
+  logcheckresult "WARN"
 }
 
 check_c_2() {
@@ -63,19 +67,21 @@ check_c_2() {
     if get_docker_configuration_file_args 'disable-legacy-registry' | grep 'true' >/dev/null 2>&1; then
       pass -s "$check"
       logcheckresult "PASS"
-    elif get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
+      return
+    fi
+    if get_docker_effective_command_line_args '--disable-legacy-registry' | grep "disable-legacy-registry" >/dev/null 2>&1; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      logcheckresult "WARN"
+      return
     fi
-  else
-    local desc="$desc (Deprecated)"
-    local check="$id  - $desc"
-    info -c "$check"
-    logcheckresult "INFO"
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  local desc="$desc (Deprecated)"
+  local check="$id  - $desc"
+  info -c "$check"
+  logcheckresult "INFO"
 }
 
 check_c_end() {

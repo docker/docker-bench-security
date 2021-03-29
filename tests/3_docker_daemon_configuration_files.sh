@@ -22,16 +22,16 @@ check_3_1() {
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "     * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "     * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_2() {
@@ -47,16 +47,16 @@ check_3_2() {
     if [ "$(stat -c %a $file)" -le 644 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "     * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "     * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_3() {
@@ -72,16 +72,16 @@ check_3_3() {
     if [ "$(stat -c %u%g $file)" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "     * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "     * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_4() {
@@ -97,16 +97,16 @@ check_3_4() {
     if [ "$(stat -c %a $file)" -le 644 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "     * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "     * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_5() {
@@ -122,16 +122,16 @@ check_3_5() {
     if [ "$(stat -c %u%g $directory)" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong ownership for $directory"
-      logcheckresult "WARN" "Wrong ownership for $directory"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * Directory not found"
-    logcheckresult "INFO" "Directory not found"
+    warn -s "$check"
+    warn "     * Wrong ownership for $directory"
+    logcheckresult "WARN" "Wrong ownership for $directory"
+    return
   fi
+  info -c "$check"
+  info "     * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_3_6() {
@@ -147,16 +147,16 @@ check_3_6() {
     if [ "$(stat -c %a $directory)" -le 755 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong permissions for $directory"
-      logcheckresult "WARN" "Wrong permissions for $directory"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * Directory not found"
-    logcheckresult "INFO" "Directory not found"
+    warn -s "$check"
+    warn "     * Wrong permissions for $directory"
+    logcheckresult "WARN" "Wrong permissions for $directory"
+    return
   fi
+  info -c "$check"
+  info "     * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_3_7() {
@@ -180,15 +180,15 @@ check_3_7() {
       warn -s "$check"
       warn "     * Wrong ownership for $directory"
       logcheckresult "WARN" "Wrong ownership for $directory"
-    else
-      pass -s "$check"
-      logcheckresult "PASS"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * Directory not found"
-    logcheckresult "INFO" "Directory not found"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  info -c "$check"
+  info "     * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_3_8() {
@@ -212,15 +212,15 @@ check_3_8() {
       warn -s "$check"
       warn "     * Wrong permissions for $directory"
       logcheckresult "WARN" "Wrong permissions for $directory"
-    else
-      pass -s "$check"
-      logcheckresult "PASS"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * Directory not found"
-    logcheckresult "INFO" "Directory not found"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  info -c "$check"
+  info "     * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_3_9() {
@@ -231,25 +231,24 @@ check_3_9() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlscacert')" ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
-  else
-    tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscacert" ]; then
     if [ "$(stat -c %u%g "$tlscacert")" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "     * Wrong ownership for $tlscacert"
-      logcheckresult "WARN" "Wrong ownership for $tlscacert"
+      return
     fi
-  else
-    info -c "$check"
-    info "     * No TLS CA certificate found"
-    logcheckresult "INFO" "No TLS CA certificate found"
+    warn -s "$check"
+    warn "     * Wrong ownership for $tlscacert"
+    logcheckresult "WARN" "Wrong ownership for $tlscacert"
+    return
   fi
+  info -c "$check"
+  info "     * No TLS CA certificate found"
+  logcheckresult "INFO" "No TLS CA certificate found"
 }
 
 check_3_10() {
@@ -260,25 +259,24 @@ check_3_10() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlscacert')" ]; then
     tlscacert=$(get_docker_configuration_file_args 'tlscacert')
-  else
-    tlscacert=$(get_docker_effective_command_line_args '--tlscacert' | sed -n 's/.*tlscacert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscacert" ]; then
     if [ "$(stat -c %a $tlscacert)" -le 444 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $tlscacert"
-      logcheckresult "WARN" "Wrong permissions for $tlscacert"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * No TLS CA certificate found"
-    logcheckresult "INFO" "No TLS CA certificate found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $tlscacert"
+    logcheckresult "WARN" "Wrong permissions for $tlscacert"
+    return
   fi
+  info -c "$check"
+  info "      * No TLS CA certificate found"
+  logcheckresult "INFO" "No TLS CA certificate found"
 }
 
 check_3_11() {
@@ -289,25 +287,24 @@ check_3_11() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlscert')" ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
-  else
-    tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscert" ]; then
     if [ "$(stat -c %u%g "$tlscert")" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $tlscert"
-      logcheckresult "WARN" "Wrong ownership for $tlscert"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * No TLS Server certificate found"
-    logcheckresult "INFO" "No TLS Server certificate found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $tlscert"
+    logcheckresult "WARN" "Wrong ownership for $tlscert"
+    return
   fi
+  info -c "$check"
+  info "      * No TLS Server certificate found"
+  logcheckresult "INFO" "No TLS Server certificate found"
 }
 
 check_3_12() {
@@ -318,25 +315,24 @@ check_3_12() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlscert')" ]; then
     tlscert=$(get_docker_configuration_file_args 'tlscert')
-  else
-    tlscert=$(get_docker_effective_command_line_args '--tlscert' | sed -n 's/.*tlscert=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlscert" ]; then
     if [ "$(stat -c %a $tlscert)" -le 444 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $tlscert"
-      logcheckresult "WARN" "Wrong permissions for $tlscert"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * No TLS Server certificate found"
-    logcheckresult "INFO" "No TLS Server certificate found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $tlscert"
+    logcheckresult "WARN" "Wrong permissions for $tlscert"
+    return
   fi
+  info -c "$check"
+  info "      * No TLS Server certificate found"
+  logcheckresult "INFO" "No TLS Server certificate found"
 }
 
 check_3_13() {
@@ -347,25 +343,24 @@ check_3_13() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlskey')" ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
-  else
-    tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlskey" ]; then
     if [ "$(stat -c %u%g "$tlskey")" -eq 00 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $tlskey"
-      logcheckresult "WARN" "Wrong ownership for $tlskey"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * No TLS Key found"
-    logcheckresult "INFO" "No TLS Key found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $tlskey"
+    logcheckresult "WARN" "Wrong ownership for $tlskey"
+    return
   fi
+  info -c "$check"
+  info "      * No TLS Key found"
+  logcheckresult "INFO" "No TLS Key found"
 }
 
 check_3_14() {
@@ -376,25 +371,24 @@ check_3_14() {
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
+  tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   if [ -n "$(get_docker_configuration_file_args 'tlskey')" ]; then
     tlskey=$(get_docker_configuration_file_args 'tlskey')
-  else
-    tlskey=$(get_docker_effective_command_line_args '--tlskey' | sed -n 's/.*tlskey=\([^s]\)/\1/p' | sed 's/--/ --/g' | cut -d " " -f 1)
   fi
   if [ -f "$tlskey" ]; then
     if [ "$(stat -c %a $tlskey)" -eq 400 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $tlskey"
-      logcheckresult "WARN" "Wrong permissions for $tlskey"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * No TLS Key found"
-    logcheckresult "INFO" "No TLS Key found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $tlskey"
+    logcheckresult "WARN" "Wrong permissions for $tlskey"
+    return
   fi
+  info -c "$check"
+  info "      * No TLS Key found"
+  logcheckresult "INFO" "No TLS Key found"
 }
 
 check_3_15() {
@@ -410,16 +404,16 @@ check_3_15() {
     if [ "$(stat -c %U:%G $file)" = 'root:docker' ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_16() {
@@ -435,16 +429,16 @@ check_3_16() {
     if [ "$(stat -c %a $file)" -le 660 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_17() {
@@ -460,16 +454,16 @@ check_3_17() {
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_18() {
@@ -485,16 +479,16 @@ check_3_18() {
     if [ "$(stat -c %a $file)" -le 644 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_19() {
@@ -510,16 +504,16 @@ check_3_19() {
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_20() {
@@ -535,16 +529,16 @@ check_3_20() {
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong ownership for $file"
-      logcheckresult "WARN" "Wrong ownership for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong ownership for $file"
+    logcheckresult "WARN" "Wrong ownership for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_21() {
@@ -560,16 +554,16 @@ check_3_21() {
     if [ "$(stat -c %a $file)" -le 644 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_22() {
@@ -585,16 +579,16 @@ check_3_22() {
     if [ "$(stat -c %a $file)" -le 644 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      warn "      * Wrong permissions for $file"
-      logcheckresult "WARN" "Wrong permissions for $file"
+      return
     fi
-  else
-    info -c "$check"
-    info "      * File not found"
-    logcheckresult "INFO" "File not found"
+    warn -s "$check"
+    warn "      * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
   fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_3_end() {

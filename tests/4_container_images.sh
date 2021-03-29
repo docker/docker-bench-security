@@ -22,37 +22,37 @@ check_4_1() {
     info -c "$check"
     info "     * No containers running"
     logcheckresult "INFO" "No containers running"
-  else
-    # We have some containers running, set failure flag to 0. Check for Users.
-    fail=0
-    # Make the loop separator be a new-line in POSIX compliant fashion
-    set -f; IFS=$'
-  '
-    root_containers=""
-    for c in $containers; do
-      user=$(docker inspect --format 'User={{.Config.User}}' "$c")
-
-      if [ "$user" = "User=0" ] || [ "$user" = "User=root" ] || [ "$user" = "User=" ] || [ "$user" = "User=[]" ] || [ "$user" = "User=<no value>" ]; then
-        # If it's the first container, fail the test
-        if [ $fail -eq 0 ]; then
-          warn -s "$check"
-          warn "     * Running as root: $c"
-          root_containers="$root_containers $c"
-          fail=1
-        else
-          warn "     * Running as root: $c"
-          root_containers="$root_containers $c"
-        fi
-      fi
-    done
-    # We went through all the containers and found none running as root
-    if [ $fail -eq 0 ]; then
-        pass -s "$check"
-        logcheckresult "PASS"
-    else
-        logcheckresult "WARN" "running as root" "$root_containers"
-    fi
+    return
   fi
+  # We have some containers running, set failure flag to 0. Check for Users.
+  fail=0
+  # Make the loop separator be a new-line in POSIX compliant fashion
+  set -f; IFS=$'
+  '
+  root_containers=""
+  for c in $containers; do
+    user=$(docker inspect --format 'User={{.Config.User}}' "$c")
+
+    if [ "$user" = "User=0" ] || [ "$user" = "User=root" ] || [ "$user" = "User=" ] || [ "$user" = "User=[]" ] || [ "$user" = "User=<no value>" ]; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn -s "$check"
+        warn "     * Running as root: $c"
+        root_containers="$root_containers $c"
+        fail=1
+        continue
+      fi
+      warn "     * Running as root: $c"
+      root_containers="$root_containers $c"
+    fi
+  done
+  # We went through all the containers and found none running as root
+  if [ $fail -eq 0 ]; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  logcheckresult "WARN" "running as root" "$root_containers"
   # Make the loop separator go back to space
   set +f; unset IFS
 }
@@ -104,10 +104,10 @@ check_4_5() {
   if [ "x$DOCKER_CONTENT_TRUST" = "x1" ]; then
     pass -s "$check"
     logcheckresult "PASS"
-  else
-    warn -s "$check"
-    logcheckresult "WARN"
+    return
   fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_4_6() {
@@ -139,9 +139,9 @@ check_4_6() {
   if [ $fail -eq 0 ]; then
     pass -s "$check"
     logcheckresult "PASS"
-  else
-    logcheckresult "WARN" "Images w/o HEALTHCHECK" "$no_health_images"
+    return
   fi
+  logcheckresult "WARN" "Images w/o HEALTHCHECK" "$no_health_images"
 }
 
 check_4_7() {
@@ -170,9 +170,9 @@ check_4_7() {
   if [ $fail -eq 0 ]; then
     pass -c "$check"
     logcheckresult "PASS"
-  else
-    logcheckresult "INFO" "Update instructions found" "$update_images"
+    return
   fi
+  logcheckresult "INFO" "Update instructions found" "$update_images"
 }
 
 check_4_8() {
@@ -214,9 +214,9 @@ check_4_9() {
   if [ $fail -eq 0 ]; then
     pass -c "$check"
     logcheckresult "PASS"
-  else
-    logcheckresult "INFO" "Images using ADD" "$add_images"
+    return
   fi
+  logcheckresult "INFO" "Images using ADD" "$add_images"
 }
 
 check_4_10() {

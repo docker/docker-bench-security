@@ -6,6 +6,23 @@ abspath () { case "$1" in /*)printf "%s\n" "$1";; *)printf "%s\n" "$PWD/$1";; es
 # Audit rules default path
 auditrules="/etc/audit/audit.rules"
 
+# Check for required program(s)
+req_programs() {
+  for p in $1; do
+    command -v "$p" >/dev/null 2>&1 || { printf "Required program not found: %s\n" "$p"; exit 1; }
+  done
+  if command -v ss >/dev/null 2>&1; then
+    netbin=ss
+    return
+  fi
+  if command -v netstat >/dev/null 2>&1; then
+    netbin=netstat
+    return
+  fi
+  echo "ss or netstat command not found."
+  exit 1
+}
+
 # Compares versions of software of the format X.Y.Z
 do_version_check() {
   [ "$1" = "$2" ] && return 10
@@ -23,9 +40,8 @@ do_version_check() {
     [ "$ver2front" = "$2" ] || [ -z "$ver2back" ] && ver2back=0
       do_version_check "$ver1back" "$ver2back"
       return $?
-  else
-    [ "$1" -gt "$2" ] && return 11 || return 9
   fi
+  [ "$1" -gt "$2" ] && return 11 || return 9
 }
 
 # Extracts commandline args from the newest running processes named like the first parameter
@@ -45,10 +61,9 @@ get_command_line_args() {
 get_docker_cumulative_command_line_args() {
   OPTION="$1"
 
+  line_arg="dockerd"
   if ! get_command_line_args "docker daemon" >/dev/null 2>&1 ; then
     line_arg="docker daemon"
-  else
-    line_arg="dockerd"
   fi
 
   get_command_line_args "$line_arg" |
@@ -88,11 +103,13 @@ get_docker_configuration_file() {
 
   if [ -f "$FILE" ]; then
     CONFIG_FILE="$FILE"
-  elif [ -f '/etc/docker/daemon.json' ]; then
-    CONFIG_FILE='/etc/docker/daemon.json'
-  else
-    CONFIG_FILE='/dev/null'
+    return
   fi
+  if [ -f '/etc/docker/daemon.json' ]; then
+    CONFIG_FILE='/etc/docker/daemon.json'
+    return
+  fi
+  CONFIG_FILE='/dev/null'
 }
 
 get_docker_configuration_file_args() {
@@ -108,13 +125,17 @@ get_service_file() {
 
   if [ -f "/etc/systemd/system/$SERVICE" ]; then
     echo "/etc/systemd/system/$SERVICE"
-  elif [ -f "/lib/systemd/system/$SERVICE" ]; then
-    echo "/lib/systemd/system/$SERVICE"
-  elif systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
-    systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
-  else
-    echo "/usr/lib/systemd/system/$SERVICE"
+    return
   fi
+  if [ -f "/lib/systemd/system/$SERVICE" ]; then
+    echo "/lib/systemd/system/$SERVICE"
+    return
+  fi
+  if systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
+    systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
+    return
+  fi
+  echo "/usr/lib/systemd/system/$SERVICE"
 }
 
 yell_info() {

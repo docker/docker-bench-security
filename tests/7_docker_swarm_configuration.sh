@@ -20,10 +20,10 @@ check_7_1() {
   if docker info 2>/dev/null | grep -e "Swarm:*\sinactive\s*" >/dev/null 2>&1; then
     pass -s "$check"
     logcheckresult "PASS"
-  else
-    warn -s "$check"
-    logcheckresult "WARN"
+    return
   fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_7_2() {
@@ -39,14 +39,14 @@ check_7_2() {
     if [ "$managernodes" -eq 1 ]; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      logcheckresult "WARN"
+      return
     fi
-  else
-    pass -s "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_3() {
@@ -62,14 +62,14 @@ check_7_3() {
     if [ $? -eq 1 ]; then
       pass -s "$check"
       logcheckresult "PASS" 
-    else
-      warn -s "$check"
-      logcheckresult "WARN"
+      return
     fi
-  else
-    pass -s "$check (Swarm mode not enabled)"
-    logcheckresult "PASS" 
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check (Swarm mode not enabled)"
+  logcheckresult "PASS" 
 }
 
 check_7_4() {
@@ -96,11 +96,11 @@ check_7_4() {
   done
   # We went through all the networks and found none that are unencrypted
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS" 
-  else
-      logcheckresult "WARN" "Unencrypted overlay networks:" "$unencrypted_networks"
+    pass -s "$check"
+    logcheckresult "PASS" 
+    return
   fi
+  logcheckresult "WARN" "Unencrypted overlay networks:" "$unencrypted_networks"
 }
 
 check_7_5() {
@@ -115,14 +115,14 @@ check_7_5() {
     if [ "$(docker secret ls -q | wc -l)" -ge 1 ]; then
       pass -c "$check"
       logcheckresult "PASS"
-    else
-      info -c "$check"
-      logcheckresult "INFO"
+      return
     fi
-  else
-    pass -c "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    info -c "$check"
+    logcheckresult "INFO"
+    return
   fi
+  pass -c "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_6() {
@@ -137,14 +137,14 @@ check_7_6() {
     if ! docker swarm unlock-key 2>/dev/null | grep 'SWMKEY' 2>/dev/null 1>&2; then
       warn -s "$check"
       logcheckresult "WARN"
-    else
-      pass -s "$check"
-      logcheckresult "PASS"
+      return
     fi
-  else
-    pass -s "$check (Swarm mode not enabled)"
-    logcheckresult "PASS" 
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  pass -s "$check (Swarm mode not enabled)"
+  logcheckresult "PASS" 
 }
 
 check_7_7() {
@@ -158,10 +158,10 @@ check_7_7() {
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     note -c "$check"
     logcheckresult "NOTE"
-  else
-    pass -c "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    return
   fi
+  pass -c "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_8() {
@@ -176,14 +176,14 @@ check_7_8() {
     if docker info 2>/dev/null | grep "Expiry Duration: 2 days"; then
       pass -c "$check"
       logcheckresult "PASS"
-    else
-      info -c "$check"
-      logcheckresult "INFO"
+      return
     fi
-  else
-    pass -c "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    info -c "$check"
+    logcheckresult "INFO"
+    return
   fi
+  pass -c "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_9() {
@@ -197,10 +197,10 @@ check_7_9() {
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     info -c "$check"
     logcheckresult "INFO"
-  else
-    pass -c "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    return
   fi
+  pass -c "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_10() {
@@ -214,10 +214,10 @@ check_7_10() {
   if docker info 2>/dev/null | grep -e "Swarm:\s*active\s*" >/dev/null 2>&1; then
     info -c "$check"
     logcheckresult "INFO"
-  else
-    pass -c "$check (Swarm mode not enabled)"
-    logcheckresult "PASS"
+    return
   fi
+  pass -c "$check (Swarm mode not enabled)"
+  logcheckresult "PASS"
 }
 
 check_7_end() {

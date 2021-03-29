@@ -13,11 +13,11 @@ check_running_containers() {
   # If containers is empty, there are no running containers
   if [ -z "$containers" ]; then
     info "  * No containers running, skipping Section 5"
-  else
-    # Make the loop separator be a new-line in POSIX compliant fashion
-    set -f; IFS=$'
-  '
+    return
   fi
+  # Make the loop separator be a new-line in POSIX compliant fashion
+  set -f; IFS=$'
+  '
 }
 
 check_5_1() {
@@ -42,21 +42,21 @@ check_5_1() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * No AppArmorProfile Found: $c"
-	no_apparmor_containers="$no_apparmor_containers $c"
+        no_apparmor_containers="$no_apparmor_containers $c"
         fail=1
-      else
-        warn "     * No AppArmorProfile Found: $c"
-	no_apparmor_containers="$no_apparmor_containers $c"
+        continue
       fi
+      warn "     * No AppArmorProfile Found: $c"
+      no_apparmor_containers="$no_apparmor_containers $c"
     fi
   done
   # We went through all the containers and found none without AppArmor
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with no AppArmorProfile" "$no_apparmor_containers"
 }
 
 check_5_2() {
@@ -81,21 +81,21 @@ check_5_2() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * No SecurityOptions Found: $c"
-	no_securityoptions_containers="$no_securityoptions_containers $c"
+        no_securityoptions_containers="$no_securityoptions_containers $c"
         fail=1
-      else
-        warn "     * No SecurityOptions Found: $c"
-	no_securityoptions_containers="$no_securityoptions_containers $c"
+        continue
       fi
+      warn "     * No SecurityOptions Found: $c"
+      no_securityoptions_containers="$no_securityoptions_containers $c"
     fi
   done
   # We went through all the containers and found none without SELinux
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with no SecurityOptions" "$no_securityoptions_containers"
 }
 
 check_5_3() {
@@ -123,21 +123,21 @@ check_5_3() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * Capabilities added: $caps to $c"
-	caps_containers="$caps_containers $c"
+        caps_containers="$caps_containers $c"
         fail=1
-      else
-        warn "     * Capabilities added: $caps to $c"
-	caps_containers="$caps_containers $c"
+        continue
       fi
+      warn "     * Capabilities added: $caps to $c"
+      caps_containers="$caps_containers $c"
     fi
   done
   # We went through all the containers and found none with extra capabilities
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Capabilities added for containers" "$caps_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Capabilities added for containers" "$caps_containers"
 }
 
 check_5_4() {
@@ -162,21 +162,21 @@ check_5_4() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * Container running in Privileged mode: $c"
-	privileged_containers="$privileged_containers $c"
+        privileged_containers="$privileged_containers $c"
         fail=1
-      else
-        warn "     * Container running in Privileged mode: $c"
-	privileged_containers="$privileged_containers $c"
+        continue
       fi
+      warn "     * Container running in Privileged mode: $c"
+      privileged_containers="$privileged_containers $c"
     fi
   done
   # We went through all the containers and found no privileged containers
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers running in privileged mode" "$privileged_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers running in privileged mode" "$privileged_containers"
 }
 
 check_5_5() {
@@ -204,10 +204,9 @@ check_5_5() {
   fail=0
   sensitive_mount_containers=""
   for c in $containers; do
+    volumes=$(docker inspect --format '{{ .Mounts }}' "$c")
     if docker inspect --format '{{ .VolumesRW }}' "$c" 2>/dev/null 1>&2; then
       volumes=$(docker inspect --format '{{ .VolumesRW }}' "$c")
-    else
-      volumes=$(docker inspect --format '{{ .Mounts }}' "$c")
     fi
     # Go over each directory in sensitive dir and see if they exist in the volumes
     for v in $sensitive_dirs; do
@@ -220,22 +219,22 @@ check_5_5() {
         if [ $fail -eq 0 ]; then
           warn -s "$check"
           warn "     * Sensitive directory $v mounted in: $c"
-	  sensitive_mount_containers="$sensitive_mount_containers $c:$v"
+          sensitive_mount_containers="$sensitive_mount_containers $c:$v"
           fail=1
-        else
-          warn "     * Sensitive directory $v mounted in: $c"
-	  sensitive_mount_containers="$sensitive_mount_containers $c:$v"
+          continue
         fi
+        warn "     * Sensitive directory $v mounted in: $c"
+        sensitive_mount_containers="$sensitive_mount_containers $c:$v"
       fi
     done
   done
   # We went through all the containers and found none with sensitive mounts
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with sensitive directories mounted" "$sensitive_mount_containers"
 }
 
 check_5_6() {
@@ -261,12 +260,12 @@ check_5_6() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * Container running sshd: $c"
-	ssh_exec_containers="$ssh_exec_containers $c"
+        ssh_exec_containers="$ssh_exec_containers $c"
         fail=1
         printcheck=1
       else
         warn "     * Container running sshd: $c"
-	ssh_exec_containers="$ssh_exec_containers $c"
+        ssh_exec_containers="$ssh_exec_containers $c"
       fi
     fi
 
@@ -284,11 +283,11 @@ check_5_6() {
   done
   # We went through all the containers and found none with sshd
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with sshd/docker exec failures" "$ssh_exec_containers"
 }
 
 check_5_7() {
@@ -311,27 +310,27 @@ check_5_7() {
 
     # iterate through port range (line delimited)
     for port in $ports; do
-    if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
+      if [ -n "$port" ] && [ "$port" -lt 1024 ]; then
         # If it's the first container, fail the test
         if [ $fail -eq 0 ]; then
           warn -s "$check"
           warn "     * Privileged Port in use: $port in $c"
-	  privileged_port_containers="$privileged_port_containers $c:$port"
+          privileged_port_containers="$privileged_port_containers $c:$port"
           fail=1
-        else
-          warn "     * Privileged Port in use: $port in $c"
-	  privileged_port_containers="$privileged_port_containers $c:$port"
+          continue
         fi
+        warn "     * Privileged Port in use: $port in $c"
+        privileged_port_containers="$privileged_port_containers $c:$port"
       fi
     done
   done
   # We went through all the containers and found no privileged ports
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers using privileged ports" "$privileged_port_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers using privileged ports" "$privileged_port_containers"
 }
 
 check_5_8() {
@@ -372,21 +371,21 @@ check_5_9() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "     * Container running with networking mode 'host': $c"
-	net_host_containers="$net_host_containers $c"
+        net_host_containers="$net_host_containers $c"
         fail=1
-      else
-        warn "     * Container running with networking mode 'host': $c"
-	net_host_containers="$net_host_containers $c"
+        continue
       fi
+      warn "     * Container running with networking mode 'host': $c"
+      net_host_containers="$net_host_containers $c"
     fi
   done
   # We went through all the containers and found no Network Mode host
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers running with networking mode 'host'" "$net_host_containers"
 }
 
 check_5_10() {
@@ -404,10 +403,9 @@ check_5_10() {
   fail=0
   mem_unlimited_containers=""
   for c in $containers; do
+    memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
     if docker inspect --format '{{ .Config.Memory }}' "$c" 2> /dev/null 1>&2; then
       memory=$(docker inspect --format '{{ .Config.Memory }}' "$c")
-    else
-      memory=$(docker inspect --format '{{ .HostConfig.Memory }}' "$c")
     fi
 
     if [ "$memory" = "0" ]; then
@@ -415,21 +413,21 @@ check_5_10() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "      * Container running without memory restrictions: $c"
-	mem_unlimited_containers="$mem_unlimited_containers $c"
+        mem_unlimited_containers="$mem_unlimited_containers $c"
         fail=1
-      else
-        warn "      * Container running without memory restrictions: $c"
-	mem_unlimited_containers="$mem_unlimited_containers $c"
+        continue
       fi
+      warn "      * Container running without memory restrictions: $c"
+      mem_unlimited_containers="$mem_unlimited_containers $c"
     fi
   done
   # We went through all the containers and found no lack of Memory restrictions
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Container running without memory restrictions" "$mem_unlimited_containers"
 }
 
 check_5_11() {
@@ -447,10 +445,9 @@ check_5_11() {
   fail=0
   cpu_unlimited_containers=""
   for c in $containers; do
+    shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
     if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
       shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
-    else
-      shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
     fi
 
     if [ "$shares" = "0" ]; then
@@ -460,19 +457,19 @@ check_5_11() {
         warn "      * Container running without CPU restrictions: $c"
         cpu_unlimited_containers="$cpu_unlimited_containers $c"
         fail=1
-      else
-        warn "      * Container running without CPU restrictions: $c"
-        cpu_unlimited_containers="$cpu_unlimited_containers $c"
+        continue
       fi
+      warn "      * Container running without CPU restrictions: $c"
+      cpu_unlimited_containers="$cpu_unlimited_containers $c"
     fi
   done
   # We went through all the containers and found no lack of CPUShare restrictions
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers running without CPU restrictions" "$cpu_unlimited_containers"
 }
 
 check_5_12() {
@@ -497,21 +494,21 @@ check_5_12() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "      * Container running with root FS mounted R/W: $c"
-	fsroot_mount_containers="$fsroot_mount_containers $c"
+        fsroot_mount_containers="$fsroot_mount_containers $c"
         fail=1
-      else
-        warn "      * Container running with root FS mounted R/W: $c"
-	fsroot_mount_containers="$fsroot_mount_containers $c"
+        continue
       fi
+      warn "      * Container running with root FS mounted R/W: $c"
+      fsroot_mount_containers="$fsroot_mount_containers $c"
     fi
   done
   # We went through all the containers and found no R/W FS mounts
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers running with root FS mounted R/W" "$fsroot_mount_containers"
 }
 
 check_5_13() {
@@ -537,20 +534,20 @@ check_5_13() {
           warn "      * Port being bound to wildcard IP: $ip in $c"
           incoming_unbound_containers="$incoming_unbound_containers $c:$ip"
           fail=1
-        else
-          warn "      * Port being bound to wildcard IP: $ip in $c"
-          incoming_unbound_containers="$incoming_unbound_containers $c:$ip"
+          continue
         fi
+        warn "      * Port being bound to wildcard IP: $ip in $c"
+        incoming_unbound_containers="$incoming_unbound_containers $c:$ip"
       fi
     done
   done
   # We went through all the containers and found no ports bound to 0.0.0.0
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with port bound to wildcard IP" "$incoming_unbound_containers"
 }
 
 check_5_14() {
@@ -575,21 +572,21 @@ check_5_14() {
       if [ $fail -eq 0 ]; then
         warn -s "$check"
         warn "      * MaximumRetryCount is not set to 5: $c"
-	maxretry_unset_containers="$maxretry_unset_containers $c"
+        maxretry_unset_containers="$maxretry_unset_containers $c"
         fail=1
-      else
-        warn "      * MaximumRetryCount is not set to 5: $c"
-	maxretry_unset_containers="$maxretry_unset_containers $c"
+        continue
       fi
+      warn "      * MaximumRetryCount is not set to 5: $c"
+      maxretry_unset_containers="$maxretry_unset_containers $c"
     fi
   done
   # We went through all the containers and they all had MaximumRetryCount=5
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with MaximumRetryCount not set to 5" "$maxretry_unset_containers"
 }
 
 check_5_15() {
@@ -616,19 +613,19 @@ check_5_15() {
         warn "      * Host PID namespace being shared with: $c"
         pidns_shared_containers="$pidns_shared_containers $c"
         fail=1
-      else
-        warn "      * Host PID namespace being shared with: $c"
-        pidns_shared_containers="$pidns_shared_containers $c"
+        continue
       fi
+      warn "      * Host PID namespace being shared with: $c"
+      pidns_shared_containers="$pidns_shared_containers $c"
     fi
   done
   # We went through all the containers and found none with PidMode as host
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers sharing host PID namespace" "$pidns_shared_containers"
 }
 
 check_5_16() {
@@ -655,19 +652,19 @@ check_5_16() {
         warn "      * Host IPC namespace being shared with: $c"
         ipcns_shared_containers="$ipcns_shared_containers $c"
         fail=1
-      else
-        warn "      * Host IPC namespace being shared with: $c"
-        ipcns_shared_containers="$ipcns_shared_containers $c"
+        continue
       fi
+      warn "      * Host IPC namespace being shared with: $c"
+      ipcns_shared_containers="$ipcns_shared_containers $c"
     fi
   done
   # We went through all the containers and found none with IPCMode as host
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers sharing host IPC namespace" "$ipcns_shared_containers"
 }
 
 check_5_17() {
@@ -694,19 +691,19 @@ check_5_17() {
         info "      * Container has devices exposed directly: $c"
         hostdev_exposed_containers="$hostdev_exposed_containers $c"
         fail=1
-      else
-        info "      * Container has devices exposed directly: $c"
-        hostdev_exposed_containers="$hostdev_exposed_containers $c"
+        continue
       fi
+      info "      * Container has devices exposed directly: $c"
+      hostdev_exposed_containers="$hostdev_exposed_containers $c"
     fi
   done
   # We went through all the containers and found none with devices
   if [ $fail -eq 0 ]; then
-      pass -c "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "INFO" "Containers with host devices exposed directly" "$hostdev_exposed_containers"
 }
 
 check_5_18() {
@@ -733,19 +730,19 @@ check_5_18() {
         info "      * Container no default ulimit override: $c"
         no_ulimit_containers="$no_ulimit_containers $c"
         fail=1
-      else
-        info "      * Container no default ulimit override: $c"
-        no_ulimit_containers="$no_ulimit_containers $c"
+        continue
       fi
+      info "      * Container no default ulimit override: $c"
+      no_ulimit_containers="$no_ulimit_containers $c"
     fi
   done
   # We went through all the containers and found none without Ulimits
   if [ $fail -eq 0 ]; then
-      pass -c "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "INFO" "Containers with no default ulimit override" "$no_ulimit_containers"
 }
 
 check_5_19() {
@@ -771,19 +768,19 @@ check_5_19() {
         warn "      * Mount propagation mode is shared: $c"
         mountprop_shared_containers="$mountprop_shared_containers $c"
         fail=1
-      else
-        warn "      * Mount propagation mode is shared: $c"
-        mountprop_shared_containers="$mountprop_shared_containers $c"
+        continue
       fi
+      warn "      * Mount propagation mode is shared: $c"
+      mountprop_shared_containers="$mountprop_shared_containers $c"
     fi
   done
   # We went through all the containers and found none with shared propagation mode
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-    logcheckresult "WARN" "Containers with shared mount propagation" "$mountprop_shared_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with shared mount propagation" "$mountprop_shared_containers"
 }
 
 check_5_20() {
@@ -810,19 +807,19 @@ check_5_20() {
         warn "      * Host UTS namespace being shared with: $c"
         utcns_shared_containers="$utcns_shared_containers $c"
         fail=1
-      else
-        warn "      * Host UTS namespace being shared with: $c"
-        utcns_shared_containers="$utcns_shared_containers $c"
+        continue
       fi
+      warn "      * Host UTS namespace being shared with: $c"
+      utcns_shared_containers="$utcns_shared_containers $c"
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers sharing host UTS namespace" "$utcns_shared_containers"
 }
 
 check_5_21() {
@@ -856,11 +853,11 @@ check_5_21() {
   done
   # We went through all the containers and found none with default secomp profile disabled
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers with default seccomp profile disabled" "$seccomp_disabled_containers"
 }
 
 check_5_22() {
@@ -919,19 +916,19 @@ check_5_24() {
         warn "      * Confirm cgroup usage: $c"
         unexpected_cgroup_containers="$unexpected_cgroup_containers $c"
         fail=1
-      else
-        warn "      * Confirm cgroup usage: $c"
-        unexpected_cgroup_containers="$unexpected_cgroup_containers $c"
+        continue
       fi
+      warn "      * Confirm cgroup usage: $c"
+      unexpected_cgroup_containers="$unexpected_cgroup_containers $c"
     fi
   done
   # We went through all the containers and found none with UTSMode as host
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+    logcheckresult "WARN" "Containers using unexpected cgroup" "$unexpected_cgroup_containers"
 }
 
 check_5_25() {
@@ -955,19 +952,19 @@ check_5_25() {
         warn "      * Privileges not restricted: $c"
         addprivs_containers="$addprivs_containers $c"
         fail=1
-      else
-        warn "      * Privileges not restricted: $c"
-        addprivs_containers="$addprivs_containers $c"
+        continue
       fi
+      warn "      * Privileges not restricted: $c"
+      addprivs_containers="$addprivs_containers $c"
     fi
   done
   # We went through all the containers and found none with capability to acquire additional privileges
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers without restricted privileges" "$addprivs_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers without restricted privileges" "$addprivs_containers"
 }
 
 check_5_26() {
@@ -991,18 +988,18 @@ check_5_26() {
         warn "      * Health check not set: $c"
         nohealthcheck_containers="$nohealthcheck_containers $c"
         fail=1
-      else
-        warn "      * Health check not set: $c"
-        nohealthcheck_containers="$nohealthcheck_containers $c"
+        continue
       fi
+      warn "      * Health check not set: $c"
+      nohealthcheck_containers="$nohealthcheck_containers $c"
     fi
   done
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers without health check" "$nohealthcheck_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers without health check" "$nohealthcheck_containers"
 }
 
 check_5_27() {
@@ -1045,19 +1042,19 @@ check_5_28() {
         warn "      * PIDs limit not set: $c"
         nopids_limit_containers="$nopids_limit_containers $c"
         fail=1
-      else
-        warn "      * PIDs limit not set: $c"
-        nopids_limit_containers="$nopids_limit_containers $c"
+        continue
       fi
+      warn "      * PIDs limit not set: $c"
+      nopids_limit_containers="$nopids_limit_containers $c"
     fi
   done
   # We went through all the containers and found all with PIDs limit
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers without PIDs cgroup limit" "$nopids_limit_containers"
 }
 
 check_5_29() {
@@ -1080,33 +1077,33 @@ check_5_29() {
       docker0Containers=$(docker network inspect --format='{{ range $k, $v := .Containers }} {{ $k }} {{ end }}' "$net" | \
         sed -e 's/^ //' -e 's/  /\n/g' 2>/dev/null)
 
-        if [ -n "$docker0Containers" ]; then
-          if [ $fail -eq 0 ]; then
-            info -c "$check"
-            fail=1
-          fi
-          for c in $docker0Containers; do
-            if [ -z "$exclude" ]; then
-              cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
-            else
-              pattern=$(echo "$exclude" | sed 's/,/|/g')
-              cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
-            fi
-            if [ -n "$cName" ]; then
-              info "      * Container in docker0 network: $cName"
-              docker_network_containers="$docker_network_containers $c:$cName"
-            fi
-          done
+      if [ -n "$docker0Containers" ]; then
+        if [ $fail -eq 0 ]; then
+          info -c "$check"
+          fail=1
         fi
+        for c in $docker0Containers; do
+          if [ -z "$exclude" ]; then
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g')
+          else
+            pattern=$(echo "$exclude" | sed 's/,/|/g')
+            cName=$(docker inspect --format '{{.Name}}' "$c" 2>/dev/null | sed 's/\///g' | grep -Ev "$pattern" )
+          fi
+          if [ -n "$cName" ]; then
+            info "      * Container in docker0 network: $cName"
+            docker_network_containers="$docker_network_containers $c:$cName"
+          fi
+        done
+      fi
     fi
   done
   # We went through all the containers and found none in docker0 network
   if [ $fail -eq 0 ]; then
-      pass -c "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "INFO" "Containers using docker0 network" "$docker_network_containers"
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "INFO" "Containers using docker0 network" "$docker_network_containers"
 }
 
 check_5_30() {
@@ -1131,19 +1128,19 @@ check_5_30() {
         warn "      * Namespace shared: $c"
         hostns_shared_containers="$hostns_shared_containers $c"
         fail=1
-      else
-        warn "      * Namespace shared: $c"
-        hostns_shared_containers="$hostns_shared_containers $c"
+        continue
       fi
+      warn "      * Namespace shared: $c"
+      hostns_shared_containers="$hostns_shared_containers $c"
     fi
   done
   # We went through all the containers and found none with host's user namespace shared
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers sharing host user namespace" "$hostns_shared_containers"
 }
 
 check_5_31() {
@@ -1168,19 +1165,19 @@ check_5_31() {
         warn "      * Docker socket shared: $c"
         docker_sock_containers="$docker_sock_containers $c"
         fail=1
-      else
-        warn "      * Docker socket shared: $c"
-        docker_sock_containers="$docker_sock_containers $c"
+        continue
       fi
+      warn "      * Docker socket shared: $c"
+      docker_sock_containers="$docker_sock_containers $c"
     fi
   done
   # We went through all the containers and found none with docker.sock shared
   if [ $fail -eq 0 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-  else
-      logcheckresult "WARN" "Containers sharing docker socket" "$docker_sock_containers"
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  logcheckresult "WARN" "Containers sharing docker socket" "$docker_sock_containers"
 }
 
 check_5_end() {

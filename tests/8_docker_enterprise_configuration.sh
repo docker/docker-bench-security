@@ -10,11 +10,10 @@ check_8() {
 }
 
 check_product_license() {
+  enterprise_license=1
   if docker version | grep -Eqi '^Server.*Community$|Version.*-ce$'; then
     info "  * Community Engine license, skipping section 8"
     enterprise_license=0
-  else
-    enterprise_license=1
   fi
 }
 

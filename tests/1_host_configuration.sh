@@ -41,16 +41,15 @@ check_1_1_2() {
   docker_current_version="$(date +%y.%m.0 -d @$(( $(date +%s) - 2592000)))"
   do_version_check "$docker_current_version" "$docker_version"
   if [ $? -eq 11 ]; then
-    info -c "$check"
-    info "       * Using $docker_version, verify is it up to date as deemed necessary"
-    info "       * Your operating system vendor may provide support and security maintenance for Docker"
-    logcheckresult "INFO" "Using $docker_version"
-  else
     pass -c "$check"
-    info "       * Using $docker_version which is current"
-    info "       * Check with your operating system vendor for support and security maintenance for Docker"
-    logcheckresult "PASS" "Using $docker_version"
+    info "       * Using $docker_version, verify is it up to date as deemed necessary"
+    logcheckresult "INFO" "Using $docker_version"
+    return
   fi
+  pass -c "$check"
+  info "       * Using $docker_version which is current"
+  info "       * Check with your operating system vendor for support and security maintenance for Docker"
+  logcheckresult "PASS" "Using $docker_version"
 }
 
 check_1_2() {
@@ -76,10 +75,10 @@ check_1_2_1() {
   if mountpoint -q -- "$docker_root_dir" >/dev/null 2>&1; then
     pass -s "$check"
     logcheckresult "PASS"
-  else
-    warn -s "$check"
-    logcheckresult "WARN"
+    return
   fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_1_2_2() { 
@@ -90,10 +89,9 @@ check_1_2_2() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
+  docker_users=$(grep 'docker' /etc/group)
   if command -v getent >/dev/null 2>&1; then
     docker_users=$(getent group docker)
-  else
-    docker_users=$(grep 'docker' /etc/group)
   fi
   docker_users=$(printf "%s" "$docker_users" | awk -F: '{print $4}')
 
@@ -101,10 +99,9 @@ check_1_2_2() {
   if [ -n "$dockertrustusers" ]; then
     for u in $(printf "%s" "$docker_users" | sed "s/,/ /g"); do
       if ! printf "%s" "$dockertrustusers" | grep -q "$u" ; then
+        doubtfulusers="$u"
         if [ -n "${doubtfulusers}" ]; then
           doubtfulusers="${doubtfulusers},$u"
-        else
-          doubtfulusers="$u"
         fi
       fi
     done
@@ -139,17 +136,19 @@ check_1_2_3() {
     if auditctl -l | grep "$file" >/dev/null 2>&1; then
       pass -s "$check"
       logcheckresult "PASS"
-    else
-      warn -s "$check"
-      logcheckresult "WARN"
+      return
     fi
-  elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-    pass -s "$check"
-    logcheckresult "PASS"
-  else
     warn -s "$check"
     logcheckresult "WARN"
+    return
   fi
+  if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_1_2_4() {
@@ -166,22 +165,24 @@ check_1_2_4() {
       if auditctl -l | grep $directory >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * Directory not found"
-    logcheckresult "INFO" "Directory not found"
+    if grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "       * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_1_2_5() {
@@ -198,22 +199,24 @@ check_1_2_5() {
       if auditctl -l | grep $directory >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * Directory not found"
-    logcheckresult "INFO" "Directory not found"
-fi
+    if grep -s "$directory" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
+  fi
+  info -c "$check"
+  info "       * Directory not found"
+  logcheckresult "INFO" "Directory not found"
 }
 
 check_1_2_6() {
@@ -231,22 +234,24 @@ check_1_2_6() {
       if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "       * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_7() {
@@ -264,22 +269,24 @@ check_1_2_7() {
       if auditctl -l | grep "$file" >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "       * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_8() {
@@ -296,22 +303,24 @@ check_1_2_8() {
       if auditctl -l | grep $file >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "       * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_9() {
@@ -328,22 +337,24 @@ check_1_2_9() {
       if auditctl -l | grep $file >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "       * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "       * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_10() {
@@ -360,22 +371,24 @@ check_1_2_10() {
       if auditctl -l | grep $file >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "        * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "        * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_11() {
@@ -392,22 +405,24 @@ check_1_2_11() {
       if auditctl -l | grep $file >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "        * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "        * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_2_12() {
@@ -424,22 +439,24 @@ check_1_2_12() {
       if auditctl -l | grep $file >/dev/null 2>&1; then
         pass -s "$check"
         logcheckresult "PASS"
-      else
-        warn -s "$check"
-        logcheckresult "WARN"
+        return
       fi
-    elif grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
-      pass -s "$check"
-      logcheckresult "PASS"
-    else
       warn -s "$check"
       logcheckresult "WARN"
+      return
     fi
-  else
-    info -c "$check"
-    info "        * File not found"
-    logcheckresult "INFO" "File not found"
+    if grep -s "$file" "$auditrules" | grep "^[^#;]" 2>/dev/null 1>&2; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  info -c "$check"
+  info "        * File not found"
+  logcheckresult "INFO" "File not found"
 }
 
 check_1_end() {
