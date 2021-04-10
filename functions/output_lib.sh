@@ -20,6 +20,7 @@ logit () {
 
 info () {
   local infoCountCheck
+  local OPTIND c
   while getopts c args
   do
     case $args in
@@ -37,6 +38,8 @@ info () {
 
 pass () {
   local passScored
+  local passCountCheck
+  local OPTIND s c
   while getopts sc args
   do
     case $args in
@@ -59,6 +62,7 @@ pass () {
 
 warn () {
   local warnScored
+  local OPTIND s
   while getopts s args
   do
     case $args in
@@ -77,6 +81,7 @@ warn () {
 
 note () {
   local noteCountCheck
+  local OPTIND c
   while getopts c args
   do
     case $args in
