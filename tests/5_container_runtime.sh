@@ -1151,7 +1151,7 @@ check_5_31() {
   local id="5.31"
   local desc="Ensure that the Docker socket is not mounted inside any containers (Scored)"
   local remediation="You should ensure that no containers mount docker.sock as a volume."
-  local remediationImpact="If you really, really have to do this, you should use user namespaces and always ensure that the images you run with this configuration are properly audited and that you trust them in order to avoid potential breaches."
+  local remediationImpact="None."
   local check="$id  - $desc"
   starttestjson "$id" "$desc"
 
