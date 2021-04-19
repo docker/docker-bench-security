@@ -184,7 +184,7 @@ logcheckresult() {
     fi
     globalRemediation="${globalRemediation}\n${bldblu}[INFO]${txtrst} ${id} - ${remediation}"
     if [ -n "${remediationImpact}" ]; then
-      globalRemediation="${globalRemediation} Impact: ${remediationImpact}"
+      globalRemediation="${globalRemediation} Remediation Impact: ${remediationImpact}"
     fi
   fi
 }
