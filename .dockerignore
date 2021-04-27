@@ -1,5 +1,6 @@
-.git
-*.md
-*.png
-distros
-
+*
+!docker-bench-security.sh
+!functions/
+!tests/
+!log/
+log/*

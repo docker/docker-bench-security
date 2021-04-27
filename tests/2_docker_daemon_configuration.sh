@@ -1,440 +1,415 @@
 #!/bin/sh
 
 check_2() {
-  logit "\n"
-  id_2="2"
-  desc_2="Docker daemon configuration"
-  check_2="$id_2 - $desc_2"
-  info "$check_2"
-  startsectionjson "$id_2" "$desc_2"
+  logit ""
+  local id="2"
+  local desc="Docker daemon configuration"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
+  startsectionjson "$id" "$desc"
 }
 
-# 2.1
 check_2_1() {
-  id_2_1="2.1"
-  desc_2_1="Ensure network traffic is restricted between containers on the default bridge (Scored)"
-  check_2_1="$id_2_1  - $desc_2_1"
-  starttestjson "$id_2_1" "$desc_2_1"
+  local id="2.1"
+  local desc="Ensure network traffic is restricted between containers on the default bridge (Scored)"
+  local remediation="Edit the Docker daemon configuration file to ensure that inter-container communication is disabled: icc: false."
+  local remediationImpact="Inter-container communication is disabled on the default network bridge. If any communication between containers on the same host is desired, it needs to be explicitly defined using container linking or custom networks."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_effective_command_line_args '--icc' | grep false >/dev/null 2>&1; then
-    pass "$check_2_1"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
-    pass "$check_2_1"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_1"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
-# 2.2
 check_2_2() {
-  id_2_2="2.2"
-  desc_2_2="Ensure the logging level is set to 'info' (Scored)"
-  check_2_2="$id_2_2  - $desc_2_2"
-  starttestjson "$id_2_2" "$desc_2_2"
+  local id="2.2"
+  local desc="Ensure the logging level is set to 'info' (Scored)"
+  local remediation="Ensure that the Docker daemon configuration file has the following configuration included log-level: info. Alternatively, run the Docker daemon as following: dockerd --log-level=info"
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'log-level' >/dev/null 2>&1; then
     if get_docker_configuration_file_args 'log-level' | grep info >/dev/null 2>&1; then
-      pass "$check_2_2"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    elif [ -z "$(get_docker_configuration_file_args 'log-level')" ]; then
-      pass "$check_2_2"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_2"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
     fi
-  elif get_docker_effective_command_line_args '-l'; then
+    if [ -z "$(get_docker_configuration_file_args 'log-level')" ]; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
+  fi
+  if get_docker_effective_command_line_args '-l'; then
     if get_docker_effective_command_line_args '-l' | grep "info" >/dev/null 2>&1; then
-      pass "$check_2_2"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_2"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
     fi
-  else
-    pass "$check_2_2"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.3
 check_2_3() {
-  id_2_3="2.3"
-  desc_2_3="Ensure Docker is allowed to make changes to iptables (Scored)"
-  check_2_3="$id_2_3  - $desc_2_3"
-  starttestjson "$id_2_3" "$desc_2_3"
+  local id="2.3"
+  local desc="Ensure Docker is allowed to make changes to iptables (Scored)"
+  local remediation="Do not run the Docker daemon with --iptables=false option."
+  local remediationImpact="The Docker daemon service requires iptables rules to be enabled before it starts."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_effective_command_line_args '--iptables' | grep "false" >/dev/null 2>&1; then
-    warn "$check_2_3"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  elif get_docker_configuration_file_args 'iptables' | grep "false" >/dev/null 2>&1; then
-    warn "$check_2_3"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  else
-    pass "$check_2_3"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  if get_docker_configuration_file_args 'iptables' | grep "false" >/dev/null 2>&1; then
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
+  fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.4
 check_2_4() {
-  id_2_4="2.4"
-  desc_2_4="Ensure insecure registries are not used (Scored)"
-  check_2_4="$id_2_4  - $desc_2_4"
-  starttestjson "$id_2_4" "$desc_2_4"
+  local id="2.4"
+  local desc="Ensure insecure registries are not used (Scored)"
+  local remediation="You should ensure that no insecure registries are in use."
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_effective_command_line_args '--insecure-registry' | grep "insecure-registry" >/dev/null 2>&1; then
-    warn "$check_2_4"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  elif ! [ -z "$(get_docker_configuration_file_args 'insecure-registries')" ]; then
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
+  fi
+  if ! [ -z "$(get_docker_configuration_file_args 'insecure-registries')" ]; then
     if get_docker_configuration_file_args 'insecure-registries' | grep '\[]' >/dev/null 2>&1; then
-      pass "$check_2_4"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_4"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
     fi
-  else
-    pass "$check_2_4"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.5
 check_2_5() {
-  id_2_5="2.5"
-  desc_2_5="Ensure aufs storage driver is not used (Scored)"
-  check_2_5="$id_2_5  - $desc_2_5"
-  starttestjson "$id_2_5" "$desc_2_5"
+  local id="2.5"
+  local desc="Ensure aufs storage driver is not used (Scored)"
+  local remediation="Do not start Docker daemon as using dockerd --storage-driver aufs option."
+  local remediationImpact="aufs is the only storage driver that allows containers to share executable and shared  library memory. Its use should be reviewed in line with your organization's security policy."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "^\sStorage Driver:\s*aufs\s*$" >/dev/null 2>&1; then
-    warn "$check_2_5"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  else
-    pass "$check_2_5"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.6
 check_2_6() {
-  id_2_6="2.6"
-  desc_2_6="Ensure TLS authentication for Docker daemon is configured (Scored)"
-  check_2_6="$id_2_6  - $desc_2_6"
-  starttestjson "$id_2_6" "$desc_2_6"
+  local id="2.6"
+  local desc="Ensure TLS authentication for Docker daemon is configured (Scored)"
+  local remediation="Follow the steps mentioned in the Docker documentation or other references. By default, TLS authentication is not configured."
+  local remediationImpact="You would need to manage and guard certificates and keys for the Docker daemon and Docker clients."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if [ $(get_docker_configuration_file_args 'tcp://') ] || \
     [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') >/dev/null 2>&1 ]; then
     if [ $(get_docker_configuration_file_args '"tlsverify":' | grep 'true') ] || \
         [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify') >/dev/null 2>&1 ]; then
-      pass "$check_2_6"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    elif [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    if [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
         [ $(get_docker_cumulative_command_line_args '--tls' | grep 'tls$') >/dev/null 2>&1 ]; then
-      warn "$check_2_6"
+      warn -s "$check"
       warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
-      resulttestjson "WARN" "Docker daemon currently listening on TCP with TLS, but no verification"
-      currentScore=$((currentScore - 1))
-    else
-      warn "$check_2_6"
-      warn "     * Docker daemon currently listening on TCP without TLS"
-      resulttestjson "WARN" "Docker daemon currently listening on TCP without TLS"
-      currentScore=$((currentScore - 1))
+      logcheckresult "WARN" "Docker daemon currently listening on TCP with TLS, but no verification"
+      return
     fi
-  else
-    info "$check_2_6"
-    info "     * Docker daemon not listening on TCP"
-    resulttestjson "INFO" "Docker daemon not listening on TCP"
-    currentScore=$((currentScore + 0))
+    warn -s "$check"
+    warn "     * Docker daemon currently listening on TCP without TLS"
+    logcheckresult "WARN" "Docker daemon currently listening on TCP without TLS"
+    return
   fi
+  info -c "$check"
+  info "     * Docker daemon not listening on TCP"
+  logcheckresult "INFO" "Docker daemon not listening on TCP"
 }
 
-# 2.7
 check_2_7() {
-  id_2_7="2.7"
-  desc_2_7="Ensure the default ulimit is configured appropriately (Not Scored)"
-  check_2_7="$id_2_7  - $desc_2_7"
-  starttestjson "$id_2_7" "$desc_2_7"
+  local id="2.7"
+  local desc="Ensure the default ulimit is configured appropriately (Not Scored)"
+  local remediation="Run Docker in daemon mode and pass --default-ulimit as option with respective ulimits as appropriate in your environment and in line with your security policy. Example: dockerd --default-ulimit nproc=1024:2048 --default-ulimit nofile=100:200"
+  local remediationImpact="If ulimits are set incorrectly this could cause issues with system resources, possibly causing a denial of service condition."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'default-ulimit' | grep -v '{}' >/dev/null 2>&1; then
-    pass "$check_2_7"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1; then
-    pass "$check_2_7"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    info "$check_2_7"
-    info "     * Default ulimit doesn't appear to be set"
-    resulttestjson "INFO" "Default ulimit doesn't appear to be set"
-    currentScore=$((currentScore + 0))
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_effective_command_line_args '--default-ulimit' | grep "default-ulimit" >/dev/null 2>&1; then
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  info -c "$check"
+  info "     * Default ulimit doesn't appear to be set"
+  logcheckresult "INFO" "Default ulimit doesn't appear to be set"
 }
 
-# 2.8
 check_2_8() {
-  id_2_8="2.8"
-  desc_2_8="Enable user namespace support (Scored)"
-  check_2_8="$id_2_8  - $desc_2_8"
-  starttestjson "$id_2_8" "$desc_2_8"
+  local id="2.8"
+  local desc="Enable user namespace support (Scored)"
+  local remediation="Please consult the Docker documentation for various ways in which this can be configured depending upon your requirements. The high-level steps are: Ensure that the files /etc/subuid and /etc/subgid exist. Start the docker daemon with --userns-remap flag."
+  local remediationImpact="User namespace remapping is incompatible with a number of Docker features and also currently breaks some of its functionalities."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'userns-remap' | grep -v '""'; then
-    pass "$check_2_8"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--userns-remap' | grep "userns-remap" >/dev/null 2>&1; then
-    pass "$check_2_8"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_8"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_effective_command_line_args '--userns-remap' | grep "userns-remap" >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
-# 2.9
 check_2_9() {
-  id_2_9="2.9"
-  desc_2_9="Ensure the default cgroup usage has been confirmed (Scored)"
-  check_2_9="$id_2_9  - $desc_2_9"
-  starttestjson "$id_2_9" "$desc_2_9"
+  local id="2.9"
+  local desc="Ensure the default cgroup usage has been confirmed (Scored)"
+  local remediation="The default setting is in line with good security practice and can be left in situ."
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'cgroup-parent' | grep -v ''; then
-    warn "$check_2_9"
+    warn -s "$check"
     info "     * Confirm cgroup usage"
-    resulttestjson "WARN" "Confirm cgroup usage"
-    currentScore=$((currentScore + 0))
-  elif get_docker_effective_command_line_args '--cgroup-parent' | grep "cgroup-parent" >/dev/null 2>&1; then
-    warn "$check_2_9"
-    info "     * Confirm cgroup usage"
-    resulttestjson "WARN" "Confirm cgroup usage"
-    currentScore=$((currentScore + 0))
-  else
-    pass "$check_2_9"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    logcheckresult "WARN" "Confirm cgroup usage"
+    return
   fi
+  if get_docker_effective_command_line_args '--cgroup-parent' | grep "cgroup-parent" >/dev/null 2>&1; then
+    warn -s "$check"
+    info "     * Confirm cgroup usage"
+    logcheckresult "WARN" "Confirm cgroup usage"
+    return
+  fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.10
 check_2_10() {
-  id_2_10="2.10"
-  desc_2_10="Ensure base device size is not changed until needed (Scored)"
-  check_2_10="$id_2_10  - $desc_2_10"
-  starttestjson "$id_2_10" "$desc_2_10"
+  local id="2.10"
+  local desc="Ensure base device size is not changed until needed (Scored)"
+  local remediation="Do not set --storage-opt dm.basesize until needed."
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'storage-opts' | grep "dm.basesize" >/dev/null 2>&1; then
-    warn "$check_2_10"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  elif get_docker_effective_command_line_args '--storage-opt' | grep "dm.basesize" >/dev/null 2>&1; then
-    warn "$check_2_10"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  else
-    pass "$check_2_10"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  if get_docker_effective_command_line_args '--storage-opt' | grep "dm.basesize" >/dev/null 2>&1; then
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
+  fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.11
 check_2_11() {
-  id_2_11="2.11"
-  desc_2_11="Ensure that authorization for Docker client commands is enabled (Scored)"
-  check_2_11="$id_2_11  - $desc_2_11"
-  starttestjson "$id_2_11" "$desc_2_11"
+  local id="2.11"
+  local desc="Ensure that authorization for Docker client commands is enabled (Scored)"
+  local remediation="Install/Create an authorization plugin. Configure the authorization policy as desired. Start the docker daemon using command dockerd --authorization-plugin=<PLUGIN_ID>"
+  local remediationImpact="Each Docker command needs to pass through the authorization plugin mechanism. This may have a performance impact"
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]'; then
-    pass "$check_2_11"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--authorization-plugin' | grep "authorization-plugin" >/dev/null 2>&1; then
-    pass "$check_2_11"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_11"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_effective_command_line_args '--authorization-plugin' | grep "authorization-plugin" >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
-# 2.12
 check_2_12() {
-  id_2_12="2.12"
-  desc_2_12="Ensure centralized and remote logging is configured (Scored)"
-  check_2_12="$id_2_12  - $desc_2_12"
-  starttestjson "$id_2_12" "$desc_2_12"
+  local id="2.12"
+  local desc="Ensure centralized and remote logging is configured (Scored)"
+  local remediation="Set up the desired log driver following its documentation. Start the docker daemon using that logging driver. Example: dockerd --log-driver=syslog --log-opt syslog-address=tcp://192.xxx.xxx.xxx"
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if docker info --format '{{ .LoggingDriver }}' | grep 'json-file' >/dev/null 2>&1; then
-    warn "$check_2_12"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
-  else
-    pass "$check_2_12"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  pass -s "$check"
+  logcheckresult "PASS"
 }
 
-# 2.13
 check_2_13() {
-  id_2_13="2.13"
-  desc_2_13="Ensure live restore is enabled (Scored)"
-  check_2_13="$id_2_13  - $desc_2_13"
-  starttestjson "$id_2_13" "$desc_2_13"
+  local id="2.13"
+  local desc="Ensure live restore is enabled (Scored)"
+  local remediation="Run Docker in daemon mode and pass --live-restore option."
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if docker info 2>/dev/null | grep -e "Live Restore Enabled:\s*true\s*" >/dev/null 2>&1; then
-    pass "$check_2_13"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
-      pass "$check_2_13 (Incompatible with swarm mode)"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    elif get_docker_effective_command_line_args '--live-restore' | grep "live-restore" >/dev/null 2>&1; then
-      pass "$check_2_13"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_13"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
-    fi
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if docker info 2>/dev/null | grep -e "Swarm:*\sactive\s*" >/dev/null 2>&1; then
+    pass -s "$check (Incompatible with swarm mode)"
+    logcheckresult "PASS"
+    return
+  fi
+  if get_docker_effective_command_line_args '--live-restore' | grep "live-restore" >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
-# 2.14
 check_2_14() {
-  id_2_14="2.14"
-  desc_2_14="Ensure Userland Proxy is Disabled (Scored)"
-  check_2_14="$id_2_14  - $desc_2_14"
-  starttestjson "$id_2_14" "$desc_2_14"
+  local id="2.14"
+  local desc="Ensure Userland Proxy is Disabled (Scored)"
+  local remediation="You should run the Docker daemon using command: dockerd --userland-proxy=false"
+  local remediationImpact="Some systems with older Linux kernels may not be able to support hairpin NAT and therefore require the userland proxy service. Also, some networking setups can be impacted by the removal of the userland proxy."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_configuration_file_args 'userland-proxy' | grep false >/dev/null 2>&1; then
-    pass "$check_2_14"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
-    pass "$check_2_14"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_14"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_effective_command_line_args '--userland-proxy=false' 2>/dev/null | grep "userland-proxy=false" >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
-# 2.15
 check_2_15() {
-  id_2_15="2.15"
-  desc_2_15="Ensure that a daemon-wide custom seccomp profile is applied if appropriate (Not Scored)"
-  check_2_15="$id_2_15  - $desc_2_15"
-  starttestjson "$id_2_15" "$desc_2_15"
+  local id="2.15"
+  local desc="Ensure that a daemon-wide custom seccomp profile is applied if appropriate (Not Scored)"
+  local remediation="By default, Docker's default seccomp profile is applied. If this is adequate for your environment, no action is necessary."
+  local remediationImpact="A misconfigured seccomp profile could possibly interrupt your container environment. You should therefore exercise extreme care if you choose to override the default settings."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if docker info --format '{{ .SecurityOptions }}' | grep 'name=seccomp,profile=default' 2>/dev/null 1>&2; then
-    pass "$check_2_15"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    info "$check_2_15"
-    resulttestjson "INFO"
-    currentScore=$((currentScore + 0))
+    pass -c "$check"
+    logcheckresult "PASS"
+    return
   fi
+  info -c "$check"
+  logcheckresult "INFO"
 }
 
-# 2.16
 check_2_16() {
   docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
     | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
 
-  id_2_16="2.16"
-  desc_2_16="Ensure that experimental features are not implemented in production (Scored)"
-  check_2_16="$id_2_16  - $desc_2_16"
-  starttestjson "$id_2_16" "$desc_2_16"
+  local id="2.16"
+  local desc="Ensure that experimental features are not implemented in production (Scored)"
+  local remediation="You should not pass --experimental as a runtime parameter to the Docker daemon on production systems."
+  local remediationImpact="None."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if [ "$docker_version" -le 1903 ]; then
     if docker version -f '{{.Server.Experimental}}' | grep false 2>/dev/null 1>&2; then
-      pass "$check_2_16"
-      resulttestjson "PASS"
-      currentScore=$((currentScore + 1))
-    else
-      warn "$check_2_16"
-      resulttestjson "WARN"
-      currentScore=$((currentScore - 1))
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
     fi
-  else
-    desc_2_16="$desc_2_16 (Deprecated)"
-    check_2_16="$id_2_16  - $desc_2_16"
-    info "$desc_2_16"
-    resulttestjson "INFO"
+    warn -s "$check"
+    logcheckresult "WARN"
+    return
   fi
+  local desc="$desc (Deprecated)"
+  local check="$id  - $desc"
+  info -c "$desc"
+  logcheckresult "INFO"
 }
 
-# 2.17
 check_2_17() {
-  id_2_17="2.17"
-  desc_2_17="Ensure containers are restricted from acquiring new privileges (Scored)"
-  check_2_17="$id_2_17  - $desc_2_17"
-  starttestjson "$id_2_17" "$desc_2_17"
+  local id="2.17"
+  local desc="Ensure containers are restricted from acquiring new privileges (Scored)"
+  local remediation="You should run the Docker daemon using command: dockerd --no-new-privileges"
+  local remediationImpact="no_new_priv prevents LSMs such as SELinux from escalating the privileges of individual containers."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   if get_docker_effective_command_line_args '--no-new-privileges' | grep "no-new-privileges" >/dev/null 2>&1; then
-    pass "$check_2_17"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  elif get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
-    pass "$check_2_17"
-    resulttestjson "PASS"
-    currentScore=$((currentScore + 1))
-  else
-    warn "$check_2_17"
-    resulttestjson "WARN"
-    currentScore=$((currentScore - 1))
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
   fi
+  if get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  warn -s "$check"
+  logcheckresult "WARN"
 }
 
 check_2_end() {

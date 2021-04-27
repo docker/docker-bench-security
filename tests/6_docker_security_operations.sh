@@ -1,22 +1,22 @@
 #!/bin/sh
 
 check_6() {
-  logit "\n"
-  id_6="6"
-  desc_6="Docker Security Operations"
-  check_6="$id_6 - $desc_6"
-  info "$check_6"
-  startsectionjson "$id_6" "$desc_6"
+  logit ""
+  local id="6"
+  local desc="Docker Security Operations"
+  checkHeader="$id - $desc"
+  info "$checkHeader"
+  startsectionjson "$id" "$desc"
 }
 
-# 6.1
 check_6_1() {
-  id_6_1="6.1"
-  desc_6_1="Ensure that image sprawl is avoided (Not Scored)"
-  check_6_1="$id_6_1  - $desc_6_1"
-  starttestjson "$id_6_1" "$desc_6_1"
+  local id="6.1"
+  local desc="Ensure that image sprawl is avoided (Not Scored)"
+  local remediation="You should keep only the images that you actually need and establish a workflow to remove old or stale images from the host. Additionally, you should use features such as pull-by-digest to get specific images from the registry."
+  local remediationImpact="docker system prune -a removes all exited containers as well as all images and volumes that are not referenced by running containers, including for UCP and DTR."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   images=$(docker images -q | sort -u | wc -l | awk '{print $1}')
   active_images=0
 
@@ -26,37 +26,33 @@ check_6_1() {
     fi
   done
 
-    info "$check_6_1"
-    info "     * There are currently: $images images"
+  info -c "$check"
+  info "     * There are currently: $images images"
 
   if [ "$active_images" -lt "$((images / 2))" ]; then
     info "     * Only $active_images out of $images are in use"
   fi
-  resulttestjson "INFO" "$active_images active/$images in use"
-  currentScore=$((currentScore + 0))
+  logcheckresult "INFO" "$active_images active/$images in use"
 }
 
-# 6.2
 check_6_2() {
-  id_6_2="6.2"
-  desc_6_2="Ensure that container sprawl is avoided (Not Scored)"
-  check_6_2="$id_6_2  - $desc_6_2"
-  starttestjson "$id_6_2" "$desc_6_2"
+  local id="6.2"
+  local desc="Ensure that container sprawl is avoided (Not Scored)"
+  local remediation="You should periodically check your container inventory on each host and clean up containers which are not in active use with the command: docker container prune"
+  local remediationImpact="You should retain containers that are actively in use, and delete ones which are no longer needed."
+  local check="$id  - $desc"
+  starttestjson "$id" "$desc"
 
-  totalChecks=$((totalChecks + 1))
   total_containers=$(docker info 2>/dev/null | grep "Containers" | awk '{print $2}')
   running_containers=$(docker ps -q | wc -l | awk '{print $1}')
   diff="$((total_containers - running_containers))"
+  info -c "$check"
   if [ "$diff" -gt 25 ]; then
-    info "$check_6_2"
     info "     * There are currently a total of $total_containers containers, with only $running_containers of them currently running"
-    resulttestjson "INFO" "$total_containers total/$running_containers running"
   else
-    info "$check_6_2"
     info "     * There are currently a total of $total_containers containers, with $running_containers of them currently running"
-    resulttestjson "INFO" "$total_containers total/$running_containers running"
   fi
-  currentScore=$((currentScore + 0))
+  logcheckresult "INFO" "$total_containers total/$running_containers running"
 }
 
 check_6_end() {

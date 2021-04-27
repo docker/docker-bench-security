@@ -1,21 +1,21 @@
 #!/bin/sh
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
 # Docker Bench for Security
 #
-# Docker, Inc. (c) 2015-
+# Docker, Inc. (c) 2015-2021
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
-# ------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------
 
-version='1.3.5'
+version='1.3.6'
 
 # Load dependencies
-. ./functions_lib.sh
-. ./helper_lib.sh
+. ./functions/functions_lib.sh
+. ./functions/helper_lib.sh
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
-myname=$(basename "${this_path}")     ## file name of this script.
+myname=$(basename "${this_path%.*}")     ## file name of this script.
 
 readonly version
 readonly this_path
@@ -24,19 +24,7 @@ readonly myname
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
-req_progs='awk docker grep stat'
-for p in $req_progs; do
-  command -v "$p" >/dev/null 2>&1 || { printf "%s command not found.\n" "$p"; exit 1; }
-done
-
-if command -v ss >/dev/null 2>&1; then
-  netbin=ss
-elif command -v netstat >/dev/null 2>&1; then
-  netbin=netstat
-else
-  echo "ss or netstat command not found."
-  exit 1
-fi
+req_programs 'awk docker grep stat tee tail wc xargs truncate sed'
 
 # Ensure we can connect to docker daemon
 if ! docker ps -q >/dev/null 2>&1; then
@@ -46,54 +34,76 @@ fi
 
 usage () {
   cat <<EOF
-  usage: ${myname} [options]
+Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
+Checks for dozens of common best-practices around deploying Docker containers in production.
+Inspired by the CIS Docker Benchmark v1.2.0.
 
+Usage: ${myname}.sh [OPTIONS]
+
+Example:
+  - Only run check "2.2 - Ensure the logging level is set to 'info'":
+      sh docker-bench-security.sh -c check_2_2
+  - Run all available checks except the host_configuration group and "2.8 - Enable user namespace support":
+      sh docker-bench-security.sh -e host_configuration,check_2_8
+  - Run just the container_images checks except "4.5 - Ensure Content trust for Docker is Enabled":
+      sh docker-bench-security.sh -c container_images -e check_4_5
+
+Options:
   -b           optional  Do not print colors
   -h           optional  Print this help message
-  -l FILE      optional  Log output in FILE
-  -c CHECK     optional  Comma delimited list of specific check(s)
-  -e CHECK     optional  Comma delimited list of specific check(s) to exclude
+  -l FILE      optional  Log output in FILE, inside container if run using docker
+  -u USERS     optional  Comma delimited list of trusted docker user(s)
+  -c CHECK     optional  Comma delimited list of specific check(s) id
+  -e CHECK     optional  Comma delimited list of specific check(s) id to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
+  -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
+
+Complete list of checks: <https://github.com/docker/docker-bench-security/blob/master/tests/>
+Full documentation: <https://github.com/docker/docker-bench-security>
+Released under the Apache-2.0 License.
 EOF
 }
+
+# Default values
+if [ ! -d log ]; then
+  mkdir log
+fi
+logger="log/${myname}.log"
+limit=0
+printremediation="1"
+globalRemediation=""
 
 # Get the flags
 # If you add an option here, please
 # remember to update usage() above.
-while getopts bhl:c:e:i:x:t:n: args
+while getopts bhl:u:c:e:i:x:t:n:p args
 do
   case $args in
   b) nocolor="nocolor";;
   h) usage; exit 0 ;;
   l) logger="$OPTARG" ;;
+  u) dockertrustusers="$OPTARG" ;;
   c) check="$OPTARG" ;;
   e) checkexclude="$OPTARG" ;;
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
   n) limit="$OPTARG" ;;
+  p) printremediation="0" ;;
   *) usage; exit 1 ;;
   esac
 done
 
-if [ -z "$logger" ]; then
-  logger="${myname}.log"
-fi
-
-if [ -z "$limit" ]; then
-  limit=0
-fi
-
 # Load output formating
-. ./output_lib.sh
+. ./functions/output_lib.sh
 
 yell_info
 
 # Warn if not root
 ID=$(id -u)
 if [ "x$ID" != "x0" ]; then
-  warn "Some tests might require root to run"
+  warn "$(yell 'Some tests might require root to run')\n"
   sleep 3
 fi
 
@@ -103,11 +113,13 @@ fi
 totalChecks=0
 currentScore=0
 
-logit "Initializing $(date)\n"
+logit "Initializing $(date +%Y-%m-%dT%H:%M:%S%:z)\n"
 beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
+  logit "\n${bldylw}Section A - Check results${txtrsr}"
+
   # Get configuration location
   get_docker_configuration_file
 
@@ -142,12 +154,6 @@ main () {
     images=$(docker images -q | grep -v "$benchcont")
   fi
 
-  if [ -z "$containers" ]; then
-    running_containers=0
-  else
-    running_containers=1
-  fi
-
   for test in tests/*.sh; do
     . ./"$test"
   done
@@ -157,7 +163,7 @@ main () {
     cis
   elif [ -z "$check" ]; then
     # No check defined but excludes defined set to calls in cis() function
-    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)
+    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)
   fi
 
   for c in $(echo "$check" | sed "s/,/ /g"); do
@@ -177,7 +183,7 @@ main () {
         continue
       elif echo "$c" | grep -vE 'check_[0-9]|check_[a-z]' 2>/dev/null 1>&2; then
         # Function not a check, fill loop_checks with all check from function
-        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions_lib.sh)"
+        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)"
       else
         # Just one check
         loop_checks="$c"
@@ -192,9 +198,14 @@ main () {
     fi
   done
 
-  printf "\n"
+  if [ -n "${globalRemediation}" ] && [ "$printremediation" = "1" ]; then
+    logit "\n\n${bldylw}Section B - Remediation measures${txtrst}"
+    logit "${globalRemediation}"
+  fi
+
+  logit "\n\n${bldylw}Section C - Score${txtrst}\n"
   info "Checks: $totalChecks"
-  info "Score: $currentScore"
+  info "Score: $currentScore\n"
 
   endjson "$totalChecks" "$currentScore" "$(date +%s)"
 }
