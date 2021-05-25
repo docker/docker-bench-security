@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 bldred='\033[1;31m' # Bold Red
 bldgrn='\033[1;32m' # Bold Green
@@ -133,7 +133,7 @@ starttestjson() {
 log_to_json() {
   if [ $# -eq 1 ]; then
     printf "\"result\": \"%s\"" "$1" | tee -a "$logger.json" 2>/dev/null 1>&2
-    return 
+    return
   fi
   if [ $# -eq 2 ] && [ $# -ne 1 ]; then
     # Result also contains details
@@ -143,7 +143,7 @@ log_to_json() {
   # Result also includes details and a list of items. Add that directly to details and to an array property "items"
   # Also limit the number of items to $limit, if $limit is non-zero
   truncItems=$3
-  if [ $limit != 0 ]; then
+  if [ "$limit" != 0 ]; then
     truncItems=""
     ITEM_COUNT=0
     for item in $3; do
