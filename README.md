@@ -2,9 +2,7 @@
 
 ![Docker Bench for Security running](img/benchmark_log.png)
 
-The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are inspired by the [CIS Docker Benchmark v1.2.0](https://www.cisecurity.org/benchmark/docker/).
-
-The list with all tests is available [here](tests/TESTS.md).
+The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are based on the [CIS Docker Benchmark v1.3.1](https://www.cisecurity.org/benchmark/docker/).
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and docker containers against this benchmark.
 
@@ -93,13 +91,13 @@ Note that when distributions don't contain `auditctl`, the audit tests will chec
   -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
 ```
 
-By default the Docker Bench for Security script will run all available CIS tests and produce 
-logs in the log folder from current directory, named `docker-bench-security.sh.log.json` and 
+By default the Docker Bench for Security script will run all available CIS tests and produce
+logs in the log folder from current directory, named `docker-bench-security.sh.log.json` and
 `docker-bench-security.sh.log`.
 
 If the docker container is used then the log files will be created inside the container in location `/usr/local/bin/log/`. If you wish to access them from the host after the container has been run you will need to mount a volume for storing them in.
 
-The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6` and community contributed checks are named `check_c_<number>`. A complete list of checks is present in [TESTS.md](tests/TESTS.md).
+The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6` and community contributed checks are named `check_c_<number>`.
 
 `sh docker-bench-security.sh -c check_2_2` will only run check `2.2 Ensure the logging level is set to 'info'`.
 
@@ -134,5 +132,3 @@ git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
 docker-compose run --rm docker-bench-security
 ```
-
-This script was built to be POSIX 2004 compliant, so it should be portable across any Unix platform.
