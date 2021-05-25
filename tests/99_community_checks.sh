@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
 check_c() {
   logit ""
   local id="99"
@@ -10,10 +11,10 @@ check_c() {
 
 check_c_1() {
   local id="C.1"
-  local desc="This is a example check for a Scored check"
-  local remediation="This is an example remediation measure for a Scored check"
-  local remediationImpact="This is an example remediation impact for a Scored check"
-  local check="$id  - $desc"
+  local desc="This is a example check for a Automated check"
+  local remediation="This is an example remediation measure for a Automated check"
+  local remediationImpact="This is an example remediation impact for a Automated check"
+  local check="$id - $desc"
   starttestjson "$id" "$desc"
 
   if docker info --format='{{ .Architecture }}' | grep 'x86_64' 2>/dev/null 1>&2; then
@@ -32,10 +33,10 @@ check_c_1() {
 
 check_c_1_1() {
   local id="C.1.1"
-  local desc="This is a example check for a Not Scored check"
-  local remediation="This is an example remediation measure for a Not Scored check"
-  local remediationImpact="This is an example remediation impact for a Not Scored check"
-  local check="$id  - $desc"
+  local desc="This is a example check for a Manual check"
+  local remediation="This is an example remediation measure for a Manual check"
+  local remediationImpact="This is an example remediation impact for a Manual check"
+  local check="$id - $desc"
   starttestjson "$id" "$desc"
 
   if docker info --format='{{ .Architecture }}' | grep 'x86_64' 2>/dev/null 1>&2; then
@@ -60,7 +61,7 @@ check_c_2() {
   local desc="Ensure operations on legacy registry (v1) are Disabled"
   local remediation="Start docker daemon with --disable-legacy-registry=false flag. Starting with Docker 17.12, support for V1 registries has been removed, and the --disable-legacy-registry flag can no longer be used."
   local remediationImpact="Prevents the docker daemon from pull, push, and login operations against v1 registries."
-  local check="$id  - $desc"
+  local check="$id - $desc"
   starttestjson "$id" "$desc"
 
   if [ "$docker_version" -lt 1712 ]; then
@@ -79,7 +80,7 @@ check_c_2() {
     return
   fi
   local desc="$desc (Deprecated)"
-  local check="$id  - $desc"
+  local check="$id - $desc"
   info -c "$check"
   logcheckresult "INFO"
 }

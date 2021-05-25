@@ -8,12 +8,9 @@ project, and follows the same rules and principles. If you're already familiar
 with the way Docker does things, you'll feel right at home.
 
 Otherwise, go read
-[Docker's contributions guidelines](https://github.com/docker/docker/blob/master/CONTRIBUTING.md).
+[Contribute to the Moby Project](https://github.com/moby/moby/blob/master/CONTRIBUTING.md).
 
 ## Development Environment Setup
-
-The only thing you need to hack on Docker Bench for Security is a POSIX 2004
-compliant shell. We try to keep the project compliant for maximum portability.
 
 ### Start hacking
 
@@ -53,12 +50,9 @@ tests/
 ```
 
 To modify the Docker Bench for Security you should first clone the repository,
-make your changes, check your code with `shellcheck`, `checkbashisms` or similar
-tools, and then sign off on your commits. After that feel free to send us a
-pull request with the changes.
+make your changes, check your code with `shellcheck`, or similar tools, and
+then sign off on your commits. After that feel free to send us a pull request
+with the changes.
 
 While this tool was inspired by the [CIS Docker 1.11.0 benchmark](https://www.cisecurity.org/benchmark/docker/)
-and its successors, feel free to add new tests. We will try to turn
-[dockerbench.com](https://dockerbench.com) into a list of good community
-benchmarks for both security and performance, and we would love community
-contributions.
+and its successors, feel free to add new tests.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # --------------------------------------------------------------------------------------------
 # Docker Bench for Security
 #
@@ -36,7 +36,7 @@ usage () {
   cat <<EOF
 Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
 Checks for dozens of common best-practices around deploying Docker containers in production.
-Inspired by the CIS Docker Benchmark v1.2.0.
+Based on the CIS Docker Benchmark 1.3.1.
 
 Usage: ${myname}.sh [OPTIONS]
 
@@ -58,7 +58,7 @@ Options:
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
-  -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
+  -p PRINT     optional  Print remediation measures. Default: Don't print remediation measures.
 
 Complete list of checks: <https://github.com/docker/docker-bench-security/blob/master/tests/>
 Full documentation: <https://github.com/docker/docker-bench-security>
@@ -70,9 +70,10 @@ EOF
 if [ ! -d log ]; then
   mkdir log
 fi
+
 logger="log/${myname}.log"
 limit=0
-printremediation="1"
+printremediation="0"
 globalRemediation=""
 
 # Get the flags
@@ -90,7 +91,7 @@ do
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
   n) limit="$OPTARG" ;;
-  p) printremediation="0" ;;
+  p) printremediation="1" ;;
   *) usage; exit 1 ;;
   esac
 done
@@ -101,8 +102,7 @@ done
 yell_info
 
 # Warn if not root
-ID=$(id -u)
-if [ "x$ID" != "x0" ]; then
+if [ "$(id -u)" != "0" ]; then
   warn "$(yell 'Some tests might require root to run')\n"
   sleep 3
 fi
@@ -118,7 +118,7 @@ beginjson "$version" "$(date +%s)"
 
 # Load all the tests from tests/ and run them
 main () {
-  logit "\n${bldylw}Section A - Check results${txtrsr}"
+  logit "\n${bldylw}Section A - Check results${txtrst}"
 
   # Get configuration location
   get_docker_configuration_file
