@@ -397,11 +397,11 @@ check_2_17() {
   logcheckresult "INFO"
 }
 
-check_2_16() {
+check_2_18() {
   docker_version=$(docker version | grep -i -A2 '^server' | grep ' Version:' \
     | awk '{print $NF; exit}' | tr -d '[:alpha:]-,.' | cut -c 1-4)
 
-  local id="2.16"
+  local id="2.18"
   local desc="Ensure that experimental features are not implemented in production (Scored)"
   local remediation="You should not pass --experimental as a runtime parameter to the Docker daemon on production systems."
   local remediationImpact="None."
