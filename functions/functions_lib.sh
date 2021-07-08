@@ -278,6 +278,10 @@ community_checks() {
   check_c_1
   check_c_1_1
   check_c_2
+  check_c_5_3_1
+  check_c_5_3_2
+  check_c_5_3_3
+  check_c_5_3_4
   check_c_end
 }
 
