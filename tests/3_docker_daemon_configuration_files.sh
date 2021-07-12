@@ -600,7 +600,7 @@ check_3_23() {
   starttestjson "$id" "$desc"
 
   file="/run/containerd/containerd.sock"
-  if [ -f "$file" ]; then
+  if [ -S "$file" ]; then
     if [ "$(stat -c %U:%G $file)" = 'root:root' ]; then
       pass -s "$check"
       logcheckresult "PASS"
@@ -625,7 +625,7 @@ check_3_24() {
   starttestjson "$id" "$desc"
 
   file="/run/containerd/containerd.sock"
-  if [ -f "$file" ]; then
+  if [ -S "$file" ]; then
     if [ "$(stat -c %a $file)" -le 660 ]; then
       pass -s "$check"
       logcheckresult "PASS"
