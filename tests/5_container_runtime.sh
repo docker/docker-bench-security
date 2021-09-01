@@ -254,7 +254,7 @@ check_5_6() {
   printcheck=0
   for c in $containers; do
 
-    processes=$(docker exec "$c" ps -el 2>/dev/null | grep -c sshd | awk '{print $1}')
+    processes=$(docker inspect "$c" --format '{{ .State.Pid }}' 2>/dev/null | xargs pgrep -a -P 2>/dev/null | grep -c sshd | awk '{print $1}')
     if [ "$processes" -ge 1 ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
