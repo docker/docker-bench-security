@@ -107,6 +107,8 @@ The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6` and 
 
 `sh docker-bench-security.sh -e docker_enterprise_configuration,check_2_2` will run allavailable checks except the docker_enterprise_configuration group and `2.2 Ensure the logging level is set to 'info'`
 
+`sh docker-bench-security.sh -c container_images,container_runtime` will run just the container_images and container_runtime checks
+
 `sh docker-bench-security.sh -c container_images -e check_4_5` will run just the container_images checks except `4.5 Ensure Content trust for Docker is Enabled`
 
 Note that when submitting checks, provide information why it is a reasonable test to add and please include some kind of official documentation verifying that information.
