@@ -92,8 +92,8 @@ Note that when distributions don't contain `auditctl`, the audit tests will chec
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests and produce
-logs in the log folder from current directory, named `docker-bench-security.sh.log.json` and
-`docker-bench-security.sh.log`.
+logs in the log folder from current directory, named `docker-bench-security.log.json` and
+`docker-bench-security.log`.
 
 If the docker container is used then the log files will be created inside the container in location `/usr/local/bin/log/`. If you wish to access them from the host after the container has been run you will need to mount a volume for storing them in.
 
