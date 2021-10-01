@@ -57,10 +57,12 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
     docker/docker-bench-security
 ```
 
-2. `Docker Desktop` on macOS doesn't have `/usr/lib/systemd` or the above Docker
+2. The /etc/hostname file is missing on macOS, so it will need to be created first. Also, `Docker Desktop` on macOS doesn't have `/usr/lib/systemd` or the above Docker
     binaries.
 
 ```sh
+sudo touch /etc/hostname
+
 docker run --rm --net host --pid host --userns host --cap-add audit_control \
     -e DOCKER_CONTENT_TRUST=$DOCKER_CONTENT_TRUST \
     -v /etc:/etc \
