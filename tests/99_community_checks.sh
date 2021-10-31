@@ -85,6 +85,150 @@ check_c_2() {
   logcheckresult "INFO"
 }
 
+check_c_5_3_1() {
+  local id="C.5.3.1"
+  local desc="Ensure that CAP_DAC_READ_SEARCH Linux kernel capability is disabled (Automated)"
+  local remediation="Please refer to https://github.com/cdk-team/CDK/wiki/Exploit:-cap-dac-read-search for PoC."
+  local remediationImpact=""
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  fail=0
+  caps_containers=""
+  for c in $containers; do
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd }}' "$c")
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
+      sed 's/CAPADD/CapAdd/')
+    if echo "$caps" | grep -q "DAC_READ_SEARCH"; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn -s "$check"
+        warn "     * CAP_DAC_READ_SEARCH added to $c"
+        caps_containers="$caps_containers $c"
+        fail=1
+        continue
+      fi
+      warn "     * CAP_DAC_READ_SEARCH added to $c"
+      caps_containers="$caps_containers $c"
+    fi
+  done
+  # We went through all the containers and found none with extra capabilities
+  if [ $fail -eq 0 ]; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  logcheckresult "WARN" "CAP_DAC_READ_SEARCH capability added for containers" "$caps_containers"
+}
+
+check_c_5_3_2() {
+  local id="C.5.3.2"
+  local desc="Ensure that CAP_SYS_MODULE Linux kernel capability is disabled (Automated)"
+  local remediation="Please refer to https://xcellerator.github.io/posts/docker_escape/ for PoC."
+  local remediationImpact=""
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  fail=0
+  caps_containers=""
+  for c in $containers; do
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd }}' "$c")
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
+      sed 's/CAPADD/CapAdd/')
+    if echo "$caps" | grep -q "SYS_MODULE"; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn -s "$check"
+        warn "     * CAP_SYS_MODULE added to $c"
+        caps_containers="$caps_containers $c"
+        fail=1
+        continue
+      fi
+      warn "     * CAP_SYS_MODULE added to $c"
+      caps_containers="$caps_containers $c"
+    fi
+  done
+  # We went through all the containers and found none with extra capabilities
+  if [ $fail -eq 0 ]; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  logcheckresult "WARN" "CAP_SYS_MODULE capability added for containers" "$caps_containers"
+}
+
+check_c_5_3_3() {
+  local id="C.5.3.3"
+  local desc="Ensure that CAP_SYS_ADMIN Linux kernel capability is disabled (Automated)"
+  local remediation="Please refer to https://blog.trailofbits.com/2019/07/19/understanding-docker-container-escapes/ for PoC."
+  local remediationImpact=""
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  fail=0
+  caps_containers=""
+  for c in $containers; do
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd }}' "$c")
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
+      sed 's/CAPADD/CapAdd/')
+    if echo "$caps" | grep -q "SYS_ADMIN"; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn -s "$check"
+        warn "     * CAP_SYS_ADMIN added to $c"
+        caps_containers="$caps_containers $c"
+        fail=1
+        continue
+      fi
+      warn "     * CAP_SYS_ADMIN added to $c"
+      caps_containers="$caps_containers $c"
+    fi
+  done
+  # We went through all the containers and found none with extra capabilities
+  if [ $fail -eq 0 ]; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  logcheckresult "WARN" "CAP_SYS_ADMIN capability added for containers" "$caps_containers"
+}
+
+check_c_5_3_4() {
+  local id="C.5.3.4"
+  local desc="Ensure that CAP_SYS_PTRACE Linux kernel capability is disabled (Automated)"
+  local remediation="Please refer to https://0xn3va.gitbook.io/cheat-sheets/container/escaping/excessive-capabilities#cap_sys_ptrace"
+  local remediationImpact=""
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  fail=0
+  caps_containers=""
+  for c in $containers; do
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd }}' "$c")
+    caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
+      sed 's/CAPADD/CapAdd/')
+    if echo "$caps" | grep -q "SYS_PTRACE"; then
+      # If it's the first container, fail the test
+      if [ $fail -eq 0 ]; then
+        warn -s "$check"
+        warn "     * CAP_SYS_PTRACE added to $c"
+        caps_containers="$caps_containers $c"
+        fail=1
+        continue
+      fi
+      warn "     * CAP_SYS_PTRACE added to $c"
+      caps_containers="$caps_containers $c"
+    fi
+  done
+  # We went through all the containers and found none with extra capabilities
+  if [ $fail -eq 0 ]; then
+    pass -s "$check"
+    logcheckresult "PASS"
+    return
+  fi
+  logcheckresult "WARN" "CAP_SYS_PTRACE capability added for containers" "$caps_containers"
+}
+
 check_c_end() {
   endsectionjson
 }
