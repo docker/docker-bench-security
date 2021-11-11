@@ -233,7 +233,7 @@ check_4_10() {
 
 check_4_11() {
   local id="4.11"
-  local desc="Ensure only verified packages are are installed (Manual)"
+  local desc="Ensure only verified packages are installed (Manual)"
   local remediation="You should use a secure package distribution mechanism of your choice to ensure the authenticity of software packages."
   local remediationImpact="None."
   local check="$id - $desc"
