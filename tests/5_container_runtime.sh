@@ -854,7 +854,7 @@ check_5_21() {
   fi
 
   local id="5.21"
-  local desc="Ensurethe default seccomp profile is not Disabled (Automated)"
+  local desc="Ensure the default seccomp profile is not Disabled (Automated)"
   local remediation="By default, seccomp profiles are enabled. You do not need to do anything unless you want to modify and use a modified seccomp profile."
   local remediationImpact="With Docker 1.10 and greater, the default seccomp profile blocks syscalls, regardless of -- cap-add passed to the container."
   local check="$id - $desc"
