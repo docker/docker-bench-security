@@ -113,9 +113,10 @@ check_5_3() {
   fail=0
   caps_containers=""
   for c in $containers; do
-    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd}}' "$c")
+    container_caps=$(docker inspect --format 'CapAdd={{ .HostConfig.CapAdd }}' "$c")
     caps=$(echo "$container_caps" | tr "[:lower:]" "[:upper:]" | \
       sed 's/CAPADD/CapAdd/' | \
+      sed -r "s/CAP_AUDIT_WRITE|CAP_CHOWN|CAP_DAC_OVERRIDE|CAP_FOWNER|CAP_FSETID|CAP_KILL|CAP_MKNOD|CAP_NET_BIND_SERVICE|CAP_NET_RAW|CAP_SETFCAP|CAP_SETGID|CAP_SETPCAP|CAP_SETUID|CAP_SYS_CHROOT|\s//g" | \
       sed -r "s/AUDIT_WRITE|CHOWN|DAC_OVERRIDE|FOWNER|FSETID|KILL|MKNOD|NET_BIND_SERVICE|NET_RAW|SETFCAP|SETGID|SETPCAP|SETUID|SYS_CHROOT|\s//g")
 
     if [ "$caps" != 'CapAdd=' ] && [ "$caps" != 'CapAdd=[]' ] && [ "$caps" != 'CapAdd=<no value>' ] && [ "$caps" != 'CapAdd=<nil>' ]; then
