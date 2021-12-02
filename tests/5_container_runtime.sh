@@ -970,23 +970,32 @@ check_5_25() {
   starttestjson "$id" "$desc"
 
   fail=0
+  no_priv_config=0
   addprivs_containers=""
-  for c in $containers; do
-    if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
-      # If it's the first container, fail the test
-      if [ $fail -eq 0 ]; then
-        warn -s "$check"
+
+  if get_docker_effective_command_line_args '--no-new-privileges' | grep "no-new-privileges" >/dev/null 2>&1; then
+    no_priv_config=1
+  elif get_docker_configuration_file_args 'no-new-privileges' | grep true >/dev/null 2>&1; then
+    no_priv_config=1
+  else
+    for c in $containers; do
+      if ! docker inspect --format 'SecurityOpt={{.HostConfig.SecurityOpt }}' "$c" | grep 'no-new-privileges' 2>/dev/null 1>&2; then
+        # If it's the first container, fail the test
+        if [ $fail -eq 0 ]; then
+          warn -s "$check"
+          warn "      * Privileges not restricted: $c"
+          addprivs_containers="$addprivs_containers $c"
+          fail=1
+          continue
+        fi
         warn "      * Privileges not restricted: $c"
         addprivs_containers="$addprivs_containers $c"
-        fail=1
-        continue
       fi
-      warn "      * Privileges not restricted: $c"
-      addprivs_containers="$addprivs_containers $c"
-    fi
-  done
+    done
+  fi
+
   # We went through all the containers and found none with capability to acquire additional privileges
-  if [ $fail -eq 0 ]; then
+  if [ $fail -eq 0 ] || [ $no_priv_config -eq 1 ]; then
     pass -s "$check"
     logcheckresult "PASS"
     return
