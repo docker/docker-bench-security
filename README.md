@@ -20,6 +20,8 @@ sudo sh docker-bench-security.sh
 
 ### Run with Docker
 
+_Please note that the `docker/docker-bench-security` image is out-of-date and and a manual build is required. See [#405](https://github.com/docker/docker-bench-security/issues/405) for more information._
+
 We packaged docker bench as a small container for your convenience. Note that this container is being run with a *lot* of privilege -- sharing the host's filesystem, pid and network namespaces, due to portions of the benchmark applying to the running host.
 
 The easiest way to run your hosts against the Docker Bench for Security is by running our pre-built container:
