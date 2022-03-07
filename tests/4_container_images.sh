@@ -243,6 +243,18 @@ check_4_11() {
   logcheckresult "NOTE"
 }
 
+check_4_12() {
+  local id="4.12"
+  local desc="Ensure all signed artifacts are validated (Manual)"
+  local remediation="Validate artifacts signatures before uploading to the package registry."
+  local remediationImpact="None."
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  note -c "$check"
+  logcheckresult "NOTE"
+}
+
 check_4_end() {
   endsectionjson
 }
