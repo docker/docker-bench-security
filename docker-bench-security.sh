@@ -2,7 +2,7 @@
 # --------------------------------------------------------------------------------------------
 # Docker Bench for Security
 #
-# Docker, Inc. (c) 2015-2021
+# Docker, Inc. (c) 2015-2022
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # --------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ usage () {
   cat <<EOF
 Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
 Checks for dozens of common best-practices around deploying Docker containers in production.
-Based on the CIS Docker Benchmark 1.3.1.
+Based on the CIS Docker Benchmark 1.4.0.
 
 Usage: ${myname}.sh [OPTIONS]
 

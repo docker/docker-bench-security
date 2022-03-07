@@ -137,6 +137,7 @@ container_images() {
   check_4_9
   check_4_10
   check_4_11
+  check_4_12
   check_4_end
 }
 
