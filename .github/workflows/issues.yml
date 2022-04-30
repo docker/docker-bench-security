@@ -1,0 +1,14 @@
+name: issue assignment
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'auto-assign issue'
+        uses: pozil/auto-assign-issue@v1.4.0
+        with:
+          assignees: konstruktoid

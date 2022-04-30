@@ -1,0 +1,41 @@
+---
+name: slsa
+on:
+  push:
+  release:
+    types: [published, released]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: checkout repository
+        uses: actions/checkout@master
+
+      - name: create checksum file
+        run: find *.sh distros/* functions/* tests/* Dockerfile Vagrantfile -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.REPOSITORY_NAME }}.sha256
+
+  generate-provenance:
+    needs: build
+    name: generate build provenance
+    runs-on: ubuntu-latest
+    steps:
+      - name: download build artifact
+        uses: actions/download-artifact@v3
+
+      - name: generate provenance
+        uses: slsa-framework/github-actions-demo@v0.1
+        with:
+          artifact_path: artifact/
+
+      - name: upload provenance
+        uses: actions/upload-artifact@v3
+        with:
+          path: build.provenance
