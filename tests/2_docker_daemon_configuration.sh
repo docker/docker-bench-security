@@ -154,8 +154,8 @@ check_2_7() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if [ $(get_docker_configuration_file_args 'tcp://') ] || \
-    [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') >/dev/null 2>&1 ]; then
+  if [ $(grep -E "host.*tcp://" "$CONFIG_FILE") ] || \
+    [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') > /dev/null 2>&1 ]; then
     if [ $(get_docker_configuration_file_args '"tlsverify":' | grep 'true') ] || \
         [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify') >/dev/null 2>&1 ]; then
       pass -s "$check"
