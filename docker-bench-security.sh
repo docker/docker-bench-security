@@ -163,7 +163,7 @@ main () {
     cis
   elif [ -z "$check" ]; then
     # No check defined but excludes defined set to calls in cis() function
-    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)
+    check=$(sed -ne "/cis() {/,/}/{/{/d; /}/d; p;}" functions/functions_lib.sh)
   fi
 
   for c in $(echo "$check" | sed "s/,/ /g"); do
@@ -183,7 +183,7 @@ main () {
         continue
       elif echo "$c" | grep -vE 'check_[0-9]|check_[a-z]' 2>/dev/null 1>&2; then
         # Function not a check, fill loop_checks with all check from function
-        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p}" functions/functions_lib.sh)"
+        loop_checks="$(sed -ne "/$c() {/,/}/{/{/d; /}/d; p;}" functions/functions_lib.sh)"
       else
         # Just one check
         loop_checks="$c"
