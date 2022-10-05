@@ -1,4 +1,4 @@
-FROM debian:sid
+FROM debian:sid@sha256:022a3cafe84d704c272794863ca5e383667c99312358e816ad1ff6e9a41ce4f6
 
 LABEL org.label-schema.name="docker-bench-security" \
       org.label-schema.url="https://github.com/konstruktoid/docker-bench-security" \
