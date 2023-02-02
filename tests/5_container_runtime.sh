@@ -472,12 +472,15 @@ check_5_11() {
   fail=0
   cpu_unlimited_containers=""
   for c in $containers; do
-    shares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
+    cpushares=$(docker inspect --format '{{ .HostConfig.CpuShares }}' "$c")
+    nanocpus=$(docker inspect --format '{{ .HostConfig.NanoCpus }}' "$c")
+
     if docker inspect --format '{{ .Config.CpuShares }}' "$c" 2> /dev/null 1>&2; then
-      shares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
+      cpushares=$(docker inspect --format '{{ .Config.CpuShares }}' "$c")
+      nanocpus=$(docker inspect --format '{{ .Config.NanoCpus }}' "$c")
     fi
 
-    if [ "$shares" = "0" ]; then
+    if [ "$cpushares" = "0" ] && [ "$nanocpus" = "0" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn -s "$check"
