@@ -6,6 +6,14 @@ The Docker Bench for Security is a script that checks for dozens of common best-
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and docker containers against this benchmark.
 
+Release | CIS |
+:---:|:---:|
+1.5.0|1.5.0|
+1.3.6|1.4.0|
+1.3.5|1.2.0|
+1.3.3|1.1.0|
+1.3.0|1.13.0|
+
 ## Running Docker Bench for Security
 
 ### Run from your base host
