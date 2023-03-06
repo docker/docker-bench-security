@@ -518,6 +518,31 @@ check_3_19() {
 
 check_3_20() {
   local id="3.20"
+  local desc="Ensure that the /etc/default/docker file permissions are set to 644 or more restrictively (Automated)"
+  local remediation="You should run the following command: chmod 644 /etc/default/docker. This sets the file permissions for this file to 644."
+  local remediationImpact="None."
+  local check="$id - $desc"
+  starttestjson "$id" "$desc"
+
+  file="/etc/default/docker"
+  if [ -f "$file" ]; then
+    if [ "$(stat -c %a $file)" -le 644 ]; then
+      pass -s "$check"
+      logcheckresult "PASS"
+      return
+    fi
+    warn -s "$check"
+    warn "      * Wrong permissions for $file"
+    logcheckresult "WARN" "Wrong permissions for $file"
+    return
+  fi
+  info -c "$check"
+  info "      * File not found"
+  logcheckresult "INFO" "File not found"
+}
+
+check_3_21() {
+  local id="3.21"
   local desc="Ensure that the /etc/sysconfig/docker file permissions are set to 644 or more restrictively (Automated)"
   local remediation="You should run the following command: chmod 644 /etc/sysconfig/docker. This sets the file permissions for this file to 644."
   local remediationImpact="None."
@@ -541,8 +566,8 @@ check_3_20() {
   logcheckresult "INFO" "File not found"
 }
 
-check_3_21() {
-  local id="3.21"
+check_3_22() {
+  local id="3.22"
   local desc="Ensure that the /etc/sysconfig/docker file ownership is set to root:root (Automated)"
   local remediation="You should run the following command: chown root:root /etc/sysconfig/docker. This sets the ownership and group ownership for the file to root."
   local remediationImpact="None."
@@ -559,31 +584,6 @@ check_3_21() {
     warn -s "$check"
     warn "      * Wrong ownership for $file"
     logcheckresult "WARN" "Wrong ownership for $file"
-    return
-  fi
-  info -c "$check"
-  info "      * File not found"
-  logcheckresult "INFO" "File not found"
-}
-
-check_3_22() {
-  local id="3.22"
-  local desc="Ensure that the /etc/default/docker file permissions are set to 644 or more restrictively (Automated)"
-  local remediation="You should run the following command: chmod 644 /etc/default/docker. This sets the file permissions for this file to 644."
-  local remediationImpact="None."
-  local check="$id - $desc"
-  starttestjson "$id" "$desc"
-
-  file="/etc/default/docker"
-  if [ -f "$file" ]; then
-    if [ "$(stat -c %a $file)" -le 644 ]; then
-      pass -s "$check"
-      logcheckresult "PASS"
-      return
-    fi
-    warn -s "$check"
-    warn "      * Wrong permissions for $file"
-    logcheckresult "WARN" "Wrong permissions for $file"
     return
   fi
   info -c "$check"
