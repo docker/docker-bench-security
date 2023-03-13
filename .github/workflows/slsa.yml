@@ -1,41 +1,71 @@
 ---
-name: slsa
+name: SLSA
 on:
   push:
   release:
+    permissions:
+      contents: write
     types: [published, released]
+
+permissions:
+  contents: read
+
 jobs:
   build:
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
         shell: bash
 
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@master
 
-      - name: create checksum file
-        run: find *.sh distros/* functions/* tests/* Dockerfile Vagrantfile -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
+      - name: Build artifacts
+        run: |
+          find *.sh distros/* functions/* tests/* Dockerfile Vagrantfile -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
 
-      - name: upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Generate hashes
+        shell: bash
+        id: hash
+        run: |
+          echo "hashes=$(sha256sum ${{ env.REPOSITORY_NAME }}.sha256 | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload ${{ env.REPOSITORY_NAME }}.sha256
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
+          name: ${{ env.REPOSITORY_NAME }}.sha256
           path: ${{ env.REPOSITORY_NAME }}.sha256
+          if-no-files-found: error
+          retention-days: 5
 
-  generate-provenance:
-    needs: build
-    name: generate build provenance
+  provenance:
+    needs: [build]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.4.0
+    with:
+      base64-subjects: "${{ needs.build.outputs.hashes }}"
+      upload-assets: true
+
+  release:
+    needs: [build, provenance]
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
-      - name: download build artifact
-        uses: actions/download-artifact@v3
+      - run: echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        shell: bash
 
-      - name: generate provenance
-        uses: slsa-framework/github-actions-demo@v0.1
+      - name: Download ${{ env.REPOSITORY_NAME }}.sha256
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
         with:
-          artifact_path: artifact/
+          name: ${{ env.REPOSITORY_NAME }}.sha256
 
-      - name: upload provenance
-        uses: actions/upload-artifact@v3
+      - name: Upload asset
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
         with:
-          path: build.provenance
+          files: |
+            ${{ env.REPOSITORY_NAME }}.sha256
