@@ -53,6 +53,10 @@ jobs:
 
   release:
     needs: [build, provenance]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
