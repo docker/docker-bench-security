@@ -1,14 +1,19 @@
-name: issue assignment
+name: Issue assignment
 
 on:
   issues:
     types: [opened]
 
+permissions:
+  contents: read
+
 jobs:
   auto-assign:
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: 'auto-assign issue'
-        uses: pozil/auto-assign-issue@v1.4.0
+        uses: pozil/auto-assign-issue@74b9f64cc1a08f99358061073e243a4c3d7dd5c4 # v1.11.0
         with:
           assignees: konstruktoid
