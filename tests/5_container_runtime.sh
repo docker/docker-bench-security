@@ -595,19 +595,21 @@ check_5_14() {
   fail=0
   maxretry_unset_containers=""
   for c in $containers; do
-    for s in $(docker service ls --format '{{.Name}}'); do
-      if docker inspect "$c" --format '{{.Name}}' | grep -q "$s"; then
+    container_name=$(docker inspect "$c" --format '{{.Name}}')
+q    for s in $(docker service ls --format '{{.Name}}'); do
+      if echo $container_name | grep -q "$s"; then
         task_id=$(docker inspect "$c" --format '{{.Name}}' | awk -F '.' '{print $NF}')
         # a container name could arbitrary include a service one: it belongs to a service (created by Docker 
         # as part of the service), if the container task ID matches one of the task IDs of the service.
         if docker service ps --no-trunc "$s" --format '{{.ID}}' | grep -q "$task_id"; then
-          spolicy=$(docker inspect --format MaximumRetryCount='{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
+          spolicy=$(docker inspect --format MaxAttempts='{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
+          break
         fi
       fi
     done
     cpolicy=$(docker inspect --format MaximumRetryCount='{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
 
-    if [ "$cpolicy" != "MaximumRetryCount=5" ] || [ "$spolicy" != "MaxAttempts=5" ]; then
+    if [ "$cpolicy" != "MaximumRetryCount=5" ] && [ "$spolicy" != "MaxAttempts=5" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn -s "$check"
