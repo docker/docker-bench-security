@@ -596,7 +596,7 @@ check_5_14() {
   maxretry_unset_containers=""
   for c in $containers; do
     container_name=$(docker inspect "$c" --format '{{.Name}}')
-q    for s in $(docker service ls --format '{{.Name}}'); do
+    for s in $(docker service ls --format '{{.Name}}'); do
       if echo $container_name | grep -q "$s"; then
         task_id=$(docker inspect "$c" --format '{{.Name}}' | awk -F '.' '{print $NF}')
         # a container name could arbitrary include a service one: it belongs to a service (created by Docker 
