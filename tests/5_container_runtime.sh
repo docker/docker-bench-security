@@ -596,17 +596,19 @@ check_5_14() {
   maxretry_unset_containers=""
   for c in $containers; do
     container_name=$(docker inspect "$c" --format '{{.Name}}')
-    for s in $(docker service ls --format '{{.Name}}'); do
-      if echo $container_name | grep -q "$s"; then
-        task_id=$(docker inspect "$c" --format '{{.Name}}' | awk -F '.' '{print $NF}')
-        # a container name could arbitrary include a service one: it belongs to a service (created by Docker 
-        # as part of the service), if the container task ID matches one of the task IDs of the service.
-        if docker service ps --no-trunc "$s" --format '{{.ID}}' | grep -q "$task_id"; then
-          spolicy=$(docker inspect --format MaxAttempts='{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
-          break
+    if [ "$(docker info --format '{{.Swarm.LocalNodeState}}')" = "active" ]; then
+      for s in $(docker service ls --format '{{.Name}}'); do
+        if echo $container_name | grep -q "$s"; then
+          task_id=$(docker inspect "$c" --format '{{.Name}}' | awk -F '.' '{print $NF}')
+          # a container name could arbitrary include a service one: it belongs to a service (created by Docker 
+          # as part of the service), if the container task ID matches one of the task IDs of the service.
+          if docker service ps --no-trunc "$s" --format '{{.ID}}' | grep -q "$task_id"; then
+            spolicy=$(docker inspect --format MaxAttempts='{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
+            break
+          fi
         fi
-      fi
-    done
+      done
+    fi
     cpolicy=$(docker inspect --format MaximumRetryCount='{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
 
     if [ "$cpolicy" != "MaximumRetryCount=5" ] && [ "$spolicy" != "MaxAttempts=5" ]; then
