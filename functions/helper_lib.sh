@@ -11,6 +11,11 @@ req_programs() {
   for p in $1; do
     command -v "$p" >/dev/null 2>&1 || { printf "Required program not found: %s\n" "$p"; exit 1; }
   done
+  if command -v jq >/dev/null 2>&1; then
+    HAVE_JQ=true
+  else
+    HAVE_JQ=false
+  fi
   if command -v ss >/dev/null 2>&1; then
     netbin=ss
     return
@@ -117,7 +122,11 @@ get_docker_configuration_file_args() {
 
   get_docker_configuration_file
 
-  grep "$OPTION" "$CONFIG_FILE" | sed 's/.*://g' | tr -d '" ',
+  if "$HAVE_JQ"; then
+    jq --monochrome-output --raw-output ".[\"${OPTION}\"]" "$CONFIG_FILE"
+  else
+    cat "$CONFIG_FILE" | tr { '\n' | tr , '\n' | tr } '\n' | grep "$OPTION" | sed 's/.*://g' | tr -d '" ',
+  fi
 }
 
 get_service_file() {
