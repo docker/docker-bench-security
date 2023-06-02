@@ -24,7 +24,7 @@ jobs:
 
       - name: Build artifacts
         run: |
-          find *.sh distros/* functions/* tests/* Dockerfile Vagrantfile -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
+          find *.sh functions/* tests/* Dockerfile Vagrantfile -exec sha256sum {} \; > ${{ env.REPOSITORY_NAME }}.sha256
 
       - name: Generate hashes
         shell: bash
