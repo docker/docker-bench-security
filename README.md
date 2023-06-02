@@ -26,6 +26,8 @@ cd docker-bench-security
 sudo sh docker-bench-security.sh
 ```
 
+> Note: [`jq`](https://jqlang.github.io/jq/) is an optional but recommended dependency.
+
 ### Run with Docker
 
 _Please note that the `docker/docker-bench-security` image is out-of-date and and a manual build is required. See [#405](https://github.com/docker/docker-bench-security/issues/405) for more information._

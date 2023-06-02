@@ -112,12 +112,22 @@ get_docker_configuration_file() {
   CONFIG_FILE='/dev/null'
 }
 
+if command -v jq &> /dev/null; then
+  HAVE_JQ=true
+else
+  HAVE_JQ=false
+fi
+
 get_docker_configuration_file_args() {
   OPTION="$1"
 
   get_docker_configuration_file
 
-  grep "$OPTION" "$CONFIG_FILE" | sed 's/.*://g' | tr -d '" ',
+  if "$HAVE_JQ"; then
+    jq --monochrome-output --raw-output ".[\"${OPTION}\"]" "$CONFIG_FILE"
+  else
+    cat "$CONFIG_FILE" | tr -u { '\n' | tr , '\n' | tr } '\n' | grep "$OPTION" | sed 's/.*://g' | tr -d '" ',
+  fi
 }
 
 get_service_file() {
