@@ -24,7 +24,7 @@ readonly myname
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/local/bin:/usr/sbin/"
 
 # Check for required program(s)
-req_programs 'awk docker grep stat tee tail wc xargs truncate sed'
+req_programs 'awk docker grep sed stat tail tee tr wc xargs'
 
 # Ensure we can connect to docker daemon
 if ! docker ps -q >/dev/null 2>&1; then
