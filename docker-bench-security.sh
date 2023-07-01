@@ -57,6 +57,7 @@ Options:
   -e CHECK     optional  Comma delimited list of specific check(s) id to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
+  -t LABEL     optional  Comma delimited list of labels within a container or image to exclude from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
   -p PRINT     optional  Print remediation measures. Default: Don't print remediation measures.
 
@@ -90,6 +91,7 @@ do
   e) checkexclude="$OPTARG" ;;
   i) include="$OPTARG" ;;
   x) exclude="$OPTARG" ;;
+  t) labels="$OPTARG" ;;
   n) limit="$OPTARG" ;;
   p) printremediation="1" ;;
   *) usage; exit 1 ;;
@@ -141,17 +143,22 @@ main () {
     fi
   done
 
+  # Format LABELS
+  for label in $(echo "$labels" | sed 's/,/ /g'); do
+    LABELS="$LABELS --filter label=$label"
+  done
+
   if [ -n "$include" ]; then
     pattern=$(echo "$include" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -E "$pattern")
-    images=$(docker images | sed '1d' | grep -E "$pattern" | awk '{print $3}' | grep -v "$benchimagecont")
+    containers=$(docker ps $LABELS| sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -E "$pattern")
+    images=$(docker images $LABELS| sed '1d' | grep -E "$pattern" | awk '{print $3}' | grep -v "$benchimagecont")
   elif [ -n "$exclude" ]; then
     pattern=$(echo "$exclude" | sed 's/,/|/g')
-    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -Ev "$pattern")
-    images=$(docker images | sed '1d' | grep -Ev "$pattern" | awk '{print $3}' | grep -v "$benchimagecont")
+    containers=$(docker ps $LABELS| sed '1d' | awk '{print $NF}' | grep -v "$benchcont" | grep -Ev "$pattern")
+    images=$(docker images $LABELS| sed '1d' | grep -Ev "$pattern" | awk '{print $3}' | grep -v "$benchimagecont")
   else
-    containers=$(docker ps | sed '1d' | awk '{print $NF}' | grep -v "$benchcont")
-    images=$(docker images -q | grep -v "$benchcont")
+    containers=$(docker ps $LABELS| sed '1d' | awk '{print $NF}' | grep -v "$benchcont")
+    images=$(docker images -q $LABELS| grep -v "$benchcont")
   fi
 
   for test in tests/*.sh; do
