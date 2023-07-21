@@ -57,7 +57,7 @@ Options:
   -e CHECK     optional  Comma delimited list of specific check(s) id to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
-  -t LABEL     optional  Comma delimited list of labels within a container or image to exclude from check
+  -t LABEL     optional  Comma delimited list of labels within a container or image to include from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
   -p PRINT     optional  Print remediation measures. Default: Don't print remediation measures.
 
