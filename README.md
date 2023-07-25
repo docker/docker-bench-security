@@ -123,7 +123,7 @@ Note that when distributions don't contain `auditctl`, the audit tests will chec
   -e CHECK     optional  Comma delimited list of specific check(s) id to exclude
   -i INCLUDE   optional  Comma delimited list of patterns within a container or image name to check
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
-  -t LABEL     optional  Comma delimited list of labels within a container or image to include from check
+  -t LABEL     optional  Comma delimited list of labels within a container or image to exclude from check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
   -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
 ```
