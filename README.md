@@ -2,12 +2,13 @@
 
 ![Docker Bench for Security running](img/benchmark_log.png)
 
-The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are based on the [CIS Docker Benchmark v1.5.0](https://www.cisecurity.org/benchmark/docker/).
+The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are based on the [CIS Docker Benchmark v1.6.0](https://www.cisecurity.org/benchmark/docker/).
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and Docker containers against this benchmark.
 
 Release | CIS |
 :---:|:---:|
+1.6.0|1.6.0|
 1.5.0|1.5.0|
 1.3.6|1.4.0|
 1.3.5|1.2.0|
