@@ -609,7 +609,9 @@ check_5_14() {
         fi
       done
     fi
-    restart_policy=$(docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
+    if docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c" &>/dev/null; then
+      restart_policy=$(docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
+    fi
 
     if [ "$restart_policy" -gt "5" ]; then
       # If it's the first container, fail the test
