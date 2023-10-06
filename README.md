@@ -43,7 +43,7 @@ cd docker-bench-security
 docker build --no-cache -t docker-bench-security .
 ```
 
-Followed by an appropriate `docker run` command as stated above.
+Followed by an appropriate `docker run` command as stated below.
 
 2. Use Docker Compose:
 
