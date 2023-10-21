@@ -34,7 +34,7 @@ check_2_2() {
     logcheckresult "PASS"
     return
   fi
-  if get_docker_configuration_file_args 'icc' | grep "false" >/dev/null 2>&1; then
+  if [[ $(get_docker_configuration_file_args 'icc' | grep "false") ]] && [[ $(get_docker_configuration_file_args 'icc' | grep "false") != "null" ]] ; then
     pass -s "$check"
     logcheckresult "PASS"
     return
@@ -93,7 +93,7 @@ check_2_4() {
     logcheckresult "WARN"
     return
   fi
-  if get_docker_configuration_file_args 'iptables' | grep "false" >/dev/null 2>&1; then
+  if [[ $(get_docker_configuration_file_args 'iptables' | grep "false") ]] && [[ $(get_docker_configuration_file_args 'iptables' | grep "false") != "null" ]] ; then
     warn -s "$check"
     logcheckresult "WARN"
     return
@@ -115,12 +115,7 @@ check_2_5() {
     logcheckresult "WARN"
     return
   fi
-  if ! [ -z "$(get_docker_configuration_file_args 'insecure-registries')" ]; then
-    if get_docker_configuration_file_args 'insecure-registries' | grep '\[]' >/dev/null 2>&1; then
-      pass -s "$check"
-      logcheckresult "PASS"
-      return
-    fi
+  if [[ $(get_docker_configuration_file_args 'insecure-registries' | grep -v '\[]') ]] && [[ $(get_docker_configuration_file_args 'insecure-registries' | grep -v '\[]') != "null" ]] ; then
     warn -s "$check"
     logcheckresult "WARN"
     return
@@ -187,7 +182,7 @@ check_2_8() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if get_docker_configuration_file_args 'default-ulimit' | grep -v '{}' >/dev/null 2>&1; then
+  if [[ $(get_docker_configuration_file_args 'default-ulimits' | grep -v '{}') ]] && [[ $(get_docker_configuration_file_args 'default-ulimits' | grep -v '{}') != "null" ]] ; then
     pass -c "$check"
     logcheckresult "PASS"
     return
@@ -210,7 +205,7 @@ check_2_9() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if get_docker_configuration_file_args 'userns-remap' | grep -v '""'; then
+  if [[ $(get_docker_configuration_file_args 'userns-remap' | grep -v '""') ]] && [[ $(get_docker_configuration_file_args 'userns-remap' | grep -v '""') != "null" ]] ; then
     pass -s "$check"
     logcheckresult "PASS"
     return
@@ -278,7 +273,7 @@ check_2_12() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]'; then
+  if [[ $(get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]') ]] && [[ $(get_docker_configuration_file_args 'authorization-plugins' | grep -v '\[]') != "null" ]] ; then
     pass -s "$check"
     logcheckresult "PASS"
     return

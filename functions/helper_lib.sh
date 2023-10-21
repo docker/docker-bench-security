@@ -110,8 +110,8 @@ get_docker_configuration_file() {
     CONFIG_FILE="$FILE"
     return
   fi
-  if [ -f '/etc/docker/daemon.json' ]; then
-    CONFIG_FILE='/etc/docker/daemon.json'
+  if [ -f '/home/kali/SUKA/daemon.json' ]; then
+    CONFIG_FILE='/home/kali/SUKA/daemon.json'
     return
   fi
   CONFIG_FILE='/dev/null'
@@ -125,7 +125,7 @@ get_docker_configuration_file_args() {
   if "$HAVE_JQ"; then
     jq --monochrome-output --raw-output ".[\"${OPTION}\"]" "$CONFIG_FILE"
   else
-    cat "$CONFIG_FILE" | tr { '\n' | tr , '\n' | tr } '\n' | grep "$OPTION" | sed 's/.*://g' | tr -d '" ',
+    cat "$CONFIG_FILE" | tr , '\n' | grep "$OPTION" | sed 's/.*://g' | tr -d '" ',
   fi
 }
 
