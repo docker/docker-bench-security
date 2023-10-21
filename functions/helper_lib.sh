@@ -110,8 +110,8 @@ get_docker_configuration_file() {
     CONFIG_FILE="$FILE"
     return
   fi
-  if [ -f '/home/kali/SUKA/daemon.json' ]; then
-    CONFIG_FILE='/home/kali/SUKA/daemon.json'
+  if [ -f '/etc/docker/daemon.json' ]; then
+    CONFIG_FILE='/etc/docker/daemon.json'
     return
   fi
   CONFIG_FILE='/dev/null'
