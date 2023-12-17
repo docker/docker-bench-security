@@ -180,6 +180,7 @@ container_runtime() {
   check_5_29
   check_5_30
   check_5_31
+  check_5_32
   check_5_end
 }
 
@@ -213,7 +214,6 @@ docker_swarm_configuration() {
   check_7_7
   check_7_8
   check_7_9
-  check_7_10
   check_7_end
 }
 
