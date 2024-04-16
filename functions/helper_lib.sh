@@ -140,7 +140,11 @@ get_service_file() {
     echo "/lib/systemd/system/$SERVICE"
     return
   fi
-  if systemctl show -p FragmentPath "$SERVICE" 2> /dev/null 1>&2; then
+  if find /run -name "$SERVICE" 2> /dev/null 1>&2; then
+    find /run -name "$SERVICE" | head -n1
+    return
+  fi
+  if [ "$(systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//')" != "" ]; then
     systemctl show -p FragmentPath "$SERVICE" | sed 's/.*=//'
     return
   fi
