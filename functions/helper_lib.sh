@@ -123,7 +123,7 @@ get_docker_configuration_file_args() {
   get_docker_configuration_file
 
   if "$HAVE_JQ"; then
-    jq --monochrome-output --raw-output ".[\"${OPTION}\"]" "$CONFIG_FILE"
+    jq --monochrome-output --raw-output "if has(\"${OPTION}\") then .[\"${OPTION}\"] else \"\" end" "$CONFIG_FILE"
   else
     cat "$CONFIG_FILE" | tr , '\n' | grep "$OPTION" | sed 's/.*://g' | tr -d '" ',
   fi
