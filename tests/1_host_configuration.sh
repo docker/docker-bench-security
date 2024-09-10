@@ -19,7 +19,7 @@ check_1_1() {
 check_1_1_1() {
   local id="1.1.1"
   local desc="Ensure a separate partition for containers has been created (Automated)"
-  local remediation="For new installations, you should create a separate partition for the /var/lib/docker mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
+  local remediation="For new installations, you should create a separate partition for the $(docker info -f '{{ .DockerRootDir }}') mount point. For systems that have already been installed, you should use the Logical Volume Manager (LVM) within Linux to create a new partition."
   local remediationImpact="None."
   local check="$id - $desc"
   starttestjson "$id" "$desc"
