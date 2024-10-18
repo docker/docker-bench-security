@@ -9,9 +9,11 @@
 
 version='1.6.0'
 
+LIBEXEC="." # Distributions can change this to /usr/libexec or similar.
+
 # Load dependencies
-. ./functions/functions_lib.sh
-. ./functions/helper_lib.sh
+. $LIBEXEC/functions/functions_lib.sh
+. $LIBEXEC/functions/helper_lib.sh
 
 # Setup the paths
 this_path=$(abspath "$0")       ## Path of this file including filename
@@ -99,7 +101,7 @@ do
 done
 
 # Load output formating
-. ./functions/output_lib.sh
+. $LIBEXEC/functions/output_lib.sh
 
 yell_info
 
@@ -161,8 +163,8 @@ main () {
     images=$(docker images -q $LABELS| grep -v "$benchcont")
   fi
 
-  for test in tests/*.sh; do
-    . ./"$test"
+  for test in $LIBEXEC/tests/*.sh; do
+    . "$test"
   done
 
   if [ -z "$check" ] && [ ! "$checkexclude" ]; then
