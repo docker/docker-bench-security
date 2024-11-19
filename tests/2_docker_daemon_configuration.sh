@@ -182,7 +182,7 @@ check_2_8() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if [[ $(get_docker_configuration_file_args 'default-ulimits' | grep -v '{}') ]] && [[ $(get_docker_configuration_file_args 'default-ulimits' | grep -v '{}') != "null" ]] ; then
+  if [ "$(get_docker_configuration_file_args 'default-ulimits')" != "" ] && [ "$(get_docker_configuration_file_args 'default-ulimits' | grep -v '{}')" ]; then
     pass -c "$check"
     logcheckresult "PASS"
     return
