@@ -149,16 +149,16 @@ check_2_7() {
   local check="$id - $desc"
   starttestjson "$id" "$desc"
 
-  if $(grep -qE "host.*tcp://" "$CONFIG_FILE") || \
-    [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://') > /dev/null 2>&1 ]; then
-    if [ $(get_docker_configuration_file_args '"tlsverify":' | grep 'true') ] || \
-        [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify') >/dev/null 2>&1 ]; then
+  if $(get_docker_configuration_file_args 'hosts' | grep 'tcp://' > /dev/null 2>&1) || \
+    [ $(get_docker_cumulative_command_line_args '-H' | grep -vE '(unix|fd)://' > /dev/null 2>&1) ]; then
+    if [ $(get_docker_configuration_file_args 'tlsverify' | grep 'true') ] || \
+        [ $(get_docker_cumulative_command_line_args '--tlsverify' | grep 'tlsverify' >/dev/null 2>&1) ]; then
       pass -s "$check"
       logcheckresult "PASS"
       return
     fi
     if [ $(get_docker_configuration_file_args '"tls":' | grep 'true') ] || \
-        [ $(get_docker_cumulative_command_line_args '--tls' | grep 'tls$') >/dev/null 2>&1 ]; then
+        [ $(get_docker_cumulative_command_line_args '--tls' | grep 'tls$' >/dev/null 2>&1) ]; then
       warn -s "$check"
       warn "     * Docker daemon currently listening on TCP with TLS, but no verification"
       logcheckresult "WARN" "Docker daemon currently listening on TCP with TLS, but no verification"
