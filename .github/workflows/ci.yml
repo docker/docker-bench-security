@@ -1,0 +1,54 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔍 Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+      - name: 🐳 Build Docker image
+        run: docker build -t docker-bench-security:latest .
+
+      - name: 🧪 Run docker-bench-security
+        run: |
+          docker run --rm \
+          --name docker-bench-test \
+          --net host \
+          --pid host \
+          --userns host \
+          --cap-add audit_control \
+          --cap-add SYS_ADMIN \
+          --cap-add NET_ADMIN \
+          --cap-add NET_RAW \
+          --cap-add SYSLOG \
+          --cap-add SYS_PTRACE \
+          --cap-add DAC_READ_SEARCH \
+          --cap-add NET_BIND_SERVICE \
+          -v /etc:/etc:ro \
+          -v /usr/bin/docker-containerd:/usr/bin/docker-containerd:ro \
+          -v /usr/bin/docker-runc:/usr/bin/docker-runc:ro \
+          -v /usr/lib/systemd:/usr/lib/systemd:ro \
+          -v /var/lib:/var/lib:ro \
+          -v /var/run/docker.sock:/var/run/docker.sock:ro \
+          -v /var/run/containerd/containerd.sock:/var/run/containerd/containerd.sock:ro \
+          docker-bench-security:latest

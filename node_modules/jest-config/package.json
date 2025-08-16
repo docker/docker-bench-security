@@ -1,0 +1,80 @@
+{
+  "name": "jest-config",
+  "version": "30.0.5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jestjs/jest.git",
+    "directory": "packages/jest-config"
+  },
+  "license": "MIT",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "require": "./build/index.js",
+      "import": "./build/index.mjs",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "@types/node": "*",
+    "esbuild-register": ">=3.4.0",
+    "ts-node": ">=9.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/node": {
+      "optional": true
+    },
+    "esbuild-register": {
+      "optional": true
+    },
+    "ts-node": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@babel/core": "^7.27.4",
+    "@jest/get-type": "30.0.1",
+    "@jest/pattern": "30.0.1",
+    "@jest/test-sequencer": "30.0.5",
+    "@jest/types": "30.0.5",
+    "babel-jest": "30.0.5",
+    "chalk": "^4.1.2",
+    "ci-info": "^4.2.0",
+    "deepmerge": "^4.3.1",
+    "glob": "^10.3.10",
+    "graceful-fs": "^4.2.11",
+    "jest-circus": "30.0.5",
+    "jest-docblock": "30.0.1",
+    "jest-environment-node": "30.0.5",
+    "jest-regex-util": "30.0.1",
+    "jest-resolve": "30.0.5",
+    "jest-runner": "30.0.5",
+    "jest-util": "30.0.5",
+    "jest-validate": "30.0.5",
+    "micromatch": "^4.0.8",
+    "parse-json": "^5.2.0",
+    "pretty-format": "30.0.5",
+    "slash": "^3.0.0",
+    "strip-json-comments": "^3.1.1"
+  },
+  "devDependencies": {
+    "@types/graceful-fs": "^4.1.9",
+    "@types/micromatch": "^4.0.9",
+    "@types/parse-json": "^4.0.2",
+    "esbuild": "^0.25.5",
+    "esbuild-register": "^3.6.0",
+    "semver": "^7.7.2",
+    "ts-node": "^10.5.0",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": "^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "22236cf58b66039f81893537c90dee290bab427f"
+}

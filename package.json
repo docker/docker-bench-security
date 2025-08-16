@@ -1,0 +1,31 @@
+{
+  "name": "docker-bench-security",
+  "version": "1.0.0",
+  "description": "Proyecto con pruebas unitarias usando Jest y TypeScript",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest --runInBand --colors",
+    "test:watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PatriciaRivas1324/docker-bench-security.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PatriciaRivas1324/docker-bench-security/issues"
+  },
+  "homepage": "https://github.com/PatriciaRivas1324/docker-bench-security#readme",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "extends": "../../api-extractor.json",
+  "mainEntryPointFilePath": "/Users/cpojer/Dropbox/Projects/jest/packages/jest-pattern/build/index.d.ts",
+  "projectFolder": "/Users/cpojer/Dropbox/Projects/jest/packages/jest-pattern"
+}

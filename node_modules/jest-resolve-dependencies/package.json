@@ -1,0 +1,39 @@
+{
+  "name": "jest-resolve-dependencies",
+  "version": "30.0.5",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jestjs/jest.git",
+    "directory": "packages/jest-resolve-dependencies"
+  },
+  "license": "MIT",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "require": "./build/index.js",
+      "import": "./build/index.mjs",
+      "default": "./build/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "jest-regex-util": "30.0.1",
+    "jest-snapshot": "30.0.5"
+  },
+  "devDependencies": {
+    "@jest/test-utils": "30.0.5",
+    "@jest/types": "30.0.5",
+    "jest-haste-map": "30.0.5",
+    "jest-resolve": "30.0.5",
+    "jest-runtime": "30.0.5"
+  },
+  "engines": {
+    "node": "^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "22236cf58b66039f81893537c90dee290bab427f"
+}
