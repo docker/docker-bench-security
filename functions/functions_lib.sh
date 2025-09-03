@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 host_configuration() {
   check_1
