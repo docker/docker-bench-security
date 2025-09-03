@@ -6,14 +6,14 @@ The Docker Bench for Security is a script that checks for dozens of common best-
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and Docker containers against this benchmark.
 
-Release | CIS |
-:---:|:---:|
-1.6.0|1.6.0|
-1.5.0|1.5.0|
-1.3.6|1.4.0|
-1.3.5|1.2.0|
-1.3.3|1.1.0|
-1.3.0|1.13.0|
+| Release |  CIS   |
+| :-----: | :----: |
+|  1.6.0  | 1.6.0  |
+|  1.5.0  | 1.5.0  |
+|  1.3.6  | 1.4.0  |
+|  1.3.5  | 1.2.0  |
+|  1.3.3  | 1.1.0  |
+|  1.3.0  | 1.13.0 |
 
 ## Running Docker Bench for Security
 
@@ -126,7 +126,7 @@ Note that when distributions don't contain `auditctl`, the audit tests will chec
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
   -t LABEL     optional  Comma delimited list of labels within a container or image to check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
-  -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
+  -p PRINT     optional  Print remediation measures. Default: Don't print remediation measures.
 ```
 
 By default the Docker Bench for Security script will run all available CIS tests and produce
