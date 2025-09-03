@@ -29,6 +29,16 @@ host_configuration() {
 
 host_configuration_level1() {
   check_1
+  check_1_1
+  check_1_1_1
+  check_1_1_2
+  check_1_1_3
+  check_1_1_4
+  check_1_1_5
+  check_1_1_6
+  check_1_2
+  check_1_2_1
+  check_1_2_2
   check_1_end
 }
 
@@ -82,11 +92,25 @@ docker_daemon_configuration() {
   check_2_16
   check_2_17
   check_2_18
+  check_2_19
   check_2_end
 }
 
 docker_daemon_configuration_level1() {
   check_2
+  check_2_1
+  check_2_2
+  check_2_3
+  check_2_4
+  check_2_5
+  check_2_6
+  check_2_7
+  check_2_8
+  check_2_9
+  check_2_15
+  check_2_16
+  check_2_17
+  check_2_19
   check_2_end
 }
 
@@ -121,6 +145,24 @@ docker_daemon_files() {
 
 docker_daemon_files_level1() {
   check_3
+  check_3_1
+  check_3_2
+  check_3_3
+  check_3_4
+  check_3_5
+  check_3_6
+  check_3_7
+  check_3_8
+  check_3_9
+  check_3_10
+  check_3_11
+  check_3_12
+  check_3_13
+  check_3_14
+  check_3_15
+  check_3_16
+  check_3_23
+  check_3_24
   check_3_end
 }
 
@@ -143,6 +185,15 @@ container_images() {
 
 container_images_level1() {
   check_4
+  check_4_1
+  check_4_2
+  check_4_3
+  check_4_4
+  check_4_6
+  check_4_7
+  check_4_9
+  check_4_10
+  check_4_12
   check_4_end
 }
 
@@ -186,6 +237,34 @@ container_runtime() {
 
 container_runtime_level1() {
   check_5
+  check_5_1
+  check_5_2
+  check_5_4
+  check_5_5
+  check_5_6
+  check_5_7
+  check_5_8
+  check_5_9
+  check_5_10
+  check_5_11
+  check_5_12
+  check_5_13
+  check_5_14
+  check_5_15
+  check_5_16
+  check_5_17
+  check_5_18
+  check_5_19
+  check_5_20
+  check_5_21
+  check_5_22
+  check_5_25
+  check_5_26
+  check_5_27
+  check_5_28
+  check_5_29
+  check_5_31
+  check_5_32
   check_5_end
 }
 
@@ -219,6 +298,15 @@ docker_swarm_configuration() {
 
 docker_swarm_configuration_level1() {
   check_7
+  check_7_1
+  check_7_2
+  check_7_3
+  check_7_4
+  check_7_5
+  check_7_6
+  check_7_7
+  check_7_8
+  check_7_9
   check_7_end
 }
 
@@ -311,8 +399,8 @@ cis_controls_v8_ig1() {
   check_1_1_2
   check_1_1_3
   check_2_1
-  check_2_13
   check_2_14
+  check_2_15
   check_3_1
   check_3_2
   check_3_3
@@ -380,14 +468,14 @@ cis_controls_v8_ig2() {
   check_2_3
   check_2_4
   check_2_5
-  check_2_7
   check_2_8
-  check_2_11
-  check_2_13
+  check_2_9
+  check_2_12
   check_2_14
   check_2_15
   check_2_16
-  check_2_18
+  check_2_17
+  check_2_19
   check_3_1
   check_3_2
   check_3_3
@@ -480,14 +568,14 @@ cis_controls_v8_ig3() {
   check_2_3
   check_2_4
   check_2_5
-  check_2_7
   check_2_8
-  check_2_11
-  check_2_13
+  check_2_9
+  check_2_12
   check_2_14
   check_2_15
   check_2_16
-  check_2_18
+  check_2_17
+  check_2_19
   check_3_1
   check_3_2
   check_3_3
