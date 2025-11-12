@@ -7,7 +7,7 @@
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # --------------------------------------------------------------------------------------------
 
-version='1.6.0'
+version='1.8.0'
 
 LIBEXEC="." # Distributions can change this to /usr/libexec or similar.
 
@@ -38,7 +38,7 @@ usage () {
   cat <<EOF
 Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
 Checks for dozens of common best-practices around deploying Docker containers in production.
-Based on the CIS Docker Benchmark 1.6.0.
+Based on the CIS Docker Benchmark 1.8.0.
 
 Usage: ${myname}.sh [OPTIONS]
 
