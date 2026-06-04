@@ -615,22 +615,24 @@ check_5_15() {
     container_name=$(docker inspect "$c" --format '{{.Name}}')
     if [ "$(docker info --format '{{.Swarm.LocalNodeState}}')" = "active" ]; then
       for s in $(docker service ls --format '{{.Name}}'); do
-        if echo $container_name | grep -q "$s"; then
+        if echo "$container_name" | grep -q "$s"; then
           task_id=$(docker inspect "$c" --format '{{.Name}}' | awk -F '.' '{print $NF}')
           # a container name could arbitrary include a service one: it belongs to a service (created by Docker
           # as part of the service), if the container task ID matches one of the task IDs of the service.
           if docker service ps --no-trunc "$s" --format '{{.ID}}' | grep -q "$task_id"; then
-            restart_policy=$(docker inspect --format '{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
+            maxAttempts=$(docker inspect --format '{{ .Spec.TaskTemplate.RestartPolicy.MaxAttempts }}' "$s")
+            restart_policy=$(docker inspect --format '{{ .Spec.TaskTemplate.RestartPolicy.Name }}' "$s")
             break
           fi
         fi
       done
     fi
     if docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c" &>/dev/null; then
-      restart_policy=$(docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
+      maxAttempts=$(docker inspect --format '{{ .HostConfig.RestartPolicy.MaximumRetryCount }}' "$c")
+      restart_policy=$(docker inspect --format '{{ .HostConfig.RestartPolicy.Name }}' "$c")
     fi
 
-    if [ "$restart_policy" -gt "5" ]; then
+    if [ "$maxAttempts" -gt "5" ] || [ "$restart_policy" != "on-failure" ]; then
       # If it's the first container, fail the test
       if [ $fail -eq 0 ]; then
         warn -s "$check"

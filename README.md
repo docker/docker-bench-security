@@ -2,18 +2,19 @@
 
 ![Docker Bench for Security running](img/benchmark_log.png)
 
-The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are based on the [CIS Docker Benchmark v1.6.0](https://www.cisecurity.org/benchmark/docker/).
+The Docker Bench for Security is a script that checks for dozens of common best-practices around deploying Docker containers in production. The tests are all automated, and are based on the [CIS Docker Benchmark v1.8.0](https://www.cisecurity.org/benchmark/docker/).
 
 We are making this available as an open-source utility so the Docker community can have an easy way to self-assess their hosts and Docker containers against this benchmark.
 
-Release | CIS |
-:---:|:---:|
-1.6.0|1.6.0|
-1.5.0|1.5.0|
-1.3.6|1.4.0|
-1.3.5|1.2.0|
-1.3.3|1.1.0|
-1.3.0|1.13.0|
+| Release |  CIS   |
+| :-----: | :----: |
+|  1.8.0  | 1.8.0  |
+|  1.6.0  | 1.6.0  |
+|  1.5.0  | 1.5.0  |
+|  1.3.6  | 1.4.0  |
+|  1.3.5  | 1.2.0  |
+|  1.3.3  | 1.1.0  |
+|  1.3.0  | 1.13.0 |
 
 ## Running Docker Bench for Security
 
@@ -24,7 +25,7 @@ You can simply run this script from your base host by running:
 ```sh
 git clone https://github.com/docker/docker-bench-security.git
 cd docker-bench-security
-sudo sh docker-bench-security.sh
+sudo bash docker-bench-security.sh
 ```
 
 > Note: [`jq`](https://jqlang.github.io/jq/) is an optional but recommended dependency.
@@ -126,8 +127,36 @@ Note that when distributions don't contain `auditctl`, the audit tests will chec
   -x EXCLUDE   optional  Comma delimited list of patterns within a container or image name to exclude from check
   -t LABEL     optional  Comma delimited list of labels within a container or image to check
   -n LIMIT     optional  In JSON output, when reporting lists of items (containers, images, etc.), limit the number of reported items to LIMIT. Default 0 (no limit).
-  -p PRINT     optional  Disable the printing of remediation measures. Default: print remediation measures.
+  -p PRINT     optional  Print remediation measures. Default: Don't print remediation measures.
 ```
+Subsets of tests available :
+- cis
+  - host_configuration
+  - docker_daemon_configuration
+  - docker_daemon_files
+  - container_images
+  - container_runtime
+  - docker_security_operations
+  - docker_swarm_configuration
+- cis_level1
+  - host_configuration_level1
+  - docker_daemon_configuration_level1
+  - docker_daemon_files_level1
+  - container_images_level1
+  - container_runtime_level1
+  - docker_security_operations_level1
+  - docker_swarm_configuration_level1
+- cis_controls_v8_ig1
+- cis_controls_v8_ig2
+- cis_controls_v8_ig3
+- docker_enterprise_configuration
+  - docker_enterprise_configuration_level1
+- docker_trusted_registry_configuration
+- universal_control_plane_configuration
+- community
+  - community_checks
+- all
+
 
 By default the Docker Bench for Security script will run all available CIS tests and produce
 logs in the log folder from current directory, named `docker-bench-security.log.json` and
@@ -137,16 +166,16 @@ If the docker container is used then the log files will be created inside the co
 
 The CIS based checks are named `check_<section>_<number>`, e.g. `check_2_6` and community contributed checks are named `check_c_<number>`.
 
-`sh docker-bench-security.sh -c check_2_2` will only run check `2.2 Ensure the logging level is set to 'info'`.
+`bash docker-bench-security.sh -c check_2_2` will only run check `2.2 Ensure the logging level is set to 'info'`.
 
-`sh docker-bench-security.sh -e check_2_2` will run all available checks except `2.2 Ensure the logging level is set to 'info'`.
+`bash docker-bench-security.sh -e check_2_2` will run all available checks except `2.2 Ensure the logging level is set to 'info'`.
 
-`sh docker-bench-security.sh -e docker_enterprise_configuration` will run all available checks except the docker_enterprise_configuration group
+`bash docker-bench-security.sh -e docker_enterprise_configuration` will run all available checks except the docker_enterprise_configuration group
 
-`sh docker-bench-security.sh -e docker_enterprise_configuration,check_2_2` will run all available checks except the docker_enterprise_configuration group and `2.2 Ensure the logging level is set to 'info'`
+`bash docker-bench-security.sh -e docker_enterprise_configuration,check_2_2` will run all available checks except the docker_enterprise_configuration group and `2.2 Ensure the logging level is set to 'info'`
 
-`sh docker-bench-security.sh -c container_images,container_runtime` will run just the container_images and container_runtime checks
+`bash docker-bench-security.sh -c container_images,container_runtime` will run just the container_images and container_runtime checks
 
-`sh docker-bench-security.sh -c container_images -e check_4_5` will run just the container_images checks except `4.5 Ensure Content trust for Docker is Enabled`
+`bash docker-bench-security.sh -c container_images -e check_4_5` will run just the container_images checks except `4.5 Ensure Content trust for Docker is Enabled`
 
 Note that when submitting checks, provide information why it is a reasonable test to add and please include some kind of official documentation verifying that information.

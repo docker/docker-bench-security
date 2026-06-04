@@ -7,7 +7,7 @@
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # --------------------------------------------------------------------------------------------
 
-version='1.6.0'
+version='1.8.0'
 
 LIBEXEC="." # Distributions can change this to /usr/libexec or similar.
 
@@ -38,17 +38,17 @@ usage () {
   cat <<EOF
 Docker Bench for Security - Docker, Inc. (c) 2015-$(date +"%Y")
 Checks for dozens of common best-practices around deploying Docker containers in production.
-Based on the CIS Docker Benchmark 1.6.0.
+Based on the CIS Docker Benchmark 1.8.0.
 
 Usage: ${myname}.sh [OPTIONS]
 
 Example:
   - Only run check "2.2 - Ensure the logging level is set to 'info'":
-      sh docker-bench-security.sh -c check_2_2
+      bash docker-bench-security.sh -c check_2_2
   - Run all available checks except the host_configuration group and "2.8 - Enable user namespace support":
-      sh docker-bench-security.sh -e host_configuration,check_2_8
+      bash docker-bench-security.sh -e host_configuration,check_2_8
   - Run just the container_images checks except "4.5 - Ensure Content trust for Docker is Enabled":
-      sh docker-bench-security.sh -c container_images -e check_4_5
+      bash docker-bench-security.sh -c container_images -e check_4_5
 
 Options:
   -b           optional  Do not print colors
