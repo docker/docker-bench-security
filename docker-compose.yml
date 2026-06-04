@@ -5,6 +5,7 @@ services:
       # image: docker-bench-security
 
       # use build path to Dockerfile if docker-compose should build the image
+      image: docker-bench-security
       build: .
 
       cap_add:
@@ -19,3 +20,11 @@ services:
           - /var/run/docker.sock:/var/run/docker.sock:ro
           - /usr/lib/systemd:/usr/lib/systemd:ro
           - /etc:/etc:ro
+          - ./log:/log
+
+  report:
+      image: nginx:alpine
+      ports:
+          - "8099:80"
+      volumes:
+          - ./log:/usr/share/nginx/html:ro
