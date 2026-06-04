@@ -103,6 +103,8 @@ get_docker_effective_command_line_args() {
 }
 
 get_docker_configuration_file() {
+  DOCKER_USER_HOME="$(grep -m1 "^$(ps -eo user,cmd | grep docker | grep -v grep |\
+    awk '{ print $1 }')" /etc/passwd | awk -F':' '{ print $6 }')"
   FILE="$(get_docker_effective_command_line_args '--config-file' | \
     sed 's/.*=//g')"
 
@@ -112,6 +114,10 @@ get_docker_configuration_file() {
   fi
   if [ -f '/etc/docker/daemon.json' ]; then
     CONFIG_FILE='/etc/docker/daemon.json'
+    return
+  fi
+  if [ -f "${DOCKER_USER_HOME}/.config/docker/daemon.json" ]; then
+    CONFIG_FILE="${DOCKER_USER_HOME}/.config/docker/daemon.json"
     return
   fi
   CONFIG_FILE='/dev/null'
