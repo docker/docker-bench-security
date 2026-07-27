@@ -415,7 +415,7 @@ check_2_18() {
   fi
   local desc="$desc (Deprecated)"
   local check="$id - $desc"
-  info -c "$desc"
+  info -c "$check"
   logcheckresult "INFO"
 }
 
