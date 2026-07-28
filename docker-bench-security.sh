@@ -2,7 +2,7 @@
 # --------------------------------------------------------------------------------------------
 # Docker Bench for Security
 #
-# Docker, Inc. (c) 2015-2022
+# Docker, Inc. (c) 2015-2024
 #
 # Checks for dozens of common best-practices around deploying Docker containers in production.
 # --------------------------------------------------------------------------------------------
@@ -78,6 +78,14 @@ logger="log/${myname}.log"
 limit=0
 printremediation="0"
 globalRemediation=""
+
+# ============================================
+# CONTADORES PARA RESUMEN DE AUDITORÍA
+# ============================================
+PASS_COUNT=0
+WARN_COUNT=0
+INFO_COUNT=0
+NOTE_COUNT=0
 
 # Get the flags
 # If you add an option here, please
@@ -218,5 +226,73 @@ main () {
 
   endjson "$totalChecks" "$currentScore" "$(date +%s)"
 }
+
+# ============================================
+# FUNCIÓN PARA MOSTRAR RESUMEN DE AUDITORÍA
+# ============================================
+show_summary() {
+    # Leer los contadores directamente de los archivos de log o calcularlos
+    # Como los contadores no se actualizan correctamente, vamos a procesar el archivo de log
+    
+    LOG_FILE="log/docker-bench-security.log"
+    
+    if [ -f "$LOG_FILE" ]; then
+        PASS_COUNT=$(grep -c "\[PASS\]" "$LOG_FILE" 2>/dev/null || echo 0)
+        WARN_COUNT=$(grep -c "\[WARN\]" "$LOG_FILE" 2>/dev/null || echo 0)
+        INFO_COUNT=$(grep -c "\[INFO\]" "$LOG_FILE" 2>/dev/null || echo 0)
+        NOTE_COUNT=$(grep -c "\[NOTE\]" "$LOG_FILE" 2>/dev/null || echo 0)
+        
+        # Restar 1 al INFO porque la línea de inicialización también tiene [INFO]
+        if [ $INFO_COUNT -gt 0 ]; then
+            INFO_COUNT=$((INFO_COUNT - 1))
+        fi
+    else
+        # Si no hay archivo de log, usar los contadores de variables
+        PASS_COUNT=${PASS_COUNT:-0}
+        WARN_COUNT=${WARN_COUNT:-0}
+        INFO_COUNT=${INFO_COUNT:-0}
+        NOTE_COUNT=${NOTE_COUNT:-0}
+    fi
+    
+    # Calcular total
+    TOTAL=$((PASS_COUNT + WARN_COUNT + INFO_COUNT + NOTE_COUNT))
+    
+    # Calcular porcentaje de cumplimiento
+    if [ $TOTAL -gt 0 ]; then
+        PASS_PERCENT=$((PASS_COUNT * 100 / TOTAL))
+    else
+        PASS_PERCENT=0
+    fi
+    
+    echo ""
+    echo "═══════════════════════════════════════════════════════════"
+    echo "  📊 RESUMEN DE AUDITORÍA"
+    echo "═══════════════════════════════════════════════════════════"
+    echo "  ✅ PASS:  $PASS_COUNT"
+    echo "  ⚠️  WARN:  $WARN_COUNT"
+    echo "  ℹ️  INFO:  $INFO_COUNT"
+    echo "  📝 NOTE:  $NOTE_COUNT"
+    echo "───────────────────────────────────────────────────────────"
+    echo "  📌 TOTAL: $TOTAL verificaciones ejecutadas"
+    echo "═══════════════════════════════════════════════════════════"
+    echo "  📈 Nivel de cumplimiento: $PASS_PERCENT% ($PASS_COUNT de $TOTAL verificaciones PASAN)"
+    echo "═══════════════════════════════════════════════════════════"
+    
+    # Recomendación basada en WARN
+    if [ $WARN_COUNT -gt 0 ]; then
+        echo "  ⚠️  Recomendación: Revisar los $WARN_COUNT hallazgos WARN identificados."
+        echo "  🔍 Ejecuta: sudo sh docker-bench-security.sh -c check_X_X"
+        echo "     (reemplaza X_X con el ID del check específico)"
+    else
+        echo "  ✅ ¡Excelente! No se encontraron advertencias de seguridad."
+    fi
+    echo "═══════════════════════════════════════════════════════════"
+    echo ""
+}
+
+# ============================================
+# EJECUTAR RESUMEN AL FINALIZAR
+# ============================================
+trap show_summary EXIT
 
 main "$@"
